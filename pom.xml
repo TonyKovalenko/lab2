@@ -35,9 +35,9 @@
     <resources>
       <resource>
         <directory>resources</directory>
-        <includes>
+        <!--<includes>
           <include>log4j.properties</include>
-        </includes>
+        </includes>-->
       </resource>
     </resources>
     <plugins>

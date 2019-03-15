@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="496.0" prefWidth="418.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.CreateGroupView">
+   <children>
+      <ListView fx:id="usersListView" layoutX="13.0" layoutY="83.0" prefHeight="398.0" prefWidth="391.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="26.0" text="Group name:" AnchorPane.leftAnchor="10.0" />
+      <TextField fx:id="groupNameTextField" layoutX="93.0" layoutY="19.0" prefHeight="26.0" prefWidth="223.0" AnchorPane.rightAnchor="97.0" />
+      <Label layoutX="176.0" layoutY="65.0" text="Select users:" />
+      <Button fx:id="createGroupButton" layoutX="328.0" layoutY="19.0" mnemonicParsing="false" onAction="#handleCreateClick" prefHeight="26.0" prefWidth="82.0" text="Create" AnchorPane.rightAnchor="10.0" />
+   </children>
+</AnchorPane>
