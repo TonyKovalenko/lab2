@@ -44,5 +44,4 @@ public class ServerController {
             executor.submit(() -> messageController[0].handle());
         }
     }
-
 }

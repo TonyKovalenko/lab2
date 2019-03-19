@@ -36,7 +36,7 @@ public class MessageController {
             StreamSource streamSource = new StreamSource(socket.getInputStream());
             responseMsg = (MessageWrapper) unmarshaller.unmarshal(streamSource);
         } catch (IOException | JAXBException ex) {
-            //log.error("Exception ", ex);
+            //log.error("Exception happened", ex);
             return;
         }
         switch (responseMsg.getMessageType())  {
