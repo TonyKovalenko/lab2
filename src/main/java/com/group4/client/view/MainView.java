@@ -1,4 +1,5 @@
 package com.group4.client.view;
+import com.group4.client.controller.Controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -6,12 +7,29 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
 
-public class MainView {
+import java.io.IOException;
 
+public class MainView extends View {
+    private static MainView instance;
+    private Controller controller;
+
+    public static MainView getInstance() {
+        try {
+            instance = (MainView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/mainWindow.fxml", "Messenger");
+            Controller controller = Controller.getInstance();
+            controller.setView(instance);
+            instance.setController(controller);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return instance;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 
     @FXML
     private MenuItem newPrivateChatButton;
@@ -35,19 +53,13 @@ public class MainView {
     private Label chatName;
 
     @FXML
-    private Button sendBotton;
+    private Button sendButton;
 
     @FXML
     private TextFlow messagesTextFlow;
 
     @FXML
     private ListView<?> onlineUsers;
-
-    @FXML
-    private Font x3;
-
-    @FXML
-    private Color x4;
 
     @FXML
     void createNewGroupChat(ActionEvent event) {
@@ -70,7 +82,7 @@ public class MainView {
     }
 
     @FXML
-    void onSendBittonClick(ActionEvent event) {
+    void onSendButtonClick(ActionEvent event) {
 
     }
 
