@@ -1,15 +1,22 @@
 package com.group4.client.view;
 
+import com.group4.client.controller.Controller;
+import com.group4.client.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
-public class CreateGroupView {
+public class CreateGroupView extends View {
+    Controller controller;
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 
     @FXML
-    private ListView<?> usersListView;
+    private ListView<User> usersListView;
 
     @FXML
     private TextField groupNameTextField;
