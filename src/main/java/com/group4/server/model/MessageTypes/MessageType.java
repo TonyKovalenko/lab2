@@ -2,14 +2,16 @@ package com.group4.server.model.MessageTypes;
 
 public enum MessageType {
     AUTHORIZE(AuthorizationMessage.class.getSimpleName()),
-    REGISTER(""),
+    REGISTER(RegistrationMessage.class.getSimpleName()),
     PING(PingMessage.class.getSimpleName()),
     NEWGROUPCHAT(""),
     NEWPRIVATECHAT(""),
     TOCHAT(""),
     USERSINCHAT(""),
     CHANGECREDENTIALS(""),
-    SERVERSHUTDOWN("");
+    SERVERSHUTDOWN(""),
+    ANSWER(AnswerMessage.class.getSimpleName());
+
 
     private String value;
 

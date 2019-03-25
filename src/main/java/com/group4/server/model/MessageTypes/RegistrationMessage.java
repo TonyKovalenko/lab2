@@ -6,21 +6,23 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-@XmlRootElement(name = "authorizationMessage")
+@XmlRootElement(name = "registrationMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class AuthorizationMessage implements TransmittableMessage, Serializable {
-
+public class RegistrationMessage implements TransmittableMessage, Serializable {
     @XmlElement
     private  String userNickname;
     @XmlElement
     private String password;
+    @XmlElement
+    private String fullName;
 
-    public AuthorizationMessage() {
+    public RegistrationMessage() {
     }
 
-    public AuthorizationMessage(String userNickname, String password) {
+    public RegistrationMessage(String userNickname, String password, String fullName) {
         this.userNickname = userNickname;
         this.password = password;
+        this.fullName = fullName;
     }
 
     public String getUserNickname() {
@@ -31,12 +33,19 @@ public class AuthorizationMessage implements TransmittableMessage, Serializable 
         this.userNickname = userNickname;
     }
 
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }
