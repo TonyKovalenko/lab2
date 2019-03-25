@@ -34,14 +34,16 @@ public class ServerController {
         isRunning = false;
     }
 
-    public void process(int port) throws Exception {
+    public void process() throws Exception {
         ServerSocket serverSocket = new ServerSocket(port);
-        Socket[] s = { null };
-        MessageController[] messageController = { null };
-        while (isRunning) {
-            s[0] = serverSocket.accept();
-            messageController[0] = new MessageController(s[0]);
-            executor.submit(() -> messageController[0].handle());
+        try {
+            while (isRunning) {
+                Socket s = serverSocket.accept();
+                MessageController messageController = new MessageController(s);
+                executor.submit(messageController::handle);
+            }
+        } finally {
+            executor.shutdown();
         }
     }
 }

@@ -1,22 +1,25 @@
 package com.group4.server.model.MessageTypes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum MessageType {
-    AUTHORIZE(AuthorizationMessage.class.getSimpleName()),
-    REGISTER(""),
-    PING(PingMessage.class.getSimpleName()),
-    NEWGROUPCHAT(""),
-    NEWPRIVATECHAT(""),
-    TOCHAT(""),
-    USERSINCHAT(""),
-    CHANGECREDENTIALS(""),
-    SERVERSHUTDOWN("");
+    AUTHORIZE,
+    REGISTER,
+    PING,
+    NEWGROUPCHAT,
+    NEWPRIVATECHAT,
+    TOCHAT,
+    USERSINCHAT,
+    CHANGECREDENTIALS,
+    SERVERSHUTDOWN;
 
-    private String value;
+    private static Map<String , MessageType> stringToMessageType = new HashMap<String, MessageType>() {{
+        put(AuthorizationMessage.class.getSimpleName(), AUTHORIZE);
+        put(PingMessage.class.getSimpleName(), PING);
+    }};
 
-    MessageType(String value) {
-        this.value = value;
-    }
-    public String getValue() {
-        return value;
+    public static MessageType getMessageType(String type) throws IllegalArgumentException {
+        return stringToMessageType.get(type);
     }
 }

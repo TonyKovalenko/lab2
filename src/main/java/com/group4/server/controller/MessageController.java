@@ -3,14 +3,9 @@ package com.group4.server.controller;
 import com.group4.server.model.MessageTypes.AuthorizationMessage;
 import com.group4.server.model.MessageTypes.PingMessage;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import javax.xml.bind.*;
+import java.io.*;
 import java.net.Socket;
 
 public class MessageController {
@@ -33,20 +28,18 @@ public class MessageController {
     void handle() {
         MessageWrapper responseMsg;
         try {
-            StreamSource streamSource = new StreamSource(socket.getInputStream());
-            responseMsg = (MessageWrapper) unmarshaller.unmarshal(streamSource);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            final StringReader dataReader = new StringReader(in.readLine());
+            responseMsg = (MessageWrapper) unmarshaller.unmarshal(dataReader);
         } catch (IOException | JAXBException ex) {
             //log.error("Exception happened", ex);
+            ex.printStackTrace();
             return;
         }
         switch (responseMsg.getMessageType())  {
             case PING:
-//                PingMessage pingMsg = (PingMessage) responseMsg.getEncapsulatedMessage();
-//                System.out.println("Ping message from: " + pingMsg.getUserNickname() + ", is alive: " + pingMsg.isAlive());
-//                break;
             case AUTHORIZE:
-//                AuthorizationMessage authMsg = (AuthorizationMessage) responseMsg.getEncapsulatedMessage();
-//                System.out.println("Auth message from: " + authMsg.getUserNickname() + ", login: " + authMsg.getUserNickname() + ", password: " + authMsg.getPassword());
         }
     }
 

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
 
-@XmlRootElement(name = "MessageWrapper")
+@XmlRootElement(name = "messageWrapper")
 @XmlAccessorType(XmlAccessType.NONE)
 public class MessageWrapper {
 
@@ -40,18 +40,8 @@ public class MessageWrapper {
 
     public MessageWrapper(TransmittableMessage encapsulatedMessage) throws IllegalArgumentException {
         this.encapsulatedMessage = encapsulatedMessage;
-        messageType = resolveEncapsulatedMessageType(encapsulatedMessage);
+        messageType = MessageType.getMessageType(encapsulatedMessage.getClass().getSimpleName());
         transmitTime = Instant.now();
-    }
-
-    private MessageType resolveEncapsulatedMessageType(TransmittableMessage encapsulatedMessage) {
-        String type = encapsulatedMessage.getClass().getSimpleName();
-        for(MessageType msgType : MessageType.values()) {
-            if(msgType.getValue().equals(type)) {
-                return msgType;
-            }
-        }
-        throw new IllegalArgumentException("Unknown encapsulated message type found: " + type);
     }
 
     public TransmittableMessage getEncapsulatedMessage() {

@@ -1,15 +1,13 @@
 package com.group4.server.model.MessageTypes;
 
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 @XmlRootElement(name = "authorizationMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class AuthorizationMessage implements TransmittableMessage, Serializable {
+public class AuthorizationMessage implements TransmittableMessage {
 
     @XmlElement
     private  String userNickname;
