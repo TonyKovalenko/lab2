@@ -12,11 +12,14 @@ public enum MessageType {
     TOCHAT,
     USERSINCHAT,
     CHANGECREDENTIALS,
-    SERVERSHUTDOWN;
+    SERVERSHUTDOWN,
+    ANSWER;
 
     private static Map<String , MessageType> stringToMessageType = new HashMap<String, MessageType>() {{
         put(AuthorizationMessage.class.getSimpleName(), AUTHORIZE);
         put(PingMessage.class.getSimpleName(), PING);
+        put(RegistrationMessage.class.getSimpleName(), REGISTER);
+        put(AnswerMessage.class.getSimpleName(), ANSWER);
     }};
 
     public static MessageType getMessageType(String type) throws IllegalArgumentException {

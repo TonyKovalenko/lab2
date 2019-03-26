@@ -2,7 +2,6 @@ package com.group4.client.controller;
 
 import com.group4.client.view.LoginView;
 import com.group4.client.view.MainView;
-import com.group4.client.view.View;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
 import javafx.application.Application;
 import javafx.stage.Stage;
