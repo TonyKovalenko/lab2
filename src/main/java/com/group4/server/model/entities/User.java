@@ -1,8 +1,9 @@
-package com.group4.client.model;
+package com.group4.server.model.entities;
 
 import java.util.Date;
 
 public class User {
+    private int id;
     private String nickname;
     private String fullName;
     private Date registrationDate;
@@ -10,7 +11,8 @@ public class User {
     public User() {
     }
 
-    public User(String nickname, String fullName, Date registrationDate) {
+    public User(int id, String nickname, String fullName, Date registrationDate) {
+        this.id = id;
         this.nickname = nickname;
         this.fullName = fullName;
         this.registrationDate = registrationDate;
@@ -38,5 +40,13 @@ public class User {
 
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -1,5 +1,12 @@
 package com.group4.client.view;
 import com.group4.client.controller.Controller;
+import com.group4.server.model.MessageTypes.ChatMessage;
+import com.group4.server.model.entities.ChatRoom;
+import com.group4.server.model.entities.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,6 +17,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 public class MainView extends View {
     private static MainView instance;
@@ -44,7 +53,7 @@ public class MainView extends View {
     private MenuItem exitButton;
 
     @FXML
-    private ListView<?> chatRooms;
+    private ListView<ChatRoom> chatRooms;
 
     @FXML
     private TextArea messageInput;
@@ -56,11 +65,20 @@ public class MainView extends View {
     private Button sendButton;
 
     @FXML
-    private TextFlow messagesTextFlow;
+    private ListView <ChatMessage> chatMessageListView;
 
     @FXML
-    private ListView<?> onlineUsers;
+    private ListView<User> onlineUsers;
 
+    public void initialize() {
+        /*chatRooms.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ChatRoom>() {
+
+            @Override
+            public void changed(ObservableValue<? extends ChatRoom> observable, ChatRoom oldValue, ChatRoom newValue) {
+                chatMessageListView.setItems(FXCollections.observableArrayList(newValue.getMessages()));
+            }
+        });*/
+    }
     @FXML
     void createNewGroupChat(ActionEvent event) {
 
@@ -86,4 +104,13 @@ public class MainView extends View {
 
     }
 
+    public void setOnlineUsers(Collection<User> users) {
+        onlineUsers.setItems(FXCollections.observableArrayList(users));
+    }
+
+    public void setChatRooms(Collection<ChatRoom> chatRooms) {
+        System.out.println(this.chatRooms);
+        System.out.println(chatRooms);
+        this.chatRooms.setItems(FXCollections.observableArrayList(chatRooms));
+    }
 }

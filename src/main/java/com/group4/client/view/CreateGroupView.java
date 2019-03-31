@@ -1,7 +1,7 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
-import com.group4.client.model.User;
+import com.group4.server.model.entities.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

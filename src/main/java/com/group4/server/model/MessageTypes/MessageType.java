@@ -20,6 +20,9 @@ public enum MessageType {
         put(PingMessage.class.getSimpleName(), PING);
         put(RegistrationMessage.class.getSimpleName(), REGISTER);
         put(AnswerMessage.class.getSimpleName(), ANSWER);
+        put(ChatMessage.class.getSimpleName(), TOCHAT);
+        put(NewGroupChatMessage.class.getSimpleName(), NEWGROUPCHAT);
+        put(UsersInChatMessage.class.getSimpleName(), USERSINCHAT);
     }};
 
     public static MessageType getMessageType(String type) throws IllegalArgumentException {
