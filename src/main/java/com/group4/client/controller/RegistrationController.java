@@ -3,6 +3,8 @@ package com.group4.client.controller;
 import com.group4.client.view.DialogWindow;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.RegistrationView;
+import com.group4.server.model.MessageTypes.AnswerMessage;
+import com.group4.server.model.MessageTypes.AnswerType;
 import com.group4.server.model.MessageTypes.RegistrationMessage;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
 
@@ -54,7 +56,12 @@ public class RegistrationController {
     }
 
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
-        System.out.println("registered successfully");
-        cancel();
+        AnswerMessage innerMessage = (AnswerMessage) responseMessage.getEncapsulatedMessage();
+        if (innerMessage.getAnswerType() == AnswerType.CONFIRMED) {
+            System.out.println("registered successfully");
+            cancel();
+        } else {
+            System.out.println("registration was denied");
+        }
     }
 }
