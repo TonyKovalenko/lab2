@@ -38,8 +38,11 @@ public class LoginController {
 
             Controller.getInstance().getThread().sendMessage(messageWrapper);
         } else {
-            DialogWindow.showWarningWindow("Fill the fields", "Fields can't be empty");
+            /*DialogWindow.showWarningWindow("Fill the fields", "Fields can't be empty");
             System.out.println("Fill the fields");
+            */
+            System.out.println(MainView.getInstance());
+            MainView.getInstance().showStage();
         }
     }
 

@@ -1,6 +1,6 @@
 package com.group4.server.controller;
 
-import com.group4.server.model.Entities.User;
+import com.group4.server.model.entities.User;
 import com.group4.server.model.MessageHandlers.RegistrationHandler;
 import com.group4.server.model.MessageTypes.*;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
@@ -8,7 +8,6 @@ import com.group4.server.model.MessageWrappers.MessageWrapper;
 import javax.xml.bind.*;
 import java.io.*;
 import java.net.Socket;
-import java.util.TreeMap;
 
 public class MessageController {
 
@@ -64,6 +63,7 @@ public class MessageController {
                     //log.error("Exception happened", ex);
                 }
                 out.println(stringWriter.toString());
+                break;
             case PING:
             case AUTHORIZE:
         }

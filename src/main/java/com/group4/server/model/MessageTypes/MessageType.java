@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum MessageType {
+    ANSWER,
     AUTHORIZE,
     REGISTRATION_REQUEST,
     REGISTRATION_RESPONSE,
