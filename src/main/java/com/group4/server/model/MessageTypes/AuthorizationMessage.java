@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AuthorizationMessage implements TransmittableMessage {
 
     @XmlElement
-    private  String userNickname;
+    private String userNickname;
     @XmlElement
     private String password;
 

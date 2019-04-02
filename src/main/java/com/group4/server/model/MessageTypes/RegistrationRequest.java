@@ -1,5 +1,7 @@
 package com.group4.server.model.MessageTypes;
 
+import com.group4.server.model.Entities.User;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -8,21 +10,21 @@ import java.io.Serializable;
 
 @XmlRootElement(name = "registrationMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class RegistrationMessage implements TransmittableMessage, Serializable {
+public class RegistrationRequest implements TransmittableMessage {
     @XmlElement
-    private  String userNickname;
+    private String userNickname;
     @XmlElement
     private String password;
     @XmlElement
     private String fullName;
 
-    public RegistrationMessage() {
+    public RegistrationRequest() {
     }
 
-    public RegistrationMessage(String userNickname, String password, String fullName) {
-        this.userNickname = userNickname;
-        this.password = password;
-        this.fullName = fullName;
+    public RegistrationRequest(User user) {
+        this.userNickname = user.getNickname();
+        this.password = user.getPassword();
+        this.fullName = user.getFullName();
     }
 
     public String getUserNickname() {

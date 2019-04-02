@@ -3,7 +3,7 @@ package com.group4.client.controller;
 import com.group4.client.view.DialogWindow;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.RegistrationView;
-import com.group4.server.model.MessageTypes.RegistrationMessage;
+import com.group4.server.model.MessageTypes.RegistrationRequest;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
 
 public class RegistrationController {
@@ -36,7 +36,7 @@ public class RegistrationController {
                 String nickname = view.getUsername();
                 String password = view.getPassword();
                 String fullName = view.getFullName();
-                RegistrationMessage message = new RegistrationMessage();
+                RegistrationRequest message = new RegistrationRequest();
                 message.setUserNickname(nickname);
                 message.setPassword(password);
                 message.setFullName(fullName);

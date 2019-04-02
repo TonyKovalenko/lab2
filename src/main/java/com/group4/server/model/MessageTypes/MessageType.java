@@ -5,16 +5,18 @@ import java.util.Map;
 
 public enum MessageType {
     AUTHORIZE,
-    REGISTER,
+    REGISTRATION_REQUEST,
+    REGISTRATION_RESPONSE,
     PING,
-    NEWGROUPCHAT,
-    NEWPRIVATECHAT,
-    TOCHAT,
-    USERSINCHAT,
-    CHANGECREDENTIALS,
-    SERVERSHUTDOWN;
+    NEW_GROUPCHAT,
+    NEW_PRIVATECHAT,
+    TO_CHAT,
+    USERS_IN_CHAT,
+    CHANGE_CREDENTIALS,
+    SERVER_SHUTDOWN;
 
     private static Map<String , MessageType> stringToMessageType = new HashMap<String, MessageType>() {{
+        put(RegistrationRequest.class.getSimpleName(), REGISTRATION_REQUEST);
         put(AuthorizationMessage.class.getSimpleName(), AUTHORIZE);
         put(PingMessage.class.getSimpleName(), PING);
     }};

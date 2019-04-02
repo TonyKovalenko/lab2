@@ -24,7 +24,7 @@ public class MessageThread extends Thread {
                 if(reader.available() > 1) {
                     //TODO unmarshall message
                     MessageWrapper message = new MessageWrapper();
-                    if (message.getMessageType() == MessageType.ANSWER) {
+                    if (message.getMessageType() == null /*MessageType.ANSWER*/) {
                         AnswerMessage innerMessage = (AnswerMessage) message.getEncapsulatedMessage();
                         long requestId = innerMessage.getRequestId();
                         MessageWrapper requestMessage = extractRequestMessage(requestId);
@@ -32,7 +32,7 @@ public class MessageThread extends Thread {
                             case AUTHORIZE:
                                 LoginController.getInstance().processMessage(requestMessage, message);
                                 break;
-                            case REGISTER:
+                            case REGISTRATION_RESPONSE:
                                 RegistrationController.getInstance().processMessage(requestMessage, message);
                                 break;
                             default:
