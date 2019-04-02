@@ -1,12 +1,11 @@
 package com.group4.server.model.MessageTypes;
 
-import com.group4.server.model.Entities.User;
+import com.group4.server.model.entities.User;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 @XmlRootElement(name = "registrationMessage")
 @XmlAccessorType(XmlAccessType.NONE)
