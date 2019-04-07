@@ -8,13 +8,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.text.TextFlow;
+import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -65,17 +64,24 @@ public class MainView extends View {
     private Button sendButton;
 
     @FXML
-    private ListView <ChatMessage> chatMessageListView;
+    private ListView<ChatMessage> chatMessageListView;
 
     @FXML
     private ListView<User> onlineUsers;
 
     public void initialize() {
-        /*chatRooms.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ChatRoom>() {
-
-            @Override
-            public void changed(ObservableValue<? extends ChatRoom> observable, ChatRoom oldValue, ChatRoom newValue) {
+        chatRooms.setCellFactory(param -> new ChatListCellView());
+        onlineUsers.setCellFactory(param -> new UsersListCellView());
+        chatRooms.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("selection changed to : " + newValue);
+            if (newValue != null) {
                 chatMessageListView.setItems(FXCollections.observableArrayList(newValue.getMessages()));
+                chatName.setText(newValue.getName());
+            }
+        });
+        /*this.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                controller.exit();
             }
         });*/
     }
@@ -95,22 +101,29 @@ public class MainView extends View {
     }
 
     @FXML
-    void exit(ActionEvent event) {
-
+    void exit() {
+        controller.exit();
     }
 
     @FXML
     void onSendButtonClick(ActionEvent event) {
-
+        controller.sendMessageToChat();
     }
 
     public void setOnlineUsers(Collection<User> users) {
+        System.out.println("users: " + users.size());
         onlineUsers.setItems(FXCollections.observableArrayList(users));
     }
 
     public void setChatRooms(Collection<ChatRoom> chatRooms) {
-        System.out.println(this.chatRooms);
-        System.out.println(chatRooms);
+        //System.out.println(chatRooms);
+        for (ChatRoom room : chatRooms) {
+            System.out.println(room.getId() + " - " + room.getMessages().size());
+        }
         this.chatRooms.setItems(FXCollections.observableArrayList(chatRooms));
+    }
+
+    public String getMessageInput() {
+        return messageInput.getText();
     }
 }

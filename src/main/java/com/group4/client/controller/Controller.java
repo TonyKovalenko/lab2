@@ -8,6 +8,7 @@ import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.sun.jmx.remote.internal.Unmarshal;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import javax.xml.bind.JAXBContext;
@@ -26,6 +27,7 @@ public class Controller extends Application {
     private MainView mainView;
     private MessageThread thread;
     private static Controller instance;
+    private User currentUser;
     private HashMap<Integer, User> users;
     private HashMap<Integer, ChatRoom> chatRooms = new HashMap<>();
 
@@ -43,6 +45,22 @@ public class Controller extends Application {
 
     public void setView(MainView view) {
         mainView = view;
+    }
+
+    public HashMap<Integer, ChatRoom> getChatRooms() {
+        return chatRooms;
+    }
+
+    public void setChatRooms(HashMap<Integer, ChatRoom> chatRooms) {
+        this.chatRooms = chatRooms;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
     }
 
     /**
@@ -68,22 +86,28 @@ public class Controller extends Application {
         thread.connect();
         thread.start();
 
+        //test data
+        ArrayList<User> arrayList = new ArrayList<>();
+        arrayList.add(new User("qwe", "asd", "Dean Winchester"));
+        chatRooms.put(2, new ChatRoom(2, true, arrayList));
+        ArrayList<User> arrayList1 = new ArrayList<>();
+        arrayList1.add(new User("marry", "1234", "Marry Winchester"));
+        arrayList1.add(new User("sammy", "1234", "Sam Winchester"));
+        chatRooms.put(3, new ChatRoom(2, false, arrayList1));
+
         LoginView.getInstance().showStage();
     }
 
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
-        //test data
-        System.out.println("process message");
-        ArrayList<User> arrayList = new ArrayList<>();
-        arrayList.add(new User("qwe", "asd", "fullname"));
-        chatRooms.put(2, new ChatRoom(2, true, arrayList));
-        mainView.setChatRooms(chatRooms.values());
+        System.out.println("process message: " + responseMessage.getMessageType());
+
+        Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
 
         switch (responseMessage.getMessageType()) {
             case USERS_IN_CHAT:
                 UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
                 users = usersInChatMessage.getUsers();
-                mainView.setOnlineUsers(users.values());
+                Platform.runLater(() -> mainView.setOnlineUsers(users.values()));
                 break;
             case NEW_GROUPCHAT:
             case NEW_PRIVATECHAT:
@@ -94,7 +118,7 @@ public class Controller extends Application {
             case TO_CHAT:
                 ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
                 chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
-                mainView.setChatRooms(chatRooms.values());
+                Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
                 break;
             case PING:
 
@@ -111,5 +135,18 @@ public class Controller extends Application {
 
                 }
         }
+    }
+
+    public void exit() {
+        thread.disconnect();
+        System.exit(0);
+    }
+
+    public void sendMessageToChat() {
+        ChatMessage message = new ChatMessage();
+        message.setFromId(this.getCurrentUser().getId());
+        message.setText(mainView.getMessageInput());
+
+        Controller.getInstance().getThread().sendMessage(message);
     }
 }

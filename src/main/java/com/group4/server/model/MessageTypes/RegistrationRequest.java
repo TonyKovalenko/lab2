@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "registrationMessage")
+@XmlRootElement(name = "registrationRequest")
 @XmlAccessorType(XmlAccessType.NONE)
 public class RegistrationRequest implements TransmittableMessage {
     @XmlElement

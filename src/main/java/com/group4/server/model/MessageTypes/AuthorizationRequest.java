@@ -7,17 +7,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "authorizationMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class AuthorizationMessage implements TransmittableMessage {
+public class AuthorizationRequest implements TransmittableMessage {
 
     @XmlElement
     private String userNickname;
     @XmlElement
     private String password;
 
-    public AuthorizationMessage() {
+    public AuthorizationRequest() {
     }
 
-    public AuthorizationMessage(String userNickname, String password) {
+    public AuthorizationRequest(String userNickname, String password) {
         this.userNickname = userNickname;
         this.password = password;
     }

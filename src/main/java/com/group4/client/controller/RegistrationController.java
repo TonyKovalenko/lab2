@@ -40,9 +40,8 @@ public class RegistrationController {
                 message.setUserNickname(nickname);
                 message.setPassword(password);
                 message.setFullName(fullName);
-                MessageWrapper messageWrapper = new MessageWrapper(message);
 
-                Controller.getInstance().getThread().sendMessage(messageWrapper);
+                Controller.getInstance().getThread().sendMessage(message);
             } else {
                 DialogWindow.showWarningWindow("Passwords don't match", "The password and confirm password fields do not match.");
                 System.out.println("password doesn't match");

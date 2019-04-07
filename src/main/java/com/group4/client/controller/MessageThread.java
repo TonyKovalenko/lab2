@@ -5,8 +5,6 @@ import com.group4.server.model.MessageWrappers.MessageWrapper;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
@@ -20,7 +18,7 @@ public class MessageThread extends Thread {
     private PrintWriter writer;
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
-            AuthorizationMessage.class, AnswerMessage.class, ChatMessage.class,
+            AuthorizationRequest.class, AnswerMessage.class, ChatMessage.class,
             NewGroupChatMessage.class, RegistrationRequest.class, UsersInChatMessage.class
     };
     private JAXBContext context;
@@ -33,12 +31,23 @@ public class MessageThread extends Thread {
                 if(reader.ready()) {
                     StringReader dataReader = new StringReader(reader.readLine());
                     MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
-                    if (message.getMessageType() == MessageType.ANSWER) {
+                    System.out.println("message accepted: " + message.getMessageId());
+                    switch (message.getMessageType()) {
+                        case AUTHORIZATION_RESPONSE:
+                            LoginController.getInstance().processMessage(message, message);
+                            break;
+                        case REGISTRATION_RESPONSE:
+                            RegistrationController.getInstance().processMessage(message, message);
+                            break;
+                        default:
+                            Controller.getInstance().processMessage(message, message);
+                    }
+                    /*if (message.getMessageType() == MessageType.ANSWER) {
                         AnswerMessage innerMessage = (AnswerMessage) message.getEncapsulatedMessage();
                         long requestId = innerMessage.getRequestId();
                         MessageWrapper requestMessage = extractRequestMessage(requestId);
                         switch (requestMessage.getMessageType()) {
-                            case AUTHORIZE:
+                            case AUTHORIZATION_REQUEST:
                                 LoginController.getInstance().processMessage(requestMessage, message);
                                 break;
                             case REGISTRATION_RESPONSE:
@@ -49,7 +58,7 @@ public class MessageThread extends Thread {
                         }
                     } else {
                         Controller.getInstance().processMessage(null, message);
-                    }
+                    }*/
                 }
             } catch (IOException | JAXBException e) {
                 e.printStackTrace();
@@ -78,7 +87,8 @@ public class MessageThread extends Thread {
         }
     }
 
-    public void sendMessage(MessageWrapper message) {
+    public void sendMessage(TransmittableMessage innerMessage) {
+        MessageWrapper message = new MessageWrapper(innerMessage);
         MessageType type = message.getMessageType();
         List<MessageWrapper> messageList = sentMessages.get(type);
         if (messageList == null) {

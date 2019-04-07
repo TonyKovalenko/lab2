@@ -18,7 +18,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.MainView">
+<VBox prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.MainView">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -38,25 +38,25 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.22048997772828507, 0.7817371937639198" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.25, 0.8" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
-        <AnchorPane>
+        <AnchorPane maxWidth="400.0" minWidth="-Infinity" prefWidth="250.0">
           <children>
-                  <ListView fx:id="chatRooms" prefHeight="553.0" prefWidth="222.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ListView fx:id="chatRooms" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
           </children>
         </AnchorPane>
-      <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="546.0" prefWidth="467.0">
+      <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="644.0" prefWidth="517.0">
         <children>
-                  <TextArea fx:id="messageInput" layoutY="411.0" prefHeight="120.0" prefWidth="416.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="82.0" />
+                  <TextArea fx:id="messageInput" layoutY="411.0" prefHeight="102.0" prefWidth="470.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="82.0" />
                   <Separator layoutY="45.0" prefHeight="0.0" prefWidth="471.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <Label fx:id="chatName" layoutX="14.0" layoutY="14.0" prefHeight="22.0" prefWidth="69.0" text="Label" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="14.0" />
-                  <Button fx:id="sendButton" layoutX="446.0" layoutY="430.0" mnemonicParsing="false" onAction="#onSendButtonClick" prefHeight="120.0" prefWidth="78.0" text="Send" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <ListView fx:id="chatMessageListView" layoutY="47.0" prefHeight="382.0" prefWidth="498.0" AnchorPane.bottomAnchor="121.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0" />
+                  <Label fx:id="chatName" layoutX="14.0" layoutY="14.0" prefHeight="22.0" prefWidth="378.0" text="Label" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="14.0" />
+                  <Button fx:id="sendButton" layoutX="446.0" layoutY="430.0" mnemonicParsing="false" onAction="#onSendButtonClick" prefHeight="102.0" prefWidth="78.0" text="Send" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <ListView fx:id="chatMessageListView" layoutY="47.0" prefHeight="492.0" prefWidth="552.0" AnchorPane.bottomAnchor="105.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0" />
         </children>
       </AnchorPane>
-        <AnchorPane prefHeight="550.0" prefWidth="152.0">
+        <AnchorPane maxWidth="400.0" minWidth="-Infinity" prefWidth="250.0">
                <children>
-                  <ListView fx:id="onlineUsers" layoutX="-3.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ListView fx:id="onlineUsers" layoutX="-3.0" maxWidth="400.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
         </AnchorPane>
       </items>

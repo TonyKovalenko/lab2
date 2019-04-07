@@ -1,13 +1,12 @@
 package com.group4.client.controller;
 
-import com.group4.client.view.DialogWindow;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.MainView;
 import com.group4.client.view.RegistrationView;
-import com.group4.server.model.MessageTypes.AnswerMessage;
-import com.group4.server.model.MessageTypes.AnswerType;
-import com.group4.server.model.MessageTypes.AuthorizationMessage;
+import com.group4.server.model.MessageTypes.AuthorizationRequest;
+import com.group4.server.model.MessageTypes.AuthorizationResponse;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
+import com.group4.server.model.entities.ChatRoom;
 
 public class LoginController {
     private LoginView view;
@@ -31,12 +30,11 @@ public class LoginController {
         String nickname = view.getUsername();
         String password = view.getPassword();
         if (!nickname.isEmpty() && !password.isEmpty()) {
-            AuthorizationMessage message = new AuthorizationMessage();
+            AuthorizationRequest message = new AuthorizationRequest();
             message.setUserNickname(nickname);
             message.setPassword(password);
-            MessageWrapper messageWrapper = new MessageWrapper(message);
 
-            Controller.getInstance().getThread().sendMessage(messageWrapper);
+            Controller.getInstance().getThread().sendMessage(message);
         } else {
             /*DialogWindow.showWarningWindow("Fill the fields", "Fields can't be empty");
             System.out.println("Fill the fields");
@@ -52,10 +50,13 @@ public class LoginController {
     }
 
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
-        AnswerMessage innerMessage = (AnswerMessage) responseMessage.getEncapsulatedMessage();
-        if (innerMessage.getAnswerType() == AnswerType.CONFIRMED) {
+        AuthorizationResponse innerMessage = (AuthorizationResponse) responseMessage.getEncapsulatedMessage();
+        if (innerMessage.isConfirmed() == true) {
             System.out.println("authorization was confirmed");
             MainView.getInstance().showStage();
+            Controller.getInstance().setCurrentUser(innerMessage.getUser());
+            ChatRoom chatRoom = innerMessage.getMainChatRoom();
+            Controller.getInstance().getChatRooms().put(chatRoom.getId(), chatRoom);
         } else {
             System.out.println("authorization was denied");
         }

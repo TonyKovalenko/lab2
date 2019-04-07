@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "chatRoom")
@@ -20,7 +21,7 @@ public class ChatRoom {
     @XmlElement
     private List<User> members;
     @XmlElement
-    private List<ChatMessage> messages;
+    private List<ChatMessage> messages = new ArrayList<>();
 
     public ChatRoom() {
     }
@@ -37,6 +38,10 @@ public class ChatRoom {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public boolean isPrivate() {

@@ -14,7 +14,7 @@ public class MessageController {
     private static Class<?>[] clazzes = {
             MessageWrapper.class,
             PingMessage.class,
-            AuthorizationMessage.class,
+            AuthorizationRequest.class,
             User.class,
             RegistrationRequest.class,
             RegistrationResponse.class
@@ -65,7 +65,7 @@ public class MessageController {
                 out.println(stringWriter.toString());
                 break;
             case PING:
-            case AUTHORIZE:
+            case AUTHORIZATION_REQUEST:
         }
     }
 
