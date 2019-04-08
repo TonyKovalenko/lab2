@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MessageThread extends Thread {
+    private static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
@@ -29,19 +30,21 @@ public class MessageThread extends Thread {
         while (true) {
             try {
                 if(reader.ready()) {
-                    StringReader dataReader = new StringReader(reader.readLine());
-                    MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
-                    System.out.println("message accepted: " + message.getMessageId());
-                    switch (message.getMessageType()) {
-                        case AUTHORIZATION_RESPONSE:
-                            LoginController.getInstance().processMessage(message, message);
-                            break;
-                        case REGISTRATION_RESPONSE:
-                            RegistrationController.getInstance().processMessage(message, message);
-                            break;
-                        default:
-                            Controller.getInstance().processMessage(message, message);
+                    try (StringReader dataReader = new StringReader(reader.readLine().replaceAll(lineBreakEscape, "\n"))) {
+                        MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
+                        System.out.println("message accepted: " + message.getMessageId());
+                        switch (message.getMessageType()) {
+                            case AUTHORIZATION_RESPONSE:
+                                LoginController.getInstance().processMessage(message, message);
+                                break;
+                            case REGISTRATION_RESPONSE:
+                                RegistrationController.getInstance().processMessage(message, message);
+                                break;
+                            default:
+                                Controller.getInstance().processMessage(message, message);
+                        }
                     }
+
                     /*if (message.getMessageType() == MessageType.ANSWER) {
                         AnswerMessage innerMessage = (AnswerMessage) message.getEncapsulatedMessage();
                         long requestId = innerMessage.getRequestId();
@@ -102,7 +105,8 @@ public class MessageThread extends Thread {
         StringWriter stringWriter = new StringWriter();
         try {
             context.createMarshaller().marshal(message, stringWriter);
-            writer.println(stringWriter.toString());
+            System.out.println(stringWriter.toString());
+            writer.println(stringWriter.toString().replaceAll("\n", lineBreakEscape));
         } catch (JAXBException e) {
             e.printStackTrace();
         }

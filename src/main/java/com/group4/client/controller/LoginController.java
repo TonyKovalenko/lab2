@@ -7,6 +7,7 @@ import com.group4.server.model.MessageTypes.AuthorizationRequest;
 import com.group4.server.model.MessageTypes.AuthorizationResponse;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
+import javafx.application.Platform;
 
 public class LoginController {
     private LoginView view;
@@ -51,12 +52,13 @@ public class LoginController {
 
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
         AuthorizationResponse innerMessage = (AuthorizationResponse) responseMessage.getEncapsulatedMessage();
-        if (innerMessage.isConfirmed() == true) {
+        if (innerMessage.isConfirmed()) {
             System.out.println("authorization was confirmed");
             MainView.getInstance().showStage();
             Controller.getInstance().setCurrentUser(innerMessage.getUser());
             ChatRoom chatRoom = innerMessage.getMainChatRoom();
             Controller.getInstance().getChatRooms().put(chatRoom.getId(), chatRoom);
+//            Platform.runLater(() -> Controller.getInstance().getMainView().setChatRooms(Controller.getInstance().getChatRooms().values()));
         } else {
             System.out.println("authorization was denied");
         }

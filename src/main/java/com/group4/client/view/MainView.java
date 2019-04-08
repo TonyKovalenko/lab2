@@ -70,7 +70,14 @@ public class MainView extends View {
             System.out.println("selection changed to : " + newValue);
             if (newValue != null) {
                 chatMessageListView.setItems(FXCollections.observableArrayList(newValue.getMessages()));
-                chatName.setText(newValue.getName());
+                if (newValue.isPrivate()) {
+                    if (Controller.getInstance().getCurrentUser() != null) {
+                        chatName.setText(newValue.getOtherMember(Controller.getInstance().getCurrentUser()).getNickname());
+                    }
+                } else {
+                    chatName.setText(newValue.getName());
+                }
+                chatMessageListView.scrollTo(chatMessageListView.getItems().size()-1);
             }
         });
         /*this.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {

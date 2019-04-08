@@ -24,6 +24,13 @@ public class User {
         this.password = password;
     }
 
+    public User(int id, String nickname, String fullName, String password) {
+        this.id = id;
+        this.nickname = nickname;
+        this.fullName = fullName;
+        this.password = password;
+    }
+
     public String getNickname() {
         return nickname;
     }

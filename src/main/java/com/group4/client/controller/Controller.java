@@ -47,6 +47,10 @@ public class Controller extends Application {
         mainView = view;
     }
 
+    public MainView getMainView() {
+        return mainView;
+    }
+
     public HashMap<Integer, ChatRoom> getChatRooms() {
         return chatRooms;
     }
@@ -61,6 +65,10 @@ public class Controller extends Application {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public User getUserById(int id) {
+        return users.get(id);
     }
 
     /**
@@ -87,13 +95,14 @@ public class Controller extends Application {
         thread.start();
 
         //test data
-        ArrayList<User> arrayList = new ArrayList<>();
-        arrayList.add(new User("qwe", "asd", "Dean Winchester"));
-        chatRooms.put(2, new ChatRoom(2, true, arrayList));
+        currentUser = new User("qwe", "asd", "Dean Winchester");;
+        User user2 = new User("azxc", "asd", "John Winchester");
+        chatRooms.put(2, new ChatRoom(2, currentUser, user2));
         ArrayList<User> arrayList1 = new ArrayList<>();
         arrayList1.add(new User("marry", "1234", "Marry Winchester"));
         arrayList1.add(new User("sammy", "1234", "Sam Winchester"));
-        chatRooms.put(3, new ChatRoom(2, false, arrayList1));
+        arrayList1.add(currentUser);
+        chatRooms.put(3, new ChatRoom(2, "Hunting things", arrayList1));
 
         LoginView.getInstance().showStage();
     }
@@ -101,39 +110,40 @@ public class Controller extends Application {
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
         System.out.println("process message: " + responseMessage.getMessageType());
 
-        Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
+        if (mainView != null) {
+            Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
+            switch (responseMessage.getMessageType()) {
+                case USERS_IN_CHAT:
+                    UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
+                    users = usersInChatMessage.getUsers();
+                    Platform.runLater(() -> mainView.setOnlineUsers(users.values()));
+                    break;
+                case NEW_GROUPCHAT:
+                case NEW_PRIVATECHAT:
+                    NewGroupChatMessage newGroupChatMessage = (NewGroupChatMessage) responseMessage.getEncapsulatedMessage();
+                    ChatRoom chatRoom = newGroupChatMessage.getChatRoom();
+                    chatRooms.put(chatRoom.getId(), chatRoom);
+                    break;
+                case TO_CHAT:
+                    ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
+                    chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
+                    Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
+                    break;
+                case PING:
 
-        switch (responseMessage.getMessageType()) {
-            case USERS_IN_CHAT:
-                UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
-                users = usersInChatMessage.getUsers();
-                Platform.runLater(() -> mainView.setOnlineUsers(users.values()));
-                break;
-            case NEW_GROUPCHAT:
-            case NEW_PRIVATECHAT:
-                NewGroupChatMessage newGroupChatMessage = (NewGroupChatMessage) responseMessage.getEncapsulatedMessage();
-                ChatRoom chatRoom = newGroupChatMessage.getChatRoom();
-                chatRooms.put(chatRoom.getId(), chatRoom);
-                break;
-            case TO_CHAT:
-                ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
-                chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
-                Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
-                break;
-            case PING:
+                case ANSWER:
+                    AnswerMessage innerMessage = (AnswerMessage) responseMessage.getEncapsulatedMessage();
+                    switch (requestMessage.getMessageType()) {
+                        case CHANGE_CREDENTIALS:
 
-            case ANSWER:
-                AnswerMessage innerMessage = (AnswerMessage) responseMessage.getEncapsulatedMessage();
-                switch (requestMessage.getMessageType()) {
-                    case CHANGE_CREDENTIALS:
+                            break;
+                        case REGISTRATION_REQUEST:
 
-                        break;
-                    case REGISTRATION_REQUEST:
+                            break;
+                        default:
 
-                        break;
-                    default:
-
-                }
+                    }
+            }
         }
     }
 
