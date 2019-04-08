@@ -18,7 +18,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.MainView">
+<VBox minHeight="200.0" minWidth="700.0" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.MainView">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -51,7 +51,17 @@
                   <Separator layoutY="45.0" prefHeight="0.0" prefWidth="471.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <Label fx:id="chatName" layoutX="14.0" layoutY="14.0" prefHeight="22.0" prefWidth="378.0" text="Label" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="14.0" />
                   <Button fx:id="sendButton" layoutX="446.0" layoutY="430.0" mnemonicParsing="false" onAction="#onSendButtonClick" prefHeight="102.0" prefWidth="78.0" text="Send" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <ListView fx:id="chatMessageListView" layoutY="47.0" prefHeight="492.0" prefWidth="552.0" AnchorPane.bottomAnchor="105.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0" />
+                  <ListView fx:id="chatMessageListView" layoutY="47.0" AnchorPane.bottomAnchor="105.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
+                      <!--<items>
+                          <FXCollections fx:factory="observableArrayList">
+                              <String fx:value="One"/>
+                              <String fx:value="Two"/>
+                              <String fx:value="Three"/>
+                              <String fx:value="Four"/>
+                              <String fx:value="Five"/>
+                          </FXCollections>
+                      </items>-->
+                  </ListView>
         </children>
       </AnchorPane>
         <AnchorPane maxWidth="400.0" minWidth="-Infinity" prefWidth="250.0">

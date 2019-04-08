@@ -15,13 +15,16 @@ import java.io.IOException;
 public class UsersListCellView extends ListCell<User> {
 
     @FXML
-    private ImageView chatImageView;
-
-    @FXML
-    private Label chatNameLabel;
-
-    @FXML
     private HBox hbox;
+
+    @FXML
+    private ImageView userImageView;
+
+    @FXML
+    private Label nicknameLabel;
+
+    @FXML
+    private Label fullnameLabel;
 
     private FXMLLoader mLLoader;
 
@@ -34,7 +37,7 @@ public class UsersListCellView extends ListCell<User> {
             setGraphic(null);
         } else {
             if (mLLoader == null) {
-                mLLoader = new FXMLLoader(getClass().getResource("/chatListCellView.fxml"));
+                mLLoader = new FXMLLoader(getClass().getResource("/usersListCellView.fxml"));
                 mLLoader.setController(this);
                 try {
                     mLLoader.load();
@@ -44,8 +47,9 @@ public class UsersListCellView extends ListCell<User> {
 
             }
 
-            chatImageView.setImage(new Image("/user0.png"));
-            chatNameLabel.setText(user.getNickname());
+            userImageView.setImage(new Image("/user0.png"));
+            nicknameLabel.setText(user.getNickname());
+            fullnameLabel.setText(user.getFullName());
 
             setText(null);
             setGraphic(hbox);

@@ -1,23 +1,16 @@
 package com.group4.client.view;
+
 import com.group4.client.controller.Controller;
 import com.group4.server.model.MessageTypes.ChatMessage;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.text.TextFlow;
-import javafx.stage.WindowEvent;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 public class MainView extends View {
     private static MainView instance;
@@ -72,6 +65,7 @@ public class MainView extends View {
     public void initialize() {
         chatRooms.setCellFactory(param -> new ChatListCellView());
         onlineUsers.setCellFactory(param -> new UsersListCellView());
+        chatMessageListView.setCellFactory(param -> new MessagesListCellView());
         chatRooms.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("selection changed to : " + newValue);
             if (newValue != null) {
