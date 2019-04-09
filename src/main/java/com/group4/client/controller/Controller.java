@@ -1,24 +1,23 @@
 package com.group4.client.controller;
 
+import com.group4.client.view.CreateChatView;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.MainView;
-import com.group4.server.model.MessageTypes.*;
+import com.group4.client.view.View;
+import com.group4.server.model.MessageTypes.AnswerMessage;
+import com.group4.server.model.MessageTypes.ChatMessage;
+import com.group4.server.model.MessageTypes.NewGroupChatMessage;
+import com.group4.server.model.MessageTypes.UsersInChatMessage;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
-import com.sun.jmx.remote.internal.Unmarshal;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import java.io.*;
-import java.nio.Buffer;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -157,6 +156,31 @@ public class Controller extends Application {
         message.setFromId(this.getCurrentUser().getId());
         message.setText(mainView.getMessageInput());
 
-        Controller.getInstance().getThread().sendMessage(message);
+        thread.sendMessage(message);
+    }
+
+    public void showCreateNewChatDialog() {
+        Stage dialogStage = new Stage();
+        dialogStage.initOwner(stage);
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        CreateChatView createChatView = CreateChatView.getInstance(dialogStage);
+        createChatView.setOnlineUsers(users.values());
+        dialogStage.showAndWait();
+    }
+
+    public void handleCreateChatClick(CreateChatView view) {
+        ChatRoom chatRoom;
+        boolean isPrivate = view.isPrivate();
+        if (isPrivate) {
+            User selectedUser = view.getSelectedUser();
+            chatRoom = new ChatRoom(selectedUser, currentUser);
+        } else {
+            List<User> users = view.getUsersList();
+            String chatName = view.getGroupName();
+            chatRoom = new ChatRoom(chatName, users);
+        }
+        NewGroupChatMessage message = new NewGroupChatMessage(chatRoom);
+        thread.sendMessage(message);
+        view.close();
     }
 }

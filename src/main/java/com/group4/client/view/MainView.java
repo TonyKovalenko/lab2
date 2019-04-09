@@ -33,12 +33,6 @@ public class MainView extends View {
     }
 
     @FXML
-    private MenuItem newPrivateChatButton;
-
-    @FXML
-    private MenuItem newGroupChatButton;
-
-    @FXML
     private MenuItem editProfileButton;
 
     @FXML
@@ -86,14 +80,10 @@ public class MainView extends View {
             }
         });*/
     }
-    @FXML
-    void createNewGroupChat(ActionEvent event) {
-
-    }
 
     @FXML
-    void createNewPrivateChat(ActionEvent event) {
-
+    void createNewChat(ActionEvent event) {
+        controller.showCreateNewChatDialog();
     }
 
     @FXML

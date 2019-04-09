@@ -1,18 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="496.0" prefWidth="418.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.CreateGroupView">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="496.0" prefWidth="418.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.CreateChatView">
    <children>
-      <ListView fx:id="usersListView" layoutX="13.0" layoutY="83.0" prefHeight="398.0" prefWidth="391.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <Label layoutX="10.0" layoutY="26.0" text="Group name:" AnchorPane.leftAnchor="10.0" />
-      <TextField fx:id="groupNameTextField" layoutX="93.0" layoutY="19.0" prefHeight="26.0" prefWidth="223.0" AnchorPane.rightAnchor="97.0" />
-      <Label layoutX="176.0" layoutY="65.0" text="Select users:" />
-      <Button fx:id="createGroupButton" layoutX="328.0" layoutY="19.0" mnemonicParsing="false" onAction="#handleCreateClick" prefHeight="26.0" prefWidth="82.0" text="Create" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="169.0" layoutY="114.0" text="Select users:" />
+      <ListView fx:id="usersListView" layoutX="13.0" layoutY="83.0" prefHeight="346.0" prefWidth="398.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <GridPane hgap="10.0" layoutX="10.0" prefHeight="30.0" prefWidth="398.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="10.0" prefWidth="72.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="191.0" minWidth="10.0" prefWidth="112.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.0" minWidth="10.0" prefWidth="185.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="createButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleCreateClick" prefHeight="31.0" prefWidth="110.0" text="Create" GridPane.columnIndex="2" />
+            <Label maxWidth="1.7976931348623157E308" prefHeight="21.0" prefWidth="67.0" text="Private:" />
+            <CheckBox fx:id="isPrivateCheckbox" mnemonicParsing="false" onAction="#changeFields" prefHeight="21.0" prefWidth="26.0" GridPane.columnIndex="1" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+         </padding>
+      </GridPane>
+      <GridPane fx:id="groupFieldsPane" hgap="10.0" layoutY="62.0" prefHeight="30.0" prefWidth="398.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="10.0" prefWidth="67.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="301.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label text="Name:" />
+            <TextField fx:id="groupNameTextField" prefHeight="31.0" prefWidth="301.0" GridPane.columnIndex="1" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+         </padding>
+      </GridPane>
    </children>
 </AnchorPane>
