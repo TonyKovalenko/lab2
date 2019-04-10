@@ -30,24 +30,6 @@ public class MessageThread extends Thread {
 
     @Override
     public void run() {
-        this.pingTimer = new Timer();
-        pingTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (inPings == outPings) {
-                    PingMessage message = new PingMessage();
-                    sendMessage(message);
-                    outPings++;
-                    System.out.println(outPings + " out");
-                } else {
-                    System.out.println("Connection was broken!");
-                    pingTimer.cancel();
-                    disconnect();
-                    reconnect();
-                }
-            }
-        }, DELAY, DELAY);
-
         while (true) {
             try {
                 if(reader.ready()) {
@@ -102,6 +84,34 @@ public class MessageThread extends Thread {
         } catch ( JAXBException e) {
             e.printStackTrace();
         }
+
+        inPings = outPings = 0;
+        this.pingTimer = new Timer();
+        pingTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (inPings == outPings) {
+                    PingMessage message = new PingMessage();
+                    sendMessage(message);
+                    outPings++;
+                    System.out.println(outPings + " out");
+                } else {
+                    System.out.println("Connection was broken!");
+                    pingTimer.cancel();
+                    disconnect();
+                    reconnect();
+                    synchronized (Controller.getInstance().getThread()) {
+                        try {
+                            System.out.println(this);
+                            System.out.println(Controller.getInstance().getThread());
+                            Controller.getInstance().getThread().wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }, DELAY, DELAY);
     }
 
     public void disconnect() {
@@ -109,7 +119,6 @@ public class MessageThread extends Thread {
             if (socket != null) {
                 socket.close();
             }
-            this.interrupt();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,12 +128,12 @@ public class MessageThread extends Thread {
         Platform.runLater(() -> DialogWindow.showErrorWindowWithoutButtons("Reconnect"));
         new Thread(() -> {
             boolean connected = false;
-            MessageThread newThread = new MessageThread();
             while (!connected) {
                 try {
-                    newThread.connect();
-                    Controller.getInstance().setThread(newThread);
-                    newThread.start();
+                    Controller.getInstance().getThread().connect();
+                    synchronized (Controller.getInstance().getThread()) {
+                        Controller.getInstance().getThread().notify();
+                    }
                     connected = true;
                     Platform.runLater(() -> DialogWindow.getLastInstance().close());
                 } catch (IOException e) {

@@ -122,9 +122,26 @@ public class TestChatServer {
                     StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"));
                     MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
                     System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
-                    if (message.getMessageType() == MessageType.PING) {
-                        PingMessage pingMessage = new PingMessage();
-                        sendMessage(pingMessage);
+                    switch (message.getMessageType()) {
+                        case AUTHORIZATION_REQUEST:
+                            AuthorizationResponse authorizationResponse = new AuthorizationResponse();
+                            break;
+                        case REGISTRATION_REQUEST:
+
+                            break;
+                        case NEW_GROUPCHAT:
+                        case NEW_PRIVATECHAT:
+
+                            break;
+                        case TO_CHAT:
+
+                            break;
+                        case PING:
+                            PingMessage pingMessage = new PingMessage();
+                            sendMessage(pingMessage);
+                            break;
+                        default:
+                            break;
                     }
                     /*switch (scanner.nextInt()) {
                         case 1 :

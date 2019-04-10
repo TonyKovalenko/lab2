@@ -5,6 +5,7 @@ import com.group4.client.controller.RegistrationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
@@ -36,10 +37,10 @@ public class RegistrationView extends View {
     private TextField fullnameTextField;
 
     @FXML
-    private TextField passwordTextField;
+    private PasswordField passwordTextField;
 
     @FXML
-    private TextField confirmPasswordTextField;
+    private PasswordField confirmPasswordTextField;
 
     @FXML
     private Button registerButton;
