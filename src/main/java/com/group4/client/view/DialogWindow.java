@@ -8,6 +8,8 @@ import java.util.Optional;
  * Realizes methods for displaying dialog windows
  */
 public class DialogWindow {
+    private static Alert lastInstance;
+
     /**
      * Shows the dialog and waits for the user response (in other words, brings
      * up a blocking dialog, with the returned value the users input)
@@ -18,12 +20,11 @@ public class DialogWindow {
      * @param type   alert type of the dialog window
      * @return value the users input
      */
-    private static Optional<ButtonType> showDialogWindow(String title, String header, String text, Alert.AlertType type) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(text);
-        return alert.showAndWait();
+    private static void showDialogWindow(String title, String header, String text, Alert.AlertType type) {
+        lastInstance = new Alert(type);
+        lastInstance.setTitle(title);
+        lastInstance.setHeaderText(header);
+        lastInstance.setContentText(text);
     }
 
     /**
@@ -34,6 +35,7 @@ public class DialogWindow {
      */
     public static void showWarningWindow(String header, String text) {
         showDialogWindow("Warning!", header, text, Alert.AlertType.WARNING);
+        lastInstance.showAndWait();
     }
 
     /**
@@ -43,6 +45,7 @@ public class DialogWindow {
      */
     public static void showInfoWindow(String text) {
         showDialogWindow("Information Dialog", null, text, Alert.AlertType.INFORMATION);
+        lastInstance.showAndWait();
     }
 
     /**
@@ -52,6 +55,20 @@ public class DialogWindow {
      */
     public static void showErrorWindow(String text) {
         showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR);
+        lastInstance.showAndWait();
+    }
+
+    /**
+     * Shows the error dialog that can't be closed by the user
+     *
+     * @param text text to show in the dialog content area
+     */
+    public static void showErrorWindowWithoutButtons(String text) {
+        showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR);
+        lastInstance.getButtonTypes().clear();
+        lastInstance.setResult(ButtonType.OK);
+        lastInstance.show();
+        System.out.println("Error Dialog is shown");
     }
 
     /**
@@ -62,7 +79,12 @@ public class DialogWindow {
      * @return {@code true}  if user pressed "OK" button
      */
     public static boolean showConfirmationWindow(String header, String text) {
-        Optional<ButtonType> result = showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION);
+        showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION);
+        Optional<ButtonType> result = lastInstance.showAndWait();
         return result.get() == ButtonType.OK;
+    }
+
+    public static Alert getLastInstance() {
+        return lastInstance;
     }
 }

@@ -1,9 +1,6 @@
 package com.group4.client.controller;
 
-import com.group4.client.view.CreateChatView;
-import com.group4.client.view.LoginView;
-import com.group4.client.view.MainView;
-import com.group4.client.view.View;
+import com.group4.client.view.*;
 import com.group4.server.model.MessageTypes.AnswerMessage;
 import com.group4.server.model.MessageTypes.ChatMessage;
 import com.group4.server.model.MessageTypes.NewGroupChatMessage;
@@ -40,6 +37,10 @@ public class Controller extends Application {
 
     public MessageThread getThread() {
         return thread;
+    }
+
+    public void setThread(MessageThread messageThread) {
+        thread = messageThread;
     }
 
     public void setView(MainView view) {
@@ -90,8 +91,13 @@ public class Controller extends Application {
         instance = this;
         stage = primaryStage;
         thread = new MessageThread();
-        thread.connect();
-        thread.start();
+        LoginView.getInstance().showStage();
+        try {
+            thread.connect();
+            thread.start();
+        } catch (IOException e) {
+            thread.reconnect();
+        }
 
         //test data
         currentUser = new User("qwe", "asd", "Dean Winchester");;
@@ -103,7 +109,7 @@ public class Controller extends Application {
         arrayList1.add(currentUser);
         chatRooms.put(3, new ChatRoom(2, "Hunting things", arrayList1));
 
-        LoginView.getInstance().showStage();
+
     }
 
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
@@ -128,8 +134,6 @@ public class Controller extends Application {
                     chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
                     Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
                     break;
-                case PING:
-
                 case ANSWER:
                     AnswerMessage innerMessage = (AnswerMessage) responseMessage.getEncapsulatedMessage();
                     switch (requestMessage.getMessageType()) {

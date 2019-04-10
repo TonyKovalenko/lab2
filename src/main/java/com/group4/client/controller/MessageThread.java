@@ -1,22 +1,25 @@
 package com.group4.client.controller;
 
+import com.group4.client.view.DialogWindow;
 import com.group4.server.model.MessageTypes.*;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
+import javafx.application.Platform;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MessageThread extends Thread {
+    private final static int DELAY = 3000;
     private static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
+    private Timer pingTimer;
+    private int inPings = 0;
+    private int outPings = 0;
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
             AuthorizationRequest.class, AnswerMessage.class, ChatMessage.class,
@@ -27,6 +30,24 @@ public class MessageThread extends Thread {
 
     @Override
     public void run() {
+        this.pingTimer = new Timer();
+        pingTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (inPings == outPings) {
+                    PingMessage message = new PingMessage();
+                    sendMessage(message);
+                    outPings++;
+                    System.out.println(outPings + " out");
+                } else {
+                    System.out.println("Connection was broken!");
+                    pingTimer.cancel();
+                    disconnect();
+                    reconnect();
+                }
+            }
+        }, DELAY, DELAY);
+
         while (true) {
             try {
                 if(reader.ready()) {
@@ -39,6 +60,9 @@ public class MessageThread extends Thread {
                                 break;
                             case REGISTRATION_RESPONSE:
                                 RegistrationController.getInstance().processMessage(message, message);
+                                break;
+                            case PING:
+                                inPings++;
                                 break;
                             default:
                                 Controller.getInstance().processMessage(message, message);
@@ -69,13 +93,13 @@ public class MessageThread extends Thread {
         }
     }
 
-    public void connect() {
+    public void connect() throws IOException {
         try {
             socket = new Socket("localhost", 8888);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
             context = JAXBContext.newInstance(clazzes);
-        } catch (IOException | JAXBException e) {
+        } catch ( JAXBException e) {
             e.printStackTrace();
         }
     }
@@ -85,9 +109,34 @@ public class MessageThread extends Thread {
             if (socket != null) {
                 socket.close();
             }
+            this.interrupt();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void reconnect() {
+        Platform.runLater(() -> DialogWindow.showErrorWindowWithoutButtons("Reconnect"));
+        new Thread(() -> {
+            boolean connected = false;
+            MessageThread newThread = new MessageThread();
+            while (!connected) {
+                try {
+                    newThread.connect();
+                    Controller.getInstance().setThread(newThread);
+                    newThread.start();
+                    connected = true;
+                    Platform.runLater(() -> DialogWindow.getLastInstance().close());
+                } catch (IOException e) {
+                    System.out.println("Still can't connect!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     public void sendMessage(TransmittableMessage innerMessage) {
