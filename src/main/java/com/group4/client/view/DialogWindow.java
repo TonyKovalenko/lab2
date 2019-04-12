@@ -18,7 +18,6 @@ public class DialogWindow {
      * @param header text to show in the dialog header area
      * @param text   text to show in the dialog content area
      * @param type   alert type of the dialog window
-     * @return value the users input
      */
     private static void showDialogWindow(String title, String header, String text, Alert.AlertType type) {
         lastInstance = new Alert(type);

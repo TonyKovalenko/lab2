@@ -13,13 +13,14 @@ import java.util.*;
 
 public class MessageThread extends Thread {
     private final static int DELAY = 3000;
-    private static String lineBreakEscape = "<br />";
+    private final static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
     private Timer pingTimer;
-    private int inPings = 0;
-    private int outPings = 0;
+    private int inPings;
+    private int outPings;
+    private boolean connected;
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
             AuthorizationRequest.class, AnswerMessage.class, ChatMessage.class,
@@ -30,7 +31,7 @@ public class MessageThread extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (connected) {
             try {
                 if(reader.ready()) {
                     try (StringReader dataReader = new StringReader(reader.readLine().replaceAll(lineBreakEscape, "\n"))) {
@@ -50,24 +51,6 @@ public class MessageThread extends Thread {
                                 Controller.getInstance().processMessage(message, message);
                         }
                     }
-
-                    /*if (message.getMessageType() == MessageType.ANSWER) {
-                        AnswerMessage innerMessage = (AnswerMessage) message.getEncapsulatedMessage();
-                        long requestId = innerMessage.getRequestId();
-                        MessageWrapper requestMessage = extractRequestMessage(requestId);
-                        switch (requestMessage.getMessageType()) {
-                            case AUTHORIZATION_REQUEST:
-                                LoginController.getInstance().processMessage(requestMessage, message);
-                                break;
-                            case REGISTRATION_RESPONSE:
-                                RegistrationController.getInstance().processMessage(requestMessage, message);
-                                break;
-                            default:
-                                Controller.getInstance().processMessage(requestMessage, message);
-                        }
-                    } else {
-                        Controller.getInstance().processMessage(null, message);
-                    }*/
                 }
             } catch (IOException | JAXBException e) {
                 e.printStackTrace();
@@ -85,8 +68,10 @@ public class MessageThread extends Thread {
             e.printStackTrace();
         }
 
+        System.out.println("connected");
         inPings = outPings = 0;
-        this.pingTimer = new Timer();
+        connected = true;
+        pingTimer = new Timer();
         pingTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -97,18 +82,8 @@ public class MessageThread extends Thread {
                     System.out.println(outPings + " out");
                 } else {
                     System.out.println("Connection was broken!");
-                    pingTimer.cancel();
                     disconnect();
                     reconnect();
-                    synchronized (Controller.getInstance().getThread()) {
-                        try {
-                            System.out.println(this);
-                            System.out.println(Controller.getInstance().getThread());
-                            Controller.getInstance().getThread().wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
                 }
             }
         }, DELAY, DELAY);
@@ -116,24 +91,32 @@ public class MessageThread extends Thread {
 
     public void disconnect() {
         try {
+            pingTimer.cancel();
+            connected = false;
             if (socket != null) {
                 socket.close();
+            }
+            if (reader != null) {
+                reader.close();
+            }
+            if (writer != null) {
+                writer.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("disconnected");
     }
 
     public void reconnect() {
         Platform.runLater(() -> DialogWindow.showErrorWindowWithoutButtons("Reconnect"));
         new Thread(() -> {
-            boolean connected = false;
+            MessageThread newThread = new MessageThread();
             while (!connected) {
                 try {
-                    Controller.getInstance().getThread().connect();
-                    synchronized (Controller.getInstance().getThread()) {
-                        Controller.getInstance().getThread().notify();
-                    }
+                    newThread.connect();
+                    Controller.getInstance().setThread(newThread);
+                    newThread.start();
                     connected = true;
                     Platform.runLater(() -> DialogWindow.getLastInstance().close());
                 } catch (IOException e) {
@@ -168,20 +151,5 @@ public class MessageThread extends Thread {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-    }
-
-    public MessageWrapper extractRequestMessage(long requestId) {
-        MessageWrapper requestMessage = null;
-        for (Map.Entry<MessageType, List<MessageWrapper>> entry : sentMessages.entrySet()) {
-            for (MessageWrapper m : entry.getValue()) {
-                if (m.getMessageId() == requestId) {
-                    requestMessage = m;
-                }
-            }
-            if (requestMessage != null) {
-                entry.getValue().remove(requestMessage);
-            }
-        }
-        return requestMessage;
     }
 }

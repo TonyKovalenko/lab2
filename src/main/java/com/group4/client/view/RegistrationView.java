@@ -4,7 +4,6 @@ import com.group4.client.controller.Controller;
 import com.group4.client.controller.RegistrationController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -13,6 +12,18 @@ import java.io.IOException;
 public class RegistrationView extends View {
     private static RegistrationView instance;
     private RegistrationController controller;
+
+    @FXML
+    private TextField nicknameTextField;
+
+    @FXML
+    private TextField fullnameTextField;
+
+    @FXML
+    private PasswordField passwordTextField;
+
+    @FXML
+    private PasswordField confirmPasswordTextField;
 
     public static RegistrationView getInstance() {
         try {
@@ -31,30 +42,12 @@ public class RegistrationView extends View {
     }
 
     @FXML
-    private TextField nicknameTextField;
-
-    @FXML
-    private TextField fullnameTextField;
-
-    @FXML
-    private PasswordField passwordTextField;
-
-    @FXML
-    private PasswordField confirmPasswordTextField;
-
-    @FXML
-    private Button registerButton;
-
-    @FXML
-    private Button cancelButton;
-
-    @FXML
-    void cancel(ActionEvent event) {
+    private void cancel(ActionEvent event) {
         controller.cancel();
     }
 
     @FXML
-    void register(ActionEvent event) {
+    private void register(ActionEvent event) {
         controller.register();
     }
 

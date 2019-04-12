@@ -1,7 +1,8 @@
 package com.group4.client.controller;
 
-import com.group4.client.view.*;
-import com.group4.server.model.MessageTypes.AnswerMessage;
+import com.group4.client.view.CreateChatView;
+import com.group4.client.view.LoginView;
+import com.group4.client.view.MainView;
 import com.group4.server.model.MessageTypes.ChatMessage;
 import com.group4.server.model.MessageTypes.NewGroupChatMessage;
 import com.group4.server.model.MessageTypes.UsersInChatMessage;
@@ -10,8 +11,10 @@ import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +27,7 @@ public class Controller extends Application {
     private MessageThread thread;
     private static Controller instance;
     private User currentUser;
-    private HashMap<Integer, User> users;
+    private HashMap<Integer, User> users = new HashMap<>();
     private HashMap<Integer, ChatRoom> chatRooms = new HashMap<>();
 
     public static Controller getInstance() {
@@ -87,9 +90,10 @@ public class Controller extends Application {
      *                     primary stages and will not be embedded in the browser.
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         instance = this;
         stage = primaryStage;
+        Controller.getInstance().getStage().setOnCloseRequest(windowEvent -> exit());
         thread = new MessageThread();
         LoginView.getInstance().showStage();
         try {
@@ -100,8 +104,8 @@ public class Controller extends Application {
         }
 
         //test data
-        currentUser = new User("qwe", "asd", "Dean Winchester");;
-        User user2 = new User("azxc", "asd", "John Winchester");
+        currentUser = new User("qwe", "asd", "Dean Winchester");
+        User user2 = new User("azxc",  "asd", "John Winchester");
         chatRooms.put(2, new ChatRoom(2, currentUser, user2));
         ArrayList<User> arrayList1 = new ArrayList<>();
         arrayList1.add(new User("marry", "1234", "Marry Winchester"));
@@ -134,25 +138,14 @@ public class Controller extends Application {
                     chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
                     Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
                     break;
-                case ANSWER:
-                    AnswerMessage innerMessage = (AnswerMessage) responseMessage.getEncapsulatedMessage();
-                    switch (requestMessage.getMessageType()) {
-                        case CHANGE_CREDENTIALS:
-
-                            break;
-                        case REGISTRATION_REQUEST:
-
-                            break;
-                        default:
-
-                    }
+                default:
             }
         }
     }
 
     public void exit() {
         thread.disconnect();
-        System.exit(0);
+        stage.close();
     }
 
     public void sendMessageToChat() {

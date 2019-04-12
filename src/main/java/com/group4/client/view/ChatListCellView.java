@@ -54,6 +54,5 @@ public class ChatListCellView extends ListCell<ChatRoom> {
             setText(null);
             setGraphic(hbox);
         }
-
     }
 }

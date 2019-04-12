@@ -16,6 +16,21 @@ public class MainView extends View {
     private static MainView instance;
     private Controller controller;
 
+    @FXML
+    private ListView<ChatRoom> chatRooms;
+
+    @FXML
+    private TextArea messageInput;
+
+    @FXML
+    private Label chatName;
+
+    @FXML
+    private ListView<ChatMessage> chatMessageListView;
+
+    @FXML
+    private ListView<User> onlineUsers;
+
     public static MainView getInstance() {
         try {
             instance = (MainView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/mainWindow.fxml", "Messenger");
@@ -31,30 +46,6 @@ public class MainView extends View {
     public void setController(Controller controller) {
         this.controller = controller;
     }
-
-    @FXML
-    private MenuItem editProfileButton;
-
-    @FXML
-    private MenuItem exitButton;
-
-    @FXML
-    private ListView<ChatRoom> chatRooms;
-
-    @FXML
-    private TextArea messageInput;
-
-    @FXML
-    private Label chatName;
-
-    @FXML
-    private Button sendButton;
-
-    @FXML
-    private ListView<ChatMessage> chatMessageListView;
-
-    @FXML
-    private ListView<User> onlineUsers;
 
     public void initialize() {
         chatRooms.setCellFactory(param -> new ChatListCellView());
@@ -74,30 +65,25 @@ public class MainView extends View {
                 chatMessageListView.scrollTo(chatMessageListView.getItems().size()-1);
             }
         });
-        /*this.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                controller.exit();
-            }
-        });*/
     }
 
     @FXML
-    void createNewChat(ActionEvent event) {
+    private void createNewChat(ActionEvent event) {
         controller.showCreateNewChatDialog();
     }
 
     @FXML
-    void editProfile(ActionEvent event) {
+    private void editProfile(ActionEvent event) {
 
     }
 
     @FXML
-    void exit() {
+    private void exit() {
         controller.exit();
     }
 
     @FXML
-    void onSendButtonClick(ActionEvent event) {
+    private void onSendButtonClick(ActionEvent event) {
         controller.sendMessageToChat();
     }
 

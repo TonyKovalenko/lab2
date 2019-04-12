@@ -1,7 +1,6 @@
 package com.group4.server.model.entities;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Date;
 
 @XmlRootElement
 public class User {

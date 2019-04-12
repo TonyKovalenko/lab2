@@ -74,7 +74,7 @@
          <children>
             <ImageView fitHeight="176.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../main/Универ/JAVA/lab2/lab2/resources/logo3.png" />
+                  <Image url="@logo3.png" />
                </image>
                <viewport>
                   <Rectangle2D />

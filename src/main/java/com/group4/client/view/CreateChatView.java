@@ -17,6 +17,18 @@ public class CreateChatView extends View {
     private static CreateChatView instance;
     private Controller controller;
 
+    @FXML
+    private ListView<User> usersListView;
+
+    @FXML
+    private CheckBox isPrivateCheckbox;
+
+    @FXML
+    private TextField groupNameTextField;
+
+    @FXML
+    private GridPane groupFieldsPane;
+
     public static CreateChatView getInstance() {
         try {
             instance = (CreateChatView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/createGroupView.fxml", "Create chat");
@@ -38,21 +50,6 @@ public class CreateChatView extends View {
         }
         return instance;
     }
-
-    @FXML
-    private ListView<User> usersListView;
-
-    @FXML
-    private CheckBox isPrivateCheckbox;
-
-    @FXML
-    private Button createButton;
-
-    @FXML
-    private TextField groupNameTextField;
-
-    @FXML
-    private GridPane groupFieldsPane;
 
     public void setController(Controller controller) {
         this.controller = controller;
@@ -83,7 +80,7 @@ public class CreateChatView extends View {
     }
 
     @FXML
-    void changeFields(ActionEvent event) {
+    private void changeFields(ActionEvent event) {
         if (isPrivateCheckbox.isSelected()) {
             groupFieldsPane.setVisible(false);
             usersListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -94,7 +91,7 @@ public class CreateChatView extends View {
     }
 
     @FXML
-    void handleCreateClick(ActionEvent event) {
+    private void handleCreateClick(ActionEvent event) {
         controller.handleCreateChatClick(instance);
     }
 

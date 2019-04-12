@@ -24,15 +24,12 @@ public class TestChatServer {
 
     public static void main(String[] args) throws Exception {
         System.out.println("The chat server is running.");
-        ServerSocket listener = new ServerSocket(PORT);
 
-        try {
+        try (ServerSocket listener = new ServerSocket(PORT)) {
             while (true) {
                 Handler handler = new Handler(listener.accept());
                 handler.start();
             }
-        } finally {
-            listener.close();
         }
     }
 
@@ -118,30 +115,32 @@ public class TestChatServer {
                 i++;
                 message0.setUsers(users);
                 sendMessage(message0);
-                while (true) {
-                    StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"));
-                    MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
-                    System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
-                    switch (message.getMessageType()) {
-                        case AUTHORIZATION_REQUEST:
-                            AuthorizationResponse authorizationResponse = new AuthorizationResponse();
-                            break;
-                        case REGISTRATION_REQUEST:
+                while (socket.isConnected()) {
+                    if(reader.ready()) {
+                        StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"));
+                        MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
+                        System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
+                        switch (message.getMessageType()) {
+                            case AUTHORIZATION_REQUEST:
+                                AuthorizationResponse authorizationResponse = new AuthorizationResponse();
+                                break;
+                            case REGISTRATION_REQUEST:
 
-                            break;
-                        case NEW_GROUPCHAT:
-                        case NEW_PRIVATECHAT:
+                                break;
+                            case NEW_GROUPCHAT:
+                            case NEW_PRIVATECHAT:
 
-                            break;
-                        case TO_CHAT:
+                                break;
+                            case TO_CHAT:
 
-                            break;
-                        case PING:
-                            PingMessage pingMessage = new PingMessage();
-                            sendMessage(pingMessage);
-                            break;
-                        default:
-                            break;
+                                break;
+                            case PING:
+                                PingMessage pingMessage = new PingMessage();
+                                sendMessage(pingMessage);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     /*switch (scanner.nextInt()) {
                         case 1 :

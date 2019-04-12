@@ -7,7 +7,6 @@ import com.group4.server.model.MessageTypes.AuthorizationRequest;
 import com.group4.server.model.MessageTypes.AuthorizationResponse;
 import com.group4.server.model.MessageWrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
-import javafx.application.Platform;
 
 public class LoginController {
     private LoginView view;
