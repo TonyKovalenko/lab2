@@ -1,9 +1,12 @@
 package com.group4.server.controller;
 
 import com.group4.server.model.entities.User;
-import com.group4.server.model.messageHandlers.RegistrationHandler;
-import com.group4.server.model.messageTypes.*;
-import com.group4.server.model.messageWrappers.MessageWrapper;
+import com.group4.server.model.message.handlers.RegistrationHandler;
+import com.group4.server.model.message.types.AuthorizationRequest;
+import com.group4.server.model.message.types.PingMessage;
+import com.group4.server.model.message.types.RegistrationRequest;
+import com.group4.server.model.message.types.RegistrationResponse;
+import com.group4.server.model.message.wrappers.MessageWrapper;
 
 import javax.xml.bind.*;
 import java.io.*;

@@ -1,8 +1,8 @@
 package com.group4.client.controller;
 
 import com.group4.client.view.DialogWindow;
-import com.group4.server.model.messageTypes.*;
-import com.group4.server.model.messageWrappers.MessageWrapper;
+import com.group4.server.model.message.types.*;
+import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
 
 import javax.xml.bind.JAXBContext;

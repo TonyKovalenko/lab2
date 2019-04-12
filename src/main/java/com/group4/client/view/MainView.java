@@ -1,11 +1,10 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
-import com.group4.server.model.messageTypes.ChatMessage;
+import com.group4.server.model.message.types.ChatMessage;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -68,13 +67,13 @@ public class MainView extends View {
     }
 
     @FXML
-    private void createNewChat(ActionEvent event) {
+    private void createNewChat() {
         controller.showCreateNewChatDialog();
     }
 
     @FXML
-    private void editProfile(ActionEvent event) {
-
+    private void editProfile() {
+        controller.editProfile();
     }
 
     @FXML

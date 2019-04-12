@@ -4,9 +4,9 @@ import com.group4.client.view.DialogWindow;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.MainView;
 import com.group4.client.view.RegistrationView;
-import com.group4.server.model.messageTypes.AuthorizationRequest;
-import com.group4.server.model.messageTypes.AuthorizationResponse;
-import com.group4.server.model.messageWrappers.MessageWrapper;
+import com.group4.server.model.message.types.AuthorizationRequest;
+import com.group4.server.model.message.types.AuthorizationResponse;
+import com.group4.server.model.message.wrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
 import javafx.application.Platform;
 

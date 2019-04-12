@@ -1,4 +1,4 @@
-package com.group4.server.model.XMLAdapters;
+package com.group4.server.model.message.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.concurrent.atomic.AtomicLong;

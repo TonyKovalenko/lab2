@@ -3,10 +3,10 @@ package com.group4.client.controller;
 import com.group4.client.view.CreateChatView;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.MainView;
-import com.group4.server.model.messageTypes.ChatMessage;
-import com.group4.server.model.messageTypes.NewGroupChatMessage;
-import com.group4.server.model.messageTypes.UsersInChatMessage;
-import com.group4.server.model.messageWrappers.MessageWrapper;
+import com.group4.server.model.message.types.ChatMessage;
+import com.group4.server.model.message.types.NewGroupChatMessage;
+import com.group4.server.model.message.types.UsersInChatMessage;
+import com.group4.server.model.message.wrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import javafx.application.Application;
@@ -138,6 +138,7 @@ public class Controller extends Application {
                     Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
                     break;
                 default:
+                    break;
             }
         //}
     }
@@ -178,5 +179,9 @@ public class Controller extends Application {
         NewGroupChatMessage message = new NewGroupChatMessage(chatRoom);
         thread.sendMessage(message);
         view.close();
+    }
+
+    public void editProfile() {
+
     }
 }

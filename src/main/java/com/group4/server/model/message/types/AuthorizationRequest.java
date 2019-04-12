@@ -1,4 +1,4 @@
-package com.group4.server.model.messageTypes;
+package com.group4.server.model.message.types;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

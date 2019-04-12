@@ -1,9 +1,9 @@
-package com.group4.server.model.messageWrappers;
+package com.group4.server.model.message.wrappers;
 
-import com.group4.server.model.messageTypes.MessageType;
-import com.group4.server.model.messageTypes.TransmittableMessage;
-import com.group4.server.model.XMLAdapters.AtomicLongAdapter;
-import com.group4.server.model.XMLAdapters.InstantAdapter;
+import com.group4.server.model.message.types.MessageType;
+import com.group4.server.model.message.types.TransmittableMessage;
+import com.group4.server.model.message.adapters.AtomicLongAdapter;
+import com.group4.server.model.message.adapters.InstantAdapter;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;

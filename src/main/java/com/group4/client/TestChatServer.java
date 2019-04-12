@@ -1,7 +1,7 @@
 package com.group4.client;
 
-import com.group4.server.model.messageTypes.*;
-import com.group4.server.model.messageWrappers.MessageWrapper;
+import com.group4.server.model.message.types.*;
+import com.group4.server.model.message.wrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 

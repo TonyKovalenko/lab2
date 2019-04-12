@@ -3,9 +3,9 @@ package com.group4.client.controller;
 import com.group4.client.view.DialogWindow;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.RegistrationView;
-import com.group4.server.model.messageTypes.RegistrationRequest;
-import com.group4.server.model.messageTypes.RegistrationResponse;
-import com.group4.server.model.messageWrappers.MessageWrapper;
+import com.group4.server.model.message.types.RegistrationRequest;
+import com.group4.server.model.message.types.RegistrationResponse;
+import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
 
 public class RegistrationController {

@@ -1,6 +1,6 @@
 package com.group4.server.model.entities;
 
-import com.group4.server.model.messageTypes.ChatMessage;
+import com.group4.server.model.message.types.ChatMessage;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

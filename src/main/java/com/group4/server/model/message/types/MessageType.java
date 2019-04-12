@@ -1,10 +1,9 @@
-package com.group4.server.model.messageTypes;
+package com.group4.server.model.message.types;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum MessageType {
-    ANSWER,
     AUTHORIZATION_REQUEST,
     AUTHORIZATION_RESPONSE,
     REGISTRATION_REQUEST,

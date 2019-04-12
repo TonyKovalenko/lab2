@@ -1,7 +1,7 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
-import com.group4.server.model.messageTypes.ChatMessage;
+import com.group4.server.model.message.types.ChatMessage;
 import com.group4.server.model.entities.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
