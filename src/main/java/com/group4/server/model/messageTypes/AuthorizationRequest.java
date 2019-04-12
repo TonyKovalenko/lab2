@@ -1,29 +1,25 @@
-package com.group4.server.model.MessageTypes;
-
-import com.group4.server.model.entities.User;
+package com.group4.server.model.messageTypes;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "registrationRequest")
+@XmlRootElement(name = "authorizationMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class RegistrationRequest implements TransmittableMessage {
+public class AuthorizationRequest implements TransmittableMessage {
+
     @XmlElement
     private String userNickname;
     @XmlElement
     private String password;
-    @XmlElement
-    private String fullName;
 
-    public RegistrationRequest() {
+    public AuthorizationRequest() {
     }
 
-    public RegistrationRequest(User user) {
-        this.userNickname = user.getNickname();
-        this.password = user.getPassword();
-        this.fullName = user.getFullName();
+    public AuthorizationRequest(String userNickname, String password) {
+        this.userNickname = userNickname;
+        this.password = password;
     }
 
     public String getUserNickname() {
@@ -34,19 +30,12 @@ public class RegistrationRequest implements TransmittableMessage {
         this.userNickname = userNickname;
     }
 
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 }

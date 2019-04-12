@@ -1,8 +1,8 @@
 package com.group4.client.controller;
 
 import com.group4.client.view.DialogWindow;
-import com.group4.server.model.MessageTypes.*;
-import com.group4.server.model.MessageWrappers.MessageWrapper;
+import com.group4.server.model.messageTypes.*;
+import com.group4.server.model.messageWrappers.MessageWrapper;
 import javafx.application.Platform;
 
 import javax.xml.bind.JAXBContext;
@@ -23,8 +23,9 @@ public class MessageThread extends Thread {
     private boolean connected;
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
-            AuthorizationRequest.class, AnswerMessage.class, ChatMessage.class,
-            NewGroupChatMessage.class, RegistrationRequest.class, UsersInChatMessage.class
+            AuthorizationRequest.class, AuthorizationResponse.class,
+            ChatMessage.class, NewGroupChatMessage.class, UsersInChatMessage.class,
+            RegistrationRequest.class, RegistrationResponse.class
     };
     private JAXBContext context;
     private Map<MessageType, List<MessageWrapper>> sentMessages = new HashMap<>();
@@ -49,6 +50,7 @@ public class MessageThread extends Thread {
                                 break;
                             default:
                                 Controller.getInstance().processMessage(message, message);
+                                break;
                         }
                     }
                 }

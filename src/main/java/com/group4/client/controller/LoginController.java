@@ -1,12 +1,14 @@
 package com.group4.client.controller;
 
+import com.group4.client.view.DialogWindow;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.MainView;
 import com.group4.client.view.RegistrationView;
-import com.group4.server.model.MessageTypes.AuthorizationRequest;
-import com.group4.server.model.MessageTypes.AuthorizationResponse;
-import com.group4.server.model.MessageWrappers.MessageWrapper;
+import com.group4.server.model.messageTypes.AuthorizationRequest;
+import com.group4.server.model.messageTypes.AuthorizationResponse;
+import com.group4.server.model.messageWrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
+import javafx.application.Platform;
 
 public class LoginController {
     private LoginView view;
@@ -36,11 +38,8 @@ public class LoginController {
 
             Controller.getInstance().getThread().sendMessage(message);
         } else {
-            /*DialogWindow.showWarningWindow("Fill the fields", "Fields can't be empty");
+            DialogWindow.showWarningWindow("Fill the fields", "Fields can't be empty");
             System.out.println("Fill the fields");
-            */
-            System.out.println(MainView.getInstance());
-            MainView.getInstance().showStage();
         }
     }
 
@@ -53,11 +52,10 @@ public class LoginController {
         AuthorizationResponse innerMessage = (AuthorizationResponse) responseMessage.getEncapsulatedMessage();
         if (innerMessage.isConfirmed()) {
             System.out.println("authorization was confirmed");
-            MainView.getInstance().showStage();
+            Platform.runLater(() -> MainView.getInstance().showStage());
             Controller.getInstance().setCurrentUser(innerMessage.getUser());
             ChatRoom chatRoom = innerMessage.getMainChatRoom();
             Controller.getInstance().getChatRooms().put(chatRoom.getId(), chatRoom);
-//            Platform.runLater(() -> Controller.getInstance().getMainView().setChatRooms(Controller.getInstance().getChatRooms().values()));
         } else {
             System.out.println("authorization was denied");
         }

@@ -1,9 +1,9 @@
 package com.group4.server.controller;
 
 import com.group4.server.model.entities.User;
-import com.group4.server.model.MessageHandlers.RegistrationHandler;
-import com.group4.server.model.MessageTypes.*;
-import com.group4.server.model.MessageWrappers.MessageWrapper;
+import com.group4.server.model.messageHandlers.RegistrationHandler;
+import com.group4.server.model.messageTypes.*;
+import com.group4.server.model.messageWrappers.MessageWrapper;
 
 import javax.xml.bind.*;
 import java.io.*;

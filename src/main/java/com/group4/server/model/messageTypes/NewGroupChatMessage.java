@@ -1,4 +1,4 @@
-package com.group4.server.model.MessageTypes;
+package com.group4.server.model.messageTypes;
 
 import com.group4.server.model.entities.ChatRoom;
 

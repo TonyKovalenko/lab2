@@ -1,7 +1,8 @@
 package com.group4.client;
 
-import com.group4.server.model.MessageTypes.*;
-import com.group4.server.model.MessageWrappers.MessageWrapper;
+import com.group4.server.model.messageTypes.*;
+import com.group4.server.model.messageWrappers.MessageWrapper;
+import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 
 import javax.xml.bind.JAXBContext;
@@ -34,14 +35,14 @@ public class TestChatServer {
     }
 
     private static class Handler extends Thread {
-        private String name;
         private Socket socket;
         public BufferedReader reader;
         public PrintWriter writer;
 
         private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
-                AuthorizationRequest.class, AnswerMessage.class, ChatMessage.class,
-                NewGroupChatMessage.class, RegistrationRequest.class, UsersInChatMessage.class
+                AuthorizationRequest.class, AuthorizationResponse.class,
+                ChatMessage.class, NewGroupChatMessage.class, UsersInChatMessage.class,
+                RegistrationRequest.class, RegistrationResponse.class
         };
         public JAXBContext context;
         public Marshaller marshaller;
@@ -100,74 +101,81 @@ public class TestChatServer {
                 context = JAXBContext.newInstance(clazzes);
                 marshaller = context.createMarshaller();
                 unmarshaller = context.createUnmarshaller();
+
                 HashMap<Integer, User> users = new HashMap<>();
-                users.put(10000, new User("donna", "1", "Donna Noble"));
-                users.put(10001, new User("doctor", "1", "The Doctor"));
-                int i = 1;
-                Scanner scanner = new Scanner(System.in);
-
-                int j = 0;
-
-                UsersInChatMessage message0 = new UsersInChatMessage();
-                User user = new User();
-                user.setNickname("User#" + i);
-                users.put(i, user);
-                i++;
-                message0.setUsers(users);
-                sendMessage(message0);
-                while (socket.isConnected()) {
-                    if(reader.ready()) {
-                        StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"));
-                        MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
-                        System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
-                        switch (message.getMessageType()) {
-                            case AUTHORIZATION_REQUEST:
-                                AuthorizationResponse authorizationResponse = new AuthorizationResponse();
+                User user1 = new User(10000, "donna",  "Donna Noble", "1");
+                User user2 = new User(10001, "doctor", "The Doctor", "1");
+                users.put(10000, user1);
+                users.put(10001, user2);
+                new Thread(() -> {
+                    int i = 1;
+                    Scanner scanner = new Scanner(System.in);
+                    int j = 0;
+                    while (true) {
+                        switch (scanner.nextInt()) {
+                            case 1:
+                                UsersInChatMessage message0 = new UsersInChatMessage();
+                                User user = new User();
+                                user.setNickname("User#" + i);
+                                users.put(i, user);
+                                i++;
+                                message0.setUsers(users);
+                                sendMessage(message0);
                                 break;
-                            case REGISTRATION_REQUEST:
-
-                                break;
-                            case NEW_GROUPCHAT:
-                            case NEW_PRIVATECHAT:
-
-                                break;
-                            case TO_CHAT:
-
-                                break;
-                            case PING:
-                                PingMessage pingMessage = new PingMessage();
-                                sendMessage(pingMessage);
+                            case 2:
+                                sendMessage(messages.get(j % messages.size()));
+                                j++;
                                 break;
                             default:
-                                break;
                         }
                     }
-                    /*switch (scanner.nextInt()) {
-                        case 1 :
-                            UsersInChatMessage message0 = new UsersInChatMessage();
-                            User user = new User();
-                            user.setNickname("User#" + i);
-                            users.put(i, user);
-                            i++;
-                            message0.setUsers(users);
-                            sendMessage(message0);
-                            break;
-                        case 2 :
-                            sendMessage(messages.get(j % messages.size()));
-                            j++;
-                            break;
-                        default:
-                    }*/
+                }).start();
+                while (socket.isConnected()) {
+                    if(reader.ready()) {
+                        try (StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"))) {
+                            MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
+                            System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
+                            switch (message.getMessageType()) {
+                                case AUTHORIZATION_REQUEST:
+                                    AuthorizationResponse authorizationResponse = new AuthorizationResponse();
+                                    authorizationResponse.setConfirmed(true);
+                                    authorizationResponse.setUser(user1);
+                                    authorizationResponse.setMainChatRoom(new ChatRoom(1, "Whovians", new ArrayList<>(users.values())));
+                                    sendMessage(authorizationResponse);
+
+                                    UsersInChatMessage message0 = new UsersInChatMessage();
+                                    message0.setUsers(users);
+                                    sendMessage(message0);
+                                    break;
+                                case REGISTRATION_REQUEST:
+                                    RegistrationResponse registrationResponse = new RegistrationResponse(true);
+                                    sendMessage(registrationResponse);
+                                    break;
+                                case NEW_GROUPCHAT:
+                                case NEW_PRIVATECHAT:
+                                    sendMessage(message.getEncapsulatedMessage());
+                                    break;
+                                case TO_CHAT:
+                                    sendMessage(message.getEncapsulatedMessage());
+                                    break;
+                                case PING:
+                                    PingMessage pingMessage = new PingMessage();
+                                    sendMessage(pingMessage);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
                 }
 
-            } catch (IOException e) {
-                System.out.println(e);
-            } catch (JAXBException e) {
+            } catch (IOException | JAXBException e) {
                 e.printStackTrace();
             } finally {
                 try {
                     socket.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }

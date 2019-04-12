@@ -1,7 +1,7 @@
-package com.group4.server.model.MessageWrappers;
+package com.group4.server.model.messageWrappers;
 
-import com.group4.server.model.MessageTypes.MessageType;
-import com.group4.server.model.MessageTypes.TransmittableMessage;
+import com.group4.server.model.messageTypes.MessageType;
+import com.group4.server.model.messageTypes.TransmittableMessage;
 import com.group4.server.model.XMLAdapters.AtomicLongAdapter;
 import com.group4.server.model.XMLAdapters.InstantAdapter;
 

@@ -3,10 +3,10 @@ package com.group4.client.controller;
 import com.group4.client.view.CreateChatView;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.MainView;
-import com.group4.server.model.MessageTypes.ChatMessage;
-import com.group4.server.model.MessageTypes.NewGroupChatMessage;
-import com.group4.server.model.MessageTypes.UsersInChatMessage;
-import com.group4.server.model.MessageWrappers.MessageWrapper;
+import com.group4.server.model.messageTypes.ChatMessage;
+import com.group4.server.model.messageTypes.NewGroupChatMessage;
+import com.group4.server.model.messageTypes.UsersInChatMessage;
+import com.group4.server.model.messageWrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import javafx.application.Application;
@@ -102,9 +102,6 @@ public class Controller extends Application {
         }
 
         //test data
-        currentUser = new User("qwe", "asd", "Dean Winchester");
-        User user2 = new User("azxc",  "asd", "John Winchester");
-        chatRooms.put(2, new ChatRoom(2, currentUser, user2));
         ArrayList<User> arrayList1 = new ArrayList<>();
         arrayList1.add(new User("marry", "1234", "Marry Winchester"));
         arrayList1.add(new User("sammy", "1234", "Sam Winchester"));
@@ -117,12 +114,15 @@ public class Controller extends Application {
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
         System.out.println("process message: " + responseMessage.getMessageType());
 
-        if (mainView != null) {
-            Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
+        System.out.println("mainView: " + mainView);
+        //if (mainView != null) {
             switch (responseMessage.getMessageType()) {
                 case USERS_IN_CHAT:
                     UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
                     users = usersInChatMessage.getUsers();
+                    if (chatRooms.get(2) == null) {
+                        chatRooms.put(2, new ChatRoom(2, users.get(10000), users.get(10001)));
+                    }
                     Platform.runLater(() -> mainView.setOnlineUsers(users.values()));
                     break;
                 case NEW_GROUPCHAT:
@@ -130,6 +130,7 @@ public class Controller extends Application {
                     NewGroupChatMessage newGroupChatMessage = (NewGroupChatMessage) responseMessage.getEncapsulatedMessage();
                     ChatRoom chatRoom = newGroupChatMessage.getChatRoom();
                     chatRooms.put(chatRoom.getId(), chatRoom);
+                    Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
                     break;
                 case TO_CHAT:
                     ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
@@ -138,7 +139,7 @@ public class Controller extends Application {
                     break;
                 default:
             }
-        }
+        //}
     }
 
     public void exit() {

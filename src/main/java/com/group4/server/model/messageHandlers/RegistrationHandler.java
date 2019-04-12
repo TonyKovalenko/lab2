@@ -1,8 +1,8 @@
-package com.group4.server.model.MessageHandlers;
+package com.group4.server.model.messageHandlers;
 
 import com.group4.server.model.entities.User;
-import com.group4.server.model.MessageTypes.RegistrationRequest;
-import com.group4.server.model.MessageTypes.RegistrationResponse;
+import com.group4.server.model.messageTypes.RegistrationRequest;
+import com.group4.server.model.messageTypes.RegistrationResponse;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

@@ -1,6 +1,6 @@
 package com.group4.server.model.entities;
 
-import com.group4.server.model.MessageTypes.ChatMessage;
+import com.group4.server.model.messageTypes.ChatMessage;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -66,16 +66,17 @@ public class ChatRoom {
             return name;
         }
         throw new RuntimeException("Operation can't be used for group chat");
-
     }
 
     public User getOtherMember(User user) {
         if (isPrivate) {
-            if (members.get(0) == user) {
+            if (members.get(0).equals(user)) {
                 return members.get(1);
-            } else if (members.get(1) == user) {
+            } else if (members.get(1).equals(user)) {
                 return members.get(0);
             }
+            System.out.println("Current user: " + user);
+            System.out.println("Users in chat: " + getMembers());
             throw new RuntimeException("User was not found.");
         }
         throw new RuntimeException("Operation can't be used for private chat.");

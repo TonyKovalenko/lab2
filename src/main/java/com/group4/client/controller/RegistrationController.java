@@ -3,8 +3,10 @@ package com.group4.client.controller;
 import com.group4.client.view.DialogWindow;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.RegistrationView;
-import com.group4.server.model.MessageTypes.RegistrationRequest;
-import com.group4.server.model.MessageWrappers.MessageWrapper;
+import com.group4.server.model.messageTypes.RegistrationRequest;
+import com.group4.server.model.messageTypes.RegistrationResponse;
+import com.group4.server.model.messageWrappers.MessageWrapper;
+import javafx.application.Platform;
 
 public class RegistrationController {
     private RegistrationView view;
@@ -53,7 +55,13 @@ public class RegistrationController {
     }
 
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
-        System.out.println("registered successfully");
-        cancel();
+        RegistrationResponse innerMessage = (RegistrationResponse) responseMessage.getEncapsulatedMessage();
+        if (innerMessage.isRegistrationSuccessful()) {
+            System.out.println("registered successfully");
+            Platform.runLater(() -> cancel());
+        } else {
+            System.out.println("authorization was denied");
+            DialogWindow.showWarningWindow("Registration failed", "Registration was denied");
+        }
     }
 }
