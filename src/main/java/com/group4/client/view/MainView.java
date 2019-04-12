@@ -83,7 +83,7 @@ public class MainView extends View {
     }
 
     @FXML
-    private void onSendButtonClick(ActionEvent event) {
+    private void onSendButtonClick() {
         controller.sendMessageToChat();
     }
 

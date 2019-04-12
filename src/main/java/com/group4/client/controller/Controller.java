@@ -11,10 +11,8 @@ import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
