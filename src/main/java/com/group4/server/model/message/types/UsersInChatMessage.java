@@ -12,20 +12,20 @@ import java.util.HashMap;
 @XmlAccessorType(XmlAccessType.NONE)
 public class UsersInChatMessage implements TransmittableMessage {
     @XmlElement
-    private HashMap<Integer, User> users;
+    private HashMap<Long, User> users;
 
     public UsersInChatMessage() {
     }
 
-    public UsersInChatMessage(HashMap<Integer, User> users) {
+    public UsersInChatMessage(HashMap<Long, User> users) {
         this.users = users;
     }
 
-    public HashMap<Integer, User> getUsers() {
+    public HashMap<Long, User> getUsers() {
         return users;
     }
 
-    public void setUsers(HashMap<Integer, User> users) {
+    public void setUsers(HashMap<Long, User> users) {
         this.users = users;
     }
 }

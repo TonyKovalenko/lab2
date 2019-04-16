@@ -21,6 +21,10 @@ public class AuthorizationResponse implements TransmittableMessage {
     public AuthorizationResponse() {
     }
 
+    public AuthorizationResponse(boolean isConfirmed) {
+        this.isConfirmed = isConfirmed;
+    }
+
     public AuthorizationResponse(boolean isConfirmed, User user, ChatRoom mainChatRoom) {
         this.isConfirmed = isConfirmed;
         this.user = user;

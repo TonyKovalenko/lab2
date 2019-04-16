@@ -25,8 +25,8 @@ public class Controller extends Application {
     private MessageThread thread;
     private static Controller instance;
     private User currentUser;
-    private HashMap<Integer, User> users = new HashMap<>();
-    private HashMap<Integer, ChatRoom> chatRooms = new HashMap<>();
+    private HashMap<Long, User> users = new HashMap<>();
+    private HashMap<Long, ChatRoom> chatRooms = new HashMap<>();
 
     public static Controller getInstance() {
         return instance;
@@ -52,11 +52,11 @@ public class Controller extends Application {
         return mainView;
     }
 
-    public HashMap<Integer, ChatRoom> getChatRooms() {
+    public HashMap<Long, ChatRoom> getChatRooms() {
         return chatRooms;
     }
 
-    public void setChatRooms(HashMap<Integer, ChatRoom> chatRooms) {
+    public void setChatRooms(HashMap<Long, ChatRoom> chatRooms) {
         this.chatRooms = chatRooms;
     }
 
@@ -68,7 +68,7 @@ public class Controller extends Application {
         this.currentUser = currentUser;
     }
 
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         return users.get(id);
     }
 
@@ -106,7 +106,7 @@ public class Controller extends Application {
         arrayList1.add(new User("marry", "1234", "Marry Winchester"));
         arrayList1.add(new User("sammy", "1234", "Sam Winchester"));
         arrayList1.add(currentUser);
-        chatRooms.put(3, new ChatRoom(2, "Hunting things", arrayList1));
+        chatRooms.put(3L, new ChatRoom(2, "Hunting things", arrayList1));
 
 
     }
@@ -120,8 +120,8 @@ public class Controller extends Application {
                 case USERS_IN_CHAT:
                     UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
                     users = usersInChatMessage.getUsers();
-                    if (chatRooms.get(2) == null) {
-                        chatRooms.put(2, new ChatRoom(2, users.get(10000), users.get(10001)));
+                    if (chatRooms.get(2L) == null) {
+                        chatRooms.put(2L, new ChatRoom(2, users.get(10000L), users.get(10001L)));
                     }
                     Platform.runLater(() -> mainView.setOnlineUsers(users.values()));
                     break;

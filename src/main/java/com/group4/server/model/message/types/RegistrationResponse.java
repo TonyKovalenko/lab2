@@ -8,12 +8,15 @@ public class RegistrationResponse implements TransmittableMessage {
 
     @XmlElement
     private boolean registrationState;
+    @XmlElement
+    private long generatedId;
 
     public RegistrationResponse() {
     }
 
-    public RegistrationResponse(boolean state) {
+    public RegistrationResponse(boolean state, long generatedId) {
         this.registrationState = state;
+        this.generatedId = generatedId;
     }
 
     public boolean isRegistrationSuccessful() {

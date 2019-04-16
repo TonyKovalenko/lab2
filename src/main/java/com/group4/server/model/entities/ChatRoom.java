@@ -13,7 +13,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 public class ChatRoom {
     @XmlElement
-    private int id;
+    private long id;
     @XmlElement
     private boolean isPrivate;
     @XmlElement
@@ -38,7 +38,7 @@ public class ChatRoom {
         this.name = name;
     }
 
-    public ChatRoom(int id, User user1, User user2) {
+    public ChatRoom(long id, User user1, User user2) {
         this.id = id;
         members = new ArrayList<>();
         members.add(user1);
@@ -46,18 +46,18 @@ public class ChatRoom {
         this.isPrivate = true;
     }
 
-    public ChatRoom(int id, String name, List<User> members) {
+    public ChatRoom(long id, String name, List<User> members) {
         this.id = id;
         this.isPrivate = false;
         this.members = members;
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

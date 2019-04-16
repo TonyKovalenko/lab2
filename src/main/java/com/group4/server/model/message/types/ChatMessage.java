@@ -33,7 +33,7 @@ public class ChatMessage implements TransmittableMessage {
         this.fromId = fromId;
     }
 
-    public int getChatId() {
+    public long getChatId() {
         return chatId;
     }
 

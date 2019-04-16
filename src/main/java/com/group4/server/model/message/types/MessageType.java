@@ -14,7 +14,8 @@ public enum MessageType {
     TO_CHAT,
     USERS_IN_CHAT,
     CHANGE_CREDENTIALS,
-    SERVER_SHUTDOWN;
+    SERVER_SHUTDOWN,
+    USER_DISCONNECT;
 
     private static Map<String , MessageType> stringToMessageType = new HashMap<String, MessageType>() {{
         put(RegistrationRequest.class.getSimpleName(), REGISTRATION_REQUEST);
@@ -25,6 +26,7 @@ public enum MessageType {
         put(ChatMessage.class.getSimpleName(), TO_CHAT);
         put(NewGroupChatMessage.class.getSimpleName(), NEW_GROUPCHAT);
         put(UsersInChatMessage.class.getSimpleName(), USERS_IN_CHAT);
+        put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
     }};
 
     public static MessageType getMessageType(String type) throws IllegalArgumentException {
