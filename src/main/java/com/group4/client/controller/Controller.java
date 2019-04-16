@@ -1,23 +1,26 @@
 package com.group4.client.controller;
 
-import com.group4.client.view.CreateChatView;
-import com.group4.client.view.LoginView;
-import com.group4.client.view.MainView;
+import com.group4.client.view.*;
+import com.group4.server.model.entities.ChatRoom;
+import com.group4.server.model.entities.User;
+import com.group4.server.model.message.types.ChangeCredentialsRequest;
 import com.group4.server.model.message.types.ChatMessage;
 import com.group4.server.model.message.types.NewGroupChatMessage;
 import com.group4.server.model.message.types.UsersInChatMessage;
 import com.group4.server.model.message.wrappers.MessageWrapper;
-import com.group4.server.model.entities.ChatRoom;
-import com.group4.server.model.entities.User;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Controller extends Application {
     private Stage stage;
@@ -26,7 +29,7 @@ public class Controller extends Application {
     private static Controller instance;
     private User currentUser;
     private HashMap<Integer, User> users = new HashMap<>();
-    private HashMap<Integer, ChatRoom> chatRooms = new HashMap<>();
+    private ObservableMap<Integer, ChatRoom> chatRooms = FXCollections.observableHashMap();
 
     public static Controller getInstance() {
         return instance;
@@ -52,12 +55,12 @@ public class Controller extends Application {
         return mainView;
     }
 
-    public HashMap<Integer, ChatRoom> getChatRooms() {
+    public Map<Integer, ChatRoom> getChatRooms() {
         return chatRooms;
     }
 
-    public void setChatRooms(HashMap<Integer, ChatRoom> chatRooms) {
-        this.chatRooms = chatRooms;
+    public ChatRoom getChatRoomById(int id) {
+        return chatRooms.get(id);
     }
 
     public User getCurrentUser() {
@@ -70,6 +73,14 @@ public class Controller extends Application {
 
     public User getUserById(int id) {
         return users.get(id);
+    }
+
+    public Collection<User> getUsersWithoutCurrent() {
+        return users.values();
+    }
+
+    public void updateChatRoomsView() {
+        Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
     }
 
     /**
@@ -92,6 +103,7 @@ public class Controller extends Application {
         instance = this;
         stage = primaryStage;
         Controller.getInstance().getStage().setOnCloseRequest(windowEvent -> exit());
+        chatRooms.addListener((MapChangeListener) change -> updateChatRoomsView());
         thread = new MessageThread();
         LoginView.getInstance().showStage();
         try {
@@ -100,15 +112,6 @@ public class Controller extends Application {
         } catch (IOException e) {
             thread.reconnect();
         }
-
-        //test data
-        ArrayList<User> arrayList1 = new ArrayList<>();
-        arrayList1.add(new User("marry", "1234", "Marry Winchester"));
-        arrayList1.add(new User("sammy", "1234", "Sam Winchester"));
-        arrayList1.add(currentUser);
-        chatRooms.put(3, new ChatRoom(2, "Hunting things", arrayList1));
-
-
     }
 
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
@@ -120,22 +123,23 @@ public class Controller extends Application {
                 case USERS_IN_CHAT:
                     UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
                     users = usersInChatMessage.getUsers();
+                    users.remove(currentUser.getId());
                     if (chatRooms.get(2) == null) {
-                        chatRooms.put(2, new ChatRoom(2, users.get(10000), users.get(10001)));
+                        chatRooms.put(2, new ChatRoom(2, currentUser, getUserById((currentUser.getId()==10000)?10001:10000)));
                     }
-                    Platform.runLater(() -> mainView.setOnlineUsers(users.values()));
+                    Platform.runLater(() -> mainView.setOnlineUsers(getUsersWithoutCurrent()));
                     break;
                 case NEW_GROUPCHAT:
                 case NEW_PRIVATECHAT:
                     NewGroupChatMessage newGroupChatMessage = (NewGroupChatMessage) responseMessage.getEncapsulatedMessage();
                     ChatRoom chatRoom = newGroupChatMessage.getChatRoom();
                     chatRooms.put(chatRoom.getId(), chatRoom);
-                    Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
+                    //updateChatRoomsView();
                     break;
                 case TO_CHAT:
                     ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
                     chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
-                    Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
+                    updateChatRoomsView();
                     break;
                 default:
                     break;
@@ -152,6 +156,7 @@ public class Controller extends Application {
         ChatMessage message = new ChatMessage();
         message.setFromId(this.getCurrentUser().getId());
         message.setText(mainView.getMessageInput());
+        message.setChatId(mainView.getSelectedChatRoom().getId());
 
         thread.sendMessage(message);
     }
@@ -161,7 +166,7 @@ public class Controller extends Application {
         dialogStage.initOwner(stage);
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         CreateChatView createChatView = CreateChatView.getInstance(dialogStage);
-        createChatView.setOnlineUsers(users.values());
+        createChatView.setOnlineUsers(getUsersWithoutCurrent());
         dialogStage.showAndWait();
     }
 
@@ -173,15 +178,48 @@ public class Controller extends Application {
             chatRoom = new ChatRoom(selectedUser, currentUser);
         } else {
             List<User> users = view.getUsersList();
+            Map<Integer, User> usersMap = new HashMap<>();
+            for (User user : users) {
+                usersMap.put(user.getId(), user);
+            }
             String chatName = view.getGroupName();
-            chatRoom = new ChatRoom(chatName, users);
+            chatRoom = new ChatRoom(chatName, usersMap);
         }
         NewGroupChatMessage message = new NewGroupChatMessage(chatRoom);
         thread.sendMessage(message);
         view.close();
     }
 
-    public void editProfile() {
+    public void showEditProfileDialog() {
+        Stage dialogStage = new Stage();
+        dialogStage.initOwner(stage);
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        EditProfileView editProfileView = EditProfileView.getInstance(dialogStage);
+        editProfileView.setUserInfo(currentUser);
+        dialogStage.showAndWait();
+    }
 
+    public void saveProfileChanges(EditProfileView view) {
+        String newFullName = view.getFullName();
+        String newPassword = view.getPassword();
+        boolean isUpdated = false;
+        if (!newFullName.equals(currentUser.getFullName())) {
+            isUpdated = true;
+        }
+
+        if (view.getPassword() != null && !view.getPassword().isEmpty()) {
+            if (view.isPasswordConfirmed()) {
+                isUpdated = true;
+            } else {
+                DialogWindow.showWarningWindow("Passwords don't match", "The password and confirm password fields do not match.");
+                System.out.println("password doesn't match");
+                isUpdated = false;
+            }
+        }
+
+        if (isUpdated) {
+            thread.sendMessage(new ChangeCredentialsRequest(newFullName, newPassword));
+            view.cancel();
+        }
     }
 }

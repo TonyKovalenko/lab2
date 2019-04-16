@@ -1,19 +1,26 @@
 package com.group4.server.model.entities;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
 public class User {
+    @XmlElement
     private int id;
+    @XmlElement
     private String nickname;
+    @XmlElement
     private String fullName;
     private String password;
 
     public User() {
     }
 
-    public User(String nickname, String password, String fullName) {
+    public User(String nickname, String fullName, String password) {
         this.nickname = nickname;
         this.fullName = fullName;
         this.password = password;
@@ -44,6 +51,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String newPassword) {
+        password = newPassword;
     }
 
     public int getId() {

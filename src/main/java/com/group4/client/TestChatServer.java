@@ -1,9 +1,9 @@
 package com.group4.client;
 
-import com.group4.server.model.message.types.*;
-import com.group4.server.model.message.wrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
+import com.group4.server.model.message.types.*;
+import com.group4.server.model.message.wrappers.MessageWrapper;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -18,6 +18,7 @@ import java.util.*;
 public class TestChatServer {
 
     private static final int PORT = 8888;
+    private static int userCounter = 0;
 
     private static HashSet<String> names = new HashSet<String>();
     private static HashSet<PrintWriter> writers = new HashSet<PrintWriter>();
@@ -42,7 +43,8 @@ public class TestChatServer {
         private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
                 AuthorizationRequest.class, AuthorizationResponse.class,
                 ChatMessage.class, NewGroupChatMessage.class, UsersInChatMessage.class,
-                RegistrationRequest.class, RegistrationResponse.class
+                RegistrationRequest.class, RegistrationResponse.class,
+                ChangeCredentialsRequest.class
         };
         public JAXBContext context;
         public Marshaller marshaller;
@@ -83,12 +85,12 @@ public class TestChatServer {
             this.socket = socket;
         }
 
-        public  void sendMessage(TransmittableMessage message) {
+        public void sendMessage(TransmittableMessage message, PrintWriter writer) {
             MessageWrapper messageWrapper = new MessageWrapper(message);
             StringWriter stringWriter = new StringWriter();
             try {
                 this.context.createMarshaller().marshal(messageWrapper, stringWriter);
-                this.writer.println(stringWriter.toString().replaceAll("\n", "<br />"));
+                writer.println(stringWriter.toString().replaceAll("\n", "<br />"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -107,6 +109,9 @@ public class TestChatServer {
                 User user2 = new User(10001, "doctor", "The Doctor", "1");
                 users.put(10000, user1);
                 users.put(10001, user2);
+
+                writers.add(writer);
+
                 new Thread(() -> {
                     int i = 1;
                     Scanner scanner = new Scanner(System.in);
@@ -117,19 +122,27 @@ public class TestChatServer {
                                 UsersInChatMessage message0 = new UsersInChatMessage();
                                 User user = new User();
                                 user.setNickname("User#" + i);
+                                user.setId(i);
                                 users.put(i, user);
                                 i++;
                                 message0.setUsers(users);
-                                sendMessage(message0);
+                                for (PrintWriter writer : writers) {
+                                    sendMessage(message0, writer);
+                                }
                                 break;
                             case 2:
-                                sendMessage(messages.get(j % messages.size()));
+                                for (PrintWriter writer : writers) {
+                                    sendMessage(messages.get(j % messages.size()), writer);
+                                }
+                                //sendMessage(messages.get(j % messages.size()));
                                 j++;
                                 break;
                             default:
                         }
                     }
                 }).start();
+                int idCounter = 5;
+
                 while (socket.isConnected()) {
                     if(reader.ready()) {
                         try (StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"))) {
@@ -139,28 +152,42 @@ public class TestChatServer {
                                 case AUTHORIZATION_REQUEST:
                                     AuthorizationResponse authorizationResponse = new AuthorizationResponse();
                                     authorizationResponse.setConfirmed(true);
-                                    authorizationResponse.setUser(user1);
-                                    authorizationResponse.setMainChatRoom(new ChatRoom(1, "Whovians", new ArrayList<>(users.values())));
-                                    sendMessage(authorizationResponse);
+                                    if (userCounter % 2 == 0) {
+                                        System.out.println("user1 login");
+                                        authorizationResponse.setUser(user1);
+                                    } else {
+                                        System.out.println("user2 login");
+                                        authorizationResponse.setUser(user2);
+                                    }
+                                    userCounter++;
+                                    authorizationResponse.setMainChatRoom(new ChatRoom(3, "Whovians", users));
+                                    sendMessage(authorizationResponse, writer);
 
                                     UsersInChatMessage message0 = new UsersInChatMessage();
                                     message0.setUsers(users);
-                                    sendMessage(message0);
+                                    sendMessage(message0, writer);
                                     break;
                                 case REGISTRATION_REQUEST:
                                     RegistrationResponse registrationResponse = new RegistrationResponse(true);
-                                    sendMessage(registrationResponse);
+                                    sendMessage(registrationResponse, writer);
                                     break;
                                 case NEW_GROUPCHAT:
                                 case NEW_PRIVATECHAT:
-                                    sendMessage(message.getEncapsulatedMessage());
+                                    NewGroupChatMessage newGroupChatMessage = (NewGroupChatMessage) message.getEncapsulatedMessage();
+                                    newGroupChatMessage.getChatRoom().setId(idCounter++);
+                                    for (PrintWriter writer : writers) {
+                                        sendMessage(newGroupChatMessage, writer);
+                                    }
                                     break;
                                 case TO_CHAT:
-                                    sendMessage(message.getEncapsulatedMessage());
+                                    System.out.println(message.getEncapsulatedMessage());
+                                    for (PrintWriter writer : writers) {
+                                        sendMessage(message.getEncapsulatedMessage(), writer);
+                                    }
                                     break;
                                 case PING:
                                     PingMessage pingMessage = new PingMessage();
-                                    sendMessage(pingMessage);
+                                    sendMessage(pingMessage, writer);
                                     break;
                                 default:
                                     break;

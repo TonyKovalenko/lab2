@@ -1,12 +1,14 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
-import com.group4.server.model.message.types.ChatMessage;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
+import com.group4.server.model.message.types.ChatMessage;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -73,7 +75,7 @@ public class MainView extends View {
 
     @FXML
     private void editProfile() {
-        controller.editProfile();
+        controller.showEditProfileDialog();
     }
 
     @FXML
@@ -101,5 +103,9 @@ public class MainView extends View {
 
     public String getMessageInput() {
         return messageInput.getText();
+    }
+
+    public ChatRoom getSelectedChatRoom() {
+        return chatRooms.getSelectionModel().getSelectedItem();
     }
 }

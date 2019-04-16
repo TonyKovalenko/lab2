@@ -4,7 +4,10 @@ import com.group4.client.controller.Controller;
 import com.group4.server.model.entities.User;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -76,6 +79,7 @@ public class CreateChatView extends View {
 
     public void initialize() {
         usersListView.setCellFactory(param -> new UsersListCellView());
+        usersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     @FXML

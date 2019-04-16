@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<GridPane alignment="TOP_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="450.0" style="-fx-background-color: #f37334;" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.EditProfileView">
+  <columnConstraints>
+    <ColumnConstraints />
+    <ColumnConstraints />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="141.40001678466797" minWidth="10.0" percentWidth="50.0" prefWidth="126.4" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="198.39995574951172" minWidth="10.0" percentWidth="50.0" prefWidth="127.20000000000002" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints maxHeight="234.39996643066405" minHeight="10.0" prefHeight="207.2" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="123.19999389648439" minHeight="0.0" prefHeight="40.80000000000001" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="109.20000305175779" minHeight="0.0" prefHeight="38.99997558593748" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="85.00001220703126" minHeight="10.0" prefHeight="42.19998779296873" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="70.60001220703123" minHeight="10.0" prefHeight="42.99996337890627" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="60.20004882812498" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Nickname:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <TextField fx:id="nicknameTextField" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <font>
+            <Font size="14.0" />
+         </font></TextField>
+      <TextField fx:id="fullNameTextField" GridPane.columnIndex="3" GridPane.rowIndex="2">
+         <font>
+            <Font size="14.0" />
+         </font></TextField>
+      <Label text="Full name:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Label text="Password:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Label text="Confirm password:" textFill="WHITE" GridPane.columnIndex="2" GridPane.rowIndex="4">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveChanges" style="-fx-background-color: white;" text="Save changes" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets right="20.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" style="-fx-background-color: white;" text="Cancel" GridPane.columnIndex="3" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <children>
+            <ImageView fitHeight="176.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@logo3.png" />
+               </image>
+               <viewport>
+                  <Rectangle2D />
+               </viewport>
+            </ImageView>
+            <Label fx:id="titleLabel" text="Edit profile" textFill="WHITE">
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <PasswordField fx:id="passwordTextField" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+      <PasswordField fx:id="confirmPasswordTextField" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+   </padding>
+</GridPane>

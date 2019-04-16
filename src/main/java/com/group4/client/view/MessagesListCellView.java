@@ -1,8 +1,8 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
-import com.group4.server.model.message.types.ChatMessage;
 import com.group4.server.model.entities.User;
+import com.group4.server.model.message.types.ChatMessage;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -46,7 +46,7 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
                 }
 
             }
-            User user = Controller.getInstance().getUserById(message.getFromId());
+            User user = Controller.getInstance().getChatRoomById(message.getChatId()).getMembers().get(message.getFromId());
             nameLabel.setText(user.getNickname());
             messageTextLabel.setText(message.getText());
 

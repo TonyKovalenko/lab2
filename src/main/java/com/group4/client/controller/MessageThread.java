@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.util.*;
 
 public class MessageThread extends Thread {
-    private final static int DELAY = 3000;
+    private final static int DELAY = 30000;
     private final static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
@@ -25,7 +25,8 @@ public class MessageThread extends Thread {
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
             AuthorizationRequest.class, AuthorizationResponse.class,
             ChatMessage.class, NewGroupChatMessage.class, UsersInChatMessage.class,
-            RegistrationRequest.class, RegistrationResponse.class
+            RegistrationRequest.class, RegistrationResponse.class,
+            ChangeCredentialsRequest.class
     };
     private JAXBContext context;
     private Map<MessageType, List<MessageWrapper>> sentMessages = new HashMap<>();

@@ -7,7 +7,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @XmlRootElement(name = "chatRoom")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -19,38 +21,33 @@ public class ChatRoom {
     @XmlElement
     private String name;
     @XmlElement
-    private List<User> members;
+    private Map<Integer, User> members;
     @XmlElement
     private List<ChatMessage> messages = new ArrayList<>();
 
     public ChatRoom() {}
 
     public ChatRoom(User user1, User user2) {
-        members = new ArrayList<>();
-        members.add(user1);
-        members.add(user2);
+        members = new HashMap<>();
+        members.put(user1.getId(), user1);
+        members.put(user2.getId(), user2);
         this.isPrivate = true;
     }
 
-    public ChatRoom(String name, List<User> members) {
+    public ChatRoom(String name, Map<Integer, User> members) {
         this.isPrivate = false;
         this.members = members;
         this.name = name;
     }
 
     public ChatRoom(int id, User user1, User user2) {
+        this(user1, user2);
         this.id = id;
-        members = new ArrayList<>();
-        members.add(user1);
-        members.add(user2);
-        this.isPrivate = true;
     }
 
-    public ChatRoom(int id, String name, List<User> members) {
+    public ChatRoom(int id, String name, Map<Integer, User> members) {
+        this(name, members);
         this.id = id;
-        this.isPrivate = false;
-        this.members = members;
-        this.name = name;
     }
 
     public int getId() {
@@ -70,10 +67,11 @@ public class ChatRoom {
 
     public User getOtherMember(User user) {
         if (isPrivate) {
-            if (members.get(0).equals(user)) {
-                return members.get(1);
-            } else if (members.get(1).equals(user)) {
-                return members.get(0);
+            List<User> membersList= new ArrayList<>(members.values());
+            if (membersList.get(0).equals(user)) {
+                return membersList.get(1);
+            } else if (membersList.get(1).equals(user)) {
+                return membersList.get(0);
             }
             System.out.println("Current user: " + user);
             System.out.println("Users in chat: " + getMembers());
@@ -86,11 +84,11 @@ public class ChatRoom {
         return isPrivate;
     }
 
-    public List<User> getMembers() {
+    public Map<Integer, User> getMembers() {
         return members;
     }
 
-    public void setMembers(List<User> members) {
+    public void setMembers(Map<Integer, User> members) {
         if (!isPrivate) {
             this.members = members;
         }
@@ -98,13 +96,13 @@ public class ChatRoom {
 
     public void addMember(User newMember) {
         if (!isPrivate) {
-            members.add(newMember);
+            members.put(newMember.getId(), newMember);
         }
     }
 
     public void removeMember(User member) {
         if (!isPrivate) {
-            members.remove(member);
+            members.remove(member.getId());
         }
     }
 
