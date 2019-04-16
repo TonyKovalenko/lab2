@@ -10,34 +10,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ChatMessage implements TransmittableMessage {
 
     @XmlElement
-    private int fromId;
+    private long fromId;
     @XmlElement
-    private int chatId;
+    private long chatId;
     @XmlElement
     private String text;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(int fromId, int chatId, String text) {
+    public ChatMessage(long fromId, int chatId, String text) {
         this.fromId = fromId;
         this.chatId = chatId;
         this.text = text;
     }
 
-    public int getFromId() {
+    public long getFromId() {
         return fromId;
     }
 
-    public void setFromId(int fromId) {
+    public void setFromId(long fromId) {
         this.fromId = fromId;
     }
 
-    public int getChatId() {
+    public long getChatId() {
         return chatId;
     }
 
-    public void setChatId(int chatId) {
+    public void setChatId(long chatId) {
         this.chatId = chatId;
     }
 

@@ -1,11 +1,10 @@
 package com.group4.server.controller;
 
+//import com.group4.server.model.containers.ChatContainer;
+//import com.group4.server.model.containers.UserStreamContainer;
 import com.group4.server.model.entities.User;
-import com.group4.server.model.message.handlers.RegistrationHandler;
-import com.group4.server.model.message.types.AuthorizationRequest;
-import com.group4.server.model.message.types.PingMessage;
-import com.group4.server.model.message.types.RegistrationRequest;
-import com.group4.server.model.message.types.RegistrationResponse;
+import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
+import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 
 import javax.xml.bind.*;
@@ -35,13 +34,21 @@ public class MessageController {
         this.unmarshaller = context.createUnmarshaller();
     }
 
+    void sendResponse(TransmittableMessage message, PrintWriter out) {
+        StringWriter stringWriter = new StringWriter();
+        try {
+            marshaller.marshal(new MessageWrapper(message), stringWriter);
+        } catch (JAXBException ex) {
+            //log.error("Exception happened", ex);
+        }
+        out.println(stringWriter.toString());
+    }
+
     void handle() {
         BufferedReader in;
         PrintWriter out;
-        StringWriter stringWriter;
         StringReader stringReader;
         MessageWrapper requestMessage;
-        MessageWrapper responseMessage;
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -55,20 +62,30 @@ public class MessageController {
 
         switch (requestMessage.getMessageType()) {
             case REGISTRATION_REQUEST:
-                RegistrationResponse registrationResponse = RegistrationHandler.INSTANCE.handle((RegistrationRequest) requestMessage.getEncapsulatedMessage());
+                RegistrationRequest registrationRequest = (RegistrationRequest) requestMessage.getEncapsulatedMessage();
+                RegistrationResponse registrationResponse = RegistrationAuthorizationHandler.INSTANCE.handle(registrationRequest);
                 if (registrationResponse.isRegistrationSuccessful()) {
-                    //TODO add user stream
+                    User user = new User(registrationRequest.getUserNickname(), registrationRequest.getPassword(), registrationRequest.getFullName());
+//                    UserStreamContainer.INSTANCE.putStream(user, out);
+//                    ChatContainer.INSTANCE.putToInitialRoom(user);
                 }
-                stringWriter = new StringWriter();
-                try {
-                    marshaller.marshal(new MessageWrapper(registrationResponse), stringWriter);
-                } catch (JAXBException ex) {
-                    //log.error("Exception happened", ex);
+                sendResponse(registrationResponse, out);
+                break;
+            case AUTHORIZATION_REQUEST:
+                AuthorizationRequest authorizationRequest = (AuthorizationRequest) requestMessage.getEncapsulatedMessage();
+                AuthorizationResponse authorizationResponse = RegistrationAuthorizationHandler.INSTANCE.handle(authorizationRequest);
+                if (authorizationResponse.isConfirmed()) {
+                    User user = RegistrationAuthorizationHandler.INSTANCE.getUser(authorizationRequest.getGeneratedId());
+//                    UserStreamContainer.INSTANCE.putStream(user, out);
+//                    ChatContainer.INSTANCE.putToInitialRoom(user);
                 }
-                out.println(stringWriter.toString());
+                sendResponse(authorizationResponse, out);
                 break;
             case PING:
-            case AUTHORIZATION_REQUEST:
+                break;
+            case USER_DISCONNECT:
+//                UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
+
         }
     }
 

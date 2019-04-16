@@ -8,6 +8,8 @@ import com.group4.server.model.message.types.ChatMessage;
 import com.group4.server.model.message.types.NewGroupChatMessage;
 import com.group4.server.model.message.types.UsersInChatMessage;
 import com.group4.server.model.message.wrappers.MessageWrapper;
+import com.group4.server.model.entities.ChatRoom;
+import com.group4.server.model.entities.User;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -28,8 +30,8 @@ public class Controller extends Application {
     private MessageThread thread;
     private static Controller instance;
     private User currentUser;
-    private HashMap<Integer, User> users = new HashMap<>();
-    private ObservableMap<Integer, ChatRoom> chatRooms = FXCollections.observableHashMap();
+    private HashMap<Long, User> users = new HashMap<>();
+    private ObservableMap<Long, ChatRoom> chatRooms = FXCollections.observableHashMap();
 
     public static Controller getInstance() {
         return instance;
@@ -55,11 +57,11 @@ public class Controller extends Application {
         return mainView;
     }
 
-    public Map<Integer, ChatRoom> getChatRooms() {
+    public Map<Long, ChatRoom> getChatRooms() {
         return chatRooms;
     }
 
-    public ChatRoom getChatRoomById(int id) {
+    public ChatRoom getChatRoomById(long id) {
         return chatRooms.get(id);
     }
 
@@ -71,7 +73,7 @@ public class Controller extends Application {
         this.currentUser = currentUser;
     }
 
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         return users.get(id);
     }
 
@@ -124,8 +126,8 @@ public class Controller extends Application {
                     UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
                     users = usersInChatMessage.getUsers();
                     users.remove(currentUser.getId());
-                    if (chatRooms.get(2) == null) {
-                        chatRooms.put(2, new ChatRoom(2, currentUser, getUserById((currentUser.getId()==10000)?10001:10000)));
+                    if (chatRooms.get(2L) == null) {
+                        chatRooms.put(2L, new ChatRoom(2, currentUser, getUserById((currentUser.getId()==10000)?10001:10000)));
                     }
                     Platform.runLater(() -> mainView.setOnlineUsers(getUsersWithoutCurrent()));
                     break;
@@ -178,7 +180,7 @@ public class Controller extends Application {
             chatRoom = new ChatRoom(selectedUser, currentUser);
         } else {
             List<User> users = view.getUsersList();
-            Map<Integer, User> usersMap = new HashMap<>();
+            Map<Long, User> usersMap = new HashMap<>();
             for (User user : users) {
                 usersMap.put(user.getId(), user);
             }

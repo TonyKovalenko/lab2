@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AuthorizationRequest implements TransmittableMessage {
 
     @XmlElement
+    private long generatedId;
+    @XmlElement
     private String userNickname;
     @XmlElement
     private String password;
@@ -17,7 +19,8 @@ public class AuthorizationRequest implements TransmittableMessage {
     public AuthorizationRequest() {
     }
 
-    public AuthorizationRequest(String userNickname, String password) {
+    public AuthorizationRequest(long generatedId, String userNickname, String password) {
+        this.generatedId = generatedId;
         this.userNickname = userNickname;
         this.password = password;
     }
@@ -37,5 +40,13 @@ public class AuthorizationRequest implements TransmittableMessage {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public long getGeneratedId() {
+        return generatedId;
+    }
+
+    public void setGeneratedId(long generatedId) {
+        this.generatedId = generatedId;
     }
 }

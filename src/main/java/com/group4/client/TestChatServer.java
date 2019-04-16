@@ -104,16 +104,16 @@ public class TestChatServer {
                 marshaller = context.createMarshaller();
                 unmarshaller = context.createUnmarshaller();
 
-                HashMap<Integer, User> users = new HashMap<>();
+                HashMap<Long, User> users = new HashMap<>();
                 User user1 = new User(10000, "donna",  "Donna Noble", "1");
                 User user2 = new User(10001, "doctor", "The Doctor", "1");
-                users.put(10000, user1);
-                users.put(10001, user2);
+                users.put(10000L, user1);
+                users.put(10001L, user2);
 
                 writers.add(writer);
 
                 new Thread(() -> {
-                    int i = 1;
+                    long i = 1;
                     Scanner scanner = new Scanner(System.in);
                     int j = 0;
                     while (true) {
@@ -168,7 +168,7 @@ public class TestChatServer {
                                     sendMessage(message0, writer);
                                     break;
                                 case REGISTRATION_REQUEST:
-                                    RegistrationResponse registrationResponse = new RegistrationResponse(true);
+                                    RegistrationResponse registrationResponse = new RegistrationResponse(true, 0);
                                     sendMessage(registrationResponse, writer);
                                     break;
                                 case NEW_GROUPCHAT:

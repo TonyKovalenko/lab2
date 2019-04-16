@@ -10,7 +10,7 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.NONE)
 public class User {
     @XmlElement
-    private int id;
+    private long id;
     @XmlElement
     private String nickname;
     @XmlElement
@@ -57,11 +57,11 @@ public class User {
         password = newPassword;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

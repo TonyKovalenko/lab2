@@ -15,13 +15,13 @@ import java.util.Map;
 @XmlAccessorType(XmlAccessType.NONE)
 public class ChatRoom {
     @XmlElement
-    private int id;
+    private long id;
     @XmlElement
     private boolean isPrivate;
     @XmlElement
     private String name;
     @XmlElement
-    private Map<Integer, User> members;
+    private Map<Long, User> members;
     @XmlElement
     private List<ChatMessage> messages = new ArrayList<>();
 
@@ -34,27 +34,27 @@ public class ChatRoom {
         this.isPrivate = true;
     }
 
-    public ChatRoom(String name, Map<Integer, User> members) {
+    public ChatRoom(String name, Map<Long, User> members) {
         this.isPrivate = false;
         this.members = members;
         this.name = name;
     }
 
-    public ChatRoom(int id, User user1, User user2) {
+    public ChatRoom(long id, User user1, User user2) {
         this(user1, user2);
         this.id = id;
     }
 
-    public ChatRoom(int id, String name, Map<Integer, User> members) {
+    public ChatRoom(long id, String name, Map<Long, User> members) {
         this(name, members);
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -84,11 +84,11 @@ public class ChatRoom {
         return isPrivate;
     }
 
-    public Map<Integer, User> getMembers() {
+    public Map<Long, User> getMembers() {
         return members;
     }
 
-    public void setMembers(Map<Integer, User> members) {
+    public void setMembers(Map<Long, User> members) {
         if (!isPrivate) {
             this.members = members;
         }
