@@ -5,6 +5,7 @@ import com.group4.server.model.entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,14 +26,21 @@ public class EditProfileView extends View {
     @FXML
     private PasswordField confirmPasswordTextField;
 
-    public static EditProfileView getInstance(Stage stage) {
-        try {
-            instance = (EditProfileView) View.loadViewFromFxml(stage, "/editProfile.fxml", "Edit profile");
-            Controller controller = Controller.getInstance();
-            instance.setController(controller);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static EditProfileView getInstance() {
+        if (instance == null) {
+            try {
+                System.out.println("EditProfileView getInstance");
+                Stage dialogStage = new Stage();
+                dialogStage.initOwner(Controller.getInstance().getStage());
+                dialogStage.initModality(Modality.APPLICATION_MODAL);
+                instance = (EditProfileView) View.loadViewFromFxml(dialogStage, "/editProfile.fxml", "Edit profile");
+                Controller controller = Controller.getInstance();
+                instance.setController(controller);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        System.out.println("EditProfileView getInstance return");
         return instance;
     }
 
@@ -43,6 +51,7 @@ public class EditProfileView extends View {
     @FXML
     public void cancel() {
         this.getStage().close();
+        instance = null;
     }
 
     @FXML

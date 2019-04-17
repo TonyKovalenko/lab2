@@ -44,7 +44,7 @@ public class TestChatServer {
                 AuthorizationRequest.class, AuthorizationResponse.class,
                 ChatMessage.class, NewGroupChatMessage.class, UsersInChatMessage.class,
                 RegistrationRequest.class, RegistrationResponse.class,
-                ChangeCredentialsRequest.class
+                ChangeCredentialsRequest.class, ChangeCredentialsResponse.class
         };
         public JAXBContext context;
         public Marshaller marshaller;
@@ -188,6 +188,14 @@ public class TestChatServer {
                                 case PING:
                                     PingMessage pingMessage = new PingMessage();
                                     sendMessage(pingMessage, writer);
+                                    break;
+                                case CHANGE_CREDENTIALS_REQUEST:
+                                    ChangeCredentialsRequest request = (ChangeCredentialsRequest) message.getEncapsulatedMessage();
+                                    User user = users.get(request.getUserId());
+                                    user.setPassword(request.getNewPassword());
+                                    user.setFullName(request.getNewFullName());
+                                    ChangeCredentialsResponse response = new ChangeCredentialsResponse(true, user);
+                                    sendMessage(response, writer);
                                     break;
                                 default:
                                     break;

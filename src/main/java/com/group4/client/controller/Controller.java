@@ -3,13 +3,8 @@ package com.group4.client.controller;
 import com.group4.client.view.*;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
-import com.group4.server.model.message.types.ChangeCredentialsRequest;
-import com.group4.server.model.message.types.ChatMessage;
-import com.group4.server.model.message.types.NewGroupChatMessage;
-import com.group4.server.model.message.types.UsersInChatMessage;
+import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
-import com.group4.server.model.entities.ChatRoom;
-import com.group4.server.model.entities.User;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -143,6 +138,17 @@ public class Controller extends Application {
                     chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
                     updateChatRoomsView();
                     break;
+                case CHANGE_CREDENTIALS_RESPONSE:
+                    ChangeCredentialsResponse changeCredentialsResponse = (ChangeCredentialsResponse) responseMessage.getEncapsulatedMessage();
+                    if (changeCredentialsResponse.isConfirmed()) {
+                        currentUser = changeCredentialsResponse.getUser();
+                        Platform.runLater(() -> {
+                            DialogWindow.showInfoWindow("Credentials change was confirmed");
+                            EditProfileView.getInstance().cancel();
+                        });
+                    } else {
+                        Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
+                    }
                 default:
                     break;
             }
@@ -155,9 +161,16 @@ public class Controller extends Application {
     }
 
     public void sendMessageToChat() {
+        if (mainView.getSelectedChatRoom() == null) {
+            return;
+        }
+        String text = mainView.getMessageInput().trim();
+        if (text.isEmpty()) {
+            return;
+        }
         ChatMessage message = new ChatMessage();
         message.setFromId(this.getCurrentUser().getId());
-        message.setText(mainView.getMessageInput());
+        message.setText(text);
         message.setChatId(mainView.getSelectedChatRoom().getId());
 
         thread.sendMessage(message);
@@ -184,6 +197,7 @@ public class Controller extends Application {
             for (User user : users) {
                 usersMap.put(user.getId(), user);
             }
+            usersMap.put(currentUser.getId(), currentUser);
             String chatName = view.getGroupName();
             chatRoom = new ChatRoom(chatName, usersMap);
         }
@@ -193,12 +207,10 @@ public class Controller extends Application {
     }
 
     public void showEditProfileDialog() {
-        Stage dialogStage = new Stage();
-        dialogStage.initOwner(stage);
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        EditProfileView editProfileView = EditProfileView.getInstance(dialogStage);
+        EditProfileView editProfileView = EditProfileView.getInstance();
         editProfileView.setUserInfo(currentUser);
-        dialogStage.showAndWait();
+        System.out.println("showEditProfileDialog");
+        editProfileView.getStage().showAndWait();
     }
 
     public void saveProfileChanges(EditProfileView view) {
@@ -220,8 +232,7 @@ public class Controller extends Application {
         }
 
         if (isUpdated) {
-            thread.sendMessage(new ChangeCredentialsRequest(newFullName, newPassword));
-            view.cancel();
+            thread.sendMessage(new ChangeCredentialsRequest(currentUser.getId(), newFullName, newPassword));
         }
     }
 }

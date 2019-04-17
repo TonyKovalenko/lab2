@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "changeCredentialsRequest")
+@XmlRootElement(name = "changeCredentialsResponse")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ChangeCredentialsResponse implements TransmittableMessage {
     @XmlElement
