@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+
 <VBox minHeight="200.0" minWidth="700.0" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.MainView">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="Menu">
             <items>
-                <MenuItem fx:id="newGroupChatButton" mnemonicParsing="false" onAction="#createNewChat"
-                          text="New chat"/>
-                <MenuItem fx:id="editProfileButton" mnemonicParsing="false" onAction="#editProfile"
-                          text="Edit profile"/>
-                <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem fx:id="exitButton" mnemonicParsing="false" onAction="#exit" text="Exit"/>
+                <MenuItem fx:id="newGroupChatButton" mnemonicParsing="false" onAction="#createNewChat" text="New chat" />
+                <MenuItem fx:id="editProfileButton" mnemonicParsing="false" onAction="#editProfile" text="Edit profile" />
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem fx:id="exitButton" mnemonicParsing="false" onAction="#exit" text="Exit" />
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
@@ -50,6 +64,14 @@
                           </FXCollections>
                       </items>-->
                   </ListView>
+                  <ImageView fx:id="infoImageButton" fitHeight="30.0" fitWidth="30.0" layoutX="438.0" layoutY="10.0" onMouseClicked="#showChatInfo" pickOnBounds="true" preserveRatio="true" visible="false" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="10.0">
+                     <image>
+                        <Image url="@info-circle.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
         </children>
       </AnchorPane>
         <AnchorPane maxWidth="400.0" minWidth="-Infinity" prefWidth="250.0">

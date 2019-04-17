@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -25,6 +26,9 @@ public class MainView extends View {
 
     @FXML
     private Label chatName;
+
+    @FXML
+    private ImageView infoImageButton;
 
     @FXML
     private ListView<ChatMessage> chatMessageListView;
@@ -60,8 +64,10 @@ public class MainView extends View {
                     if (Controller.getInstance().getCurrentUser() != null) {
                         chatName.setText(newValue.getOtherMember(Controller.getInstance().getCurrentUser()).getNickname());
                     }
+                    infoImageButton.setVisible(false);
                 } else {
                     chatName.setText(newValue.getName());
+                    infoImageButton.setVisible(true);
                 }
                 chatMessageListView.scrollTo(chatMessageListView.getItems().size()-1);
             }
@@ -86,6 +92,11 @@ public class MainView extends View {
     @FXML
     private void onSendButtonClick() {
         controller.sendMessageToChat();
+    }
+
+    @FXML
+    private void showChatInfo() {
+        controller.showChatInfo();
     }
 
     public void setOnlineUsers(Collection<User> users) {

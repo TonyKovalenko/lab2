@@ -36,7 +36,7 @@ public class CreateChatView extends View {
 
     public static CreateChatView getInstance() {
         try {
-            instance = (CreateChatView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/createGroupView.fxml", "Create chat");
+            instance = (CreateChatView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/createChatView.fxml", "Create chat");
             Controller controller = Controller.getInstance();
             instance.setController(controller);
         } catch (IOException e) {
@@ -47,7 +47,7 @@ public class CreateChatView extends View {
 
     public static CreateChatView getInstance(Stage stage) {
         try {
-            instance = (CreateChatView) View.loadViewFromFxml(stage, "/createGroupView.fxml", "Create chat");
+            instance = (CreateChatView) View.loadViewFromFxml(stage, "/createChatView.fxml", "Create chat");
             Controller controller = Controller.getInstance();
             instance.setController(controller);
         } catch (IOException e) {

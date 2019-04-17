@@ -71,14 +71,12 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id == user.id &&
-                Objects.equals(nickname, user.nickname) &&
-                Objects.equals(fullName, user.fullName) &&
-                Objects.equals(password, user.password);
+                Objects.equals(nickname, user.nickname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nickname, fullName, password);
+        return Objects.hash(id, nickname);
     }
 
     @Override

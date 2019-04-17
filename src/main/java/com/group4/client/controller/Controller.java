@@ -243,4 +243,10 @@ public class Controller extends Application {
             thread.sendMessage(new ChangeCredentialsRequest(currentUser.getId(), newFullName, newPassword));
         }
     }
+
+    public void showChatInfo() {
+        ChatInfoView chatInfoView = ChatInfoView.getInstance();
+        chatInfoView.setChatRoom(mainView.getSelectedChatRoom());
+        chatInfoView.getStage().showAndWait();
+    }
 }
