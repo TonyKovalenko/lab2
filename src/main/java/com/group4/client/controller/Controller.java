@@ -14,10 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Controller extends Application {
     private Stage stage;
@@ -80,6 +77,16 @@ public class Controller extends Application {
         Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
     }
 
+    public List<User> getUsersWithoutPrivateChat() {
+        List<User> usersWithoutPrivateChat = new ArrayList<>(getUsersWithoutCurrent());
+        Controller.getInstance().getChatRooms().values()
+                .stream()
+                .filter(item -> item.isPrivate())
+                .forEach((item) -> {
+                    usersWithoutPrivateChat.remove(item.getOtherMember(Controller.getInstance().getCurrentUser()));
+                });
+        return usersWithoutPrivateChat;
+    }
     /**
      * The main entry point for all JavaFX applications.
      * The start method is called after the init method has returned,
@@ -182,6 +189,7 @@ public class Controller extends Application {
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         CreateChatView createChatView = CreateChatView.getInstance(dialogStage);
         createChatView.setOnlineUsers(getUsersWithoutCurrent());
+        createChatView.setUsersWithoutPrivateChat(getUsersWithoutPrivateChat());
         dialogStage.showAndWait();
     }
 

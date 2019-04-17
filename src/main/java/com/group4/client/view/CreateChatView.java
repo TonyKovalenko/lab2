@@ -3,6 +3,7 @@ package com.group4.client.view;
 import com.group4.client.controller.Controller;
 import com.group4.server.model.entities.User;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
@@ -18,6 +19,8 @@ import java.util.List;
 public class CreateChatView extends View {
     private static CreateChatView instance;
     private Controller controller;
+    private ObservableList<User> onlineUsers;
+    private ObservableList<User> usersWithoutPrivateChat;
 
     @FXML
     private ListView<User> usersListView;
@@ -58,7 +61,12 @@ public class CreateChatView extends View {
     }
 
     public void setOnlineUsers(Collection<User> onlineUsers) {
-        usersListView.setItems(FXCollections.observableArrayList(onlineUsers));
+        this.onlineUsers = FXCollections.observableArrayList(onlineUsers);
+        usersListView.setItems(this.onlineUsers);
+    }
+
+    public void setUsersWithoutPrivateChat(Collection<User> usersWithoutPrivateChat) {
+        this.usersWithoutPrivateChat = FXCollections.observableArrayList(usersWithoutPrivateChat);
     }
 
     public List<User> getUsersList() {
@@ -87,9 +95,12 @@ public class CreateChatView extends View {
         if (isPrivateCheckbox.isSelected()) {
             groupFieldsPane.setVisible(false);
             usersListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            usersListView.setItems(usersWithoutPrivateChat);
+
         } else {
             groupFieldsPane.setVisible(true);
             usersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            usersListView.setItems(onlineUsers);
         }
     }
 
