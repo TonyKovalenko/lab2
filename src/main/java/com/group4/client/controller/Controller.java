@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Controller extends Application {
     private Stage stage;
@@ -156,6 +157,7 @@ public class Controller extends Application {
                     } else {
                         Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
                     }
+                    break;
                 default:
                     break;
             }
@@ -248,5 +250,23 @@ public class Controller extends Application {
         ChatInfoView chatInfoView = ChatInfoView.getInstance();
         chatInfoView.setChatRoom(mainView.getSelectedChatRoom());
         chatInfoView.getStage().showAndWait();
+    }
+
+    public void saveGroupChatChanges() {
+
+    }
+
+    public void showAddMemberToGroupChatView() {
+        AddMembersToGroupChatView view = AddMembersToGroupChatView.getInstance();
+        Collection<User> members = ChatInfoView.getInstance().getUsersList();
+        List<User> availableUsers = getUsersWithoutCurrent().stream().filter(item -> !members.contains(item)).collect(Collectors.toList());
+        view.setAvailableUsers(availableUsers);
+        view.getStage().showAndWait();
+    }
+
+    public void addMembersToGroupChat() {
+        AddMembersToGroupChatView view = AddMembersToGroupChatView.getInstance();
+        ChatInfoView.getInstance().addMembersToListView(AddMembersToGroupChatView.getInstance().getSelectedUsers());
+        view.close();
     }
 }

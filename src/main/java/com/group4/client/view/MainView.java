@@ -1,6 +1,9 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
+import com.group4.client.view.listcells.ChatListCellView;
+import com.group4.client.view.listcells.MessagesListCellView;
+import com.group4.client.view.listcells.UsersListCellView;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.ChatMessage;

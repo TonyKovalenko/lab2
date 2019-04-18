@@ -51,11 +51,10 @@ public class EditProfileView extends View {
     @FXML
     public void cancel() {
         this.getStage().close();
-        instance = null;
     }
 
     @FXML
-    void saveChanges() {
+    private void saveChanges() {
         controller.saveProfileChanges(instance);
     }
 

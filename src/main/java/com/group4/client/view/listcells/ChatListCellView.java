@@ -1,4 +1,4 @@
-package com.group4.client.view;
+package com.group4.client.view.listcells;
 
 import com.group4.client.controller.Controller;
 import com.group4.server.model.entities.ChatRoom;

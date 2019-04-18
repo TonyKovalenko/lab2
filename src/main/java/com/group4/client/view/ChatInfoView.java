@@ -1,21 +1,20 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
+import com.group4.client.view.listcells.GroupMemberListCellView;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ChatInfoView extends View {
     public static ChatInfoView instance;
@@ -59,17 +58,25 @@ public class ChatInfoView extends View {
 
     @FXML
     private void handleAddMemberClick() {
-
+        controller.showAddMemberToGroupChatView();
     }
 
     @FXML
     private void handleSaveClick() {
-
+        controller.saveGroupChatChanges();
     }
 
     public void setChatRoom(ChatRoom chatRoom) {
         groupNameTextField.setText(chatRoom.getName());
         ObservableList<User> users = FXCollections.observableArrayList(chatRoom.getMembers().values());
         usersListView.setItems(users);
+    }
+
+    public void addMembersToListView(List<User> selectedUsers) {
+        usersListView.getItems().addAll(selectedUsers);
+    }
+
+    public List<User> getUsersList() {
+        return usersListView.getItems();
     }
 }

@@ -1,4 +1,4 @@
-package com.group4.client.view;
+package com.group4.client.view.listcells;
 
 import com.group4.server.model.entities.User;
 import javafx.fxml.FXML;

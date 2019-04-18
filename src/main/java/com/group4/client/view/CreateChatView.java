@@ -1,6 +1,7 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
+import com.group4.client.view.listcells.UsersListCellView;
 import com.group4.server.model.entities.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
