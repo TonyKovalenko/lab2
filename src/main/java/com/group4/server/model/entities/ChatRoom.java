@@ -59,7 +59,7 @@ public class ChatRoom {
         if (!isPrivate) {
             return name;
         }
-        throw new RuntimeException("Operation can't be used for group chat");
+        throw new UnsupportedOperationException("Operation can't be used for group chat");
     }
 
     public User getOtherMember(User username) {
@@ -69,11 +69,9 @@ public class ChatRoom {
             } else if (members.get(1).equals(username)) {
                 return members.get(0);
             }
-            System.out.println("Current user: " + username);
-            System.out.println("Users in chat: " + getMembers());
-            throw new RuntimeException("User was not found.");
+            throw new NoSuchElementException("User was not found.");
         }
-        throw new RuntimeException("Operation can't be used for private chat.");
+        throw new UnsupportedOperationException("Operation can't be used for private chat.");
     }
 
     public boolean isPrivate() {

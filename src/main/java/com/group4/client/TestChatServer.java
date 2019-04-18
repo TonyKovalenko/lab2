@@ -13,7 +13,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.stream.Stream;
 
 
 public class TestChatServer {
@@ -163,7 +162,7 @@ public class TestChatServer {
                                         authorizationResponse.setUser(user2);
                                     }
                                     userCounter++;
-                                    authorizationResponse.setMainChatRoom(new ChatRoom(3, "Whovians", users));
+                                    authorizationResponse.setChatRoomsWithUser(Collections.singletonList(new ChatRoom(3, "Whovians", users)));
                                     sendMessage(authorizationResponse, writer);
 
                                     UsersInChatMessage message0 = new UsersInChatMessage();
@@ -171,7 +170,7 @@ public class TestChatServer {
                                     sendMessage(message0, writer);
                                     break;
                                 case REGISTRATION_REQUEST:
-                                    RegistrationResponse registrationResponse = new RegistrationResponse(true, 0);
+                                    RegistrationResponse registrationResponse = new RegistrationResponse(true, new ChatRoom());
                                     sendMessage(registrationResponse, writer);
                                     break;
                                 case NEW_GROUPCHAT:

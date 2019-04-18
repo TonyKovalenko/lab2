@@ -68,7 +68,7 @@ public class ChatInfoView extends View {
 
     public void setChatRoom(ChatRoom chatRoom) {
         groupNameTextField.setText(chatRoom.getName());
-        ObservableList<User> users = FXCollections.observableArrayList(chatRoom.getMembers().values());
+        ObservableList<User> users = FXCollections.observableArrayList(chatRoom.getMembers());
         usersListView.setItems(users);
     }
 

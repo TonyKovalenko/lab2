@@ -22,7 +22,7 @@ public class MainView extends View {
     private Controller controller;
 
     @FXML
-    private ListView<ChatRoom> chatRooms;
+    private ListView<ChatRoom> chatRoomsWithUser;
 
     @FXML
     private TextArea messageInput;
@@ -56,10 +56,10 @@ public class MainView extends View {
     }
 
     public void initialize() {
-        chatRooms.setCellFactory(param -> new ChatListCellView());
+        chatRoomsWithUser.setCellFactory(param -> new ChatListCellView());
         onlineUsers.setCellFactory(param -> new UsersListCellView());
         chatMessageListView.setCellFactory(param -> new MessagesListCellView());
-        chatRooms.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        chatRoomsWithUser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println("selection changed to : " + newValue);
             if (newValue != null) {
                 chatMessageListView.setItems(FXCollections.observableArrayList(newValue.getMessages()));
@@ -107,12 +107,12 @@ public class MainView extends View {
         onlineUsers.setItems(FXCollections.observableArrayList(users));
     }
 
-    public void setChatRooms(Collection<ChatRoom> chatRooms) {
-        //System.out.println(chatRooms);
-        for (ChatRoom room : chatRooms) {
+    public void setChatRoomsWithUser(Collection<ChatRoom> chatRoomsWithUser) {
+        //System.out.println(chatRoomsWithUser);
+        for (ChatRoom room : chatRoomsWithUser) {
             System.out.println(room.getId() + " - " + room.getMessages().size());
         }
-        this.chatRooms.setItems(FXCollections.observableArrayList(chatRooms));
+        this.chatRoomsWithUser.setItems(FXCollections.observableArrayList(chatRoomsWithUser));
     }
 
     public String getMessageInput() {
@@ -120,6 +120,6 @@ public class MainView extends View {
     }
 
     public ChatRoom getSelectedChatRoom() {
-        return chatRooms.getSelectionModel().getSelectedItem();
+        return chatRoomsWithUser.getSelectionModel().getSelectedItem();
     }
 }

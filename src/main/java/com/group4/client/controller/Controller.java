@@ -75,7 +75,7 @@ public class Controller extends Application {
     }
 
     public void updateChatRoomsView() {
-        Platform.runLater(() -> mainView.setChatRooms(chatRooms.values()));
+        Platform.runLater(() -> mainView.setChatRoomsWithUser(chatRooms.values()));
     }
 
     public List<User> getUsersWithoutPrivateChat() {
@@ -127,7 +127,10 @@ public class Controller extends Application {
             switch (responseMessage.getMessageType()) {
                 case USERS_IN_CHAT:
                     UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
-                    users = usersInChatMessage.getUsers();
+                    users = new HashMap<>();
+                    for (User user : usersInChatMessage.getUsers()) {
+                        users.put(user.getId(), user);
+                    }
                     users.remove(currentUser.getId());
                     if (chatRooms.get(2L) == null) {
                         chatRooms.put(2L, new ChatRoom(2, currentUser, getUserById((currentUser.getId()==10000)?10001:10000)));
@@ -261,7 +264,7 @@ public class Controller extends Application {
         }
 
         ChatRoom room = mainView.getSelectedChatRoom();
-        List<User> oldMembers = new ArrayList<>(room.getMembers().values());
+        List<User> oldMembers = new ArrayList<>(room.getMembers());
         if (!newName.equals(room.getName()) || !oldMembers.equals(newUsersList)) {
             List<User> membersToAdd = new ArrayList<>(newUsersList);
             membersToAdd.removeAll(oldMembers);

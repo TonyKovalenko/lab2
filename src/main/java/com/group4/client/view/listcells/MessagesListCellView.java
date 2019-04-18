@@ -10,6 +10,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class MessagesListCellView extends ListCell<ChatMessage> {
 
@@ -46,7 +47,11 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
                 }
 
             }
-            User user = Controller.getInstance().getChatRoomById(message.getChatId()).getMembers().get(message.getFromId());
+            Optional<User> optionalUser = Controller.getInstance().getChatRoomById(message.getChatId())
+                    .getMembers()
+                    .stream()
+                    .filter(item -> item.getId() == message.getFromId()).findFirst();
+            User user = optionalUser.orElse(new User());
             nameLabel.setText(user.getNickname());
             messageTextLabel.setText(message.getText());
 
