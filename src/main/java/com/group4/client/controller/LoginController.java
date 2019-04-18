@@ -10,6 +10,8 @@ import com.group4.server.model.message.wrappers.MessageWrapper;
 import com.group4.server.model.entities.ChatRoom;
 import javafx.application.Platform;
 
+import java.util.List;
+
 public class LoginController {
     private LoginView view;
     private static LoginController instance;
@@ -54,8 +56,10 @@ public class LoginController {
             System.out.println("authorization was confirmed");
             Platform.runLater(() -> MainView.getInstance().showStage());
             Controller.getInstance().setCurrentUser(innerMessage.getUser());
-            ChatRoom chatRoom = innerMessage.getMainChatRoom();
-            Controller.getInstance().getChatRooms().put(chatRoom.getId(), chatRoom);
+            List<ChatRoom> chatRooms = innerMessage.getChatRoomsWithUser();
+            for (ChatRoom room : chatRooms) {
+                Controller.getInstance().getChatRooms().put(room.getId(), room);
+            }
         } else {
             System.out.println("authorization was denied");
         }

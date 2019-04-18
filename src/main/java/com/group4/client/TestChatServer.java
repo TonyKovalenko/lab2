@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.stream.Stream;
 
 
 public class TestChatServer {
@@ -104,11 +105,11 @@ public class TestChatServer {
                 marshaller = context.createMarshaller();
                 unmarshaller = context.createUnmarshaller();
 
-                HashMap<Long, User> users = new HashMap<>();
-                User user1 = new User(10000, "donna",  "Donna Noble", "1");
+                List<User> users = new ArrayList<>();
+                User user1 = new User(10000, "donna", "Donna Noble", "1");
                 User user2 = new User(10001, "doctor", "The Doctor", "1");
-                users.put(10000L, user1);
-                users.put(10001L, user2);
+                users.add(user1);
+                users.add(user2);
 
                 writers.add(writer);
 
@@ -123,7 +124,7 @@ public class TestChatServer {
                                 User user = new User();
                                 user.setNickname("User#" + i);
                                 user.setId(i);
-                                users.put(i, user);
+                                users.add(user);
                                 i++;
                                 message0.setUsers(users);
                                 for (PrintWriter writer : writers) {
@@ -144,7 +145,7 @@ public class TestChatServer {
                 int idCounter = 5;
 
                 while (socket.isConnected()) {
-                    if(reader.ready()) {
+                    if (reader.ready()) {
                         try (StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"))) {
                             MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
                             System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
@@ -160,7 +161,7 @@ public class TestChatServer {
                                         authorizationResponse.setUser(user2);
                                     }
                                     userCounter++;
-                                    authorizationResponse.setMainChatRoom(new ChatRoom(3, "Whovians", users));
+                                    authorizationResponse.setChatRoomsWithUser(Collections.singletonList(new ChatRoom(3, "Whovians", users)));
                                     sendMessage(authorizationResponse, writer);
 
                                     UsersInChatMessage message0 = new UsersInChatMessage();
@@ -168,7 +169,7 @@ public class TestChatServer {
                                     sendMessage(message0, writer);
                                     break;
                                 case REGISTRATION_REQUEST:
-                                    RegistrationResponse registrationResponse = new RegistrationResponse(true, 0);
+                                    RegistrationResponse registrationResponse = new RegistrationResponse(true, new ChatRoom());
                                     sendMessage(registrationResponse, writer);
                                     break;
                                 case NEW_GROUPCHAT:
@@ -191,7 +192,10 @@ public class TestChatServer {
                                     break;
                                 case CHANGE_CREDENTIALS_REQUEST:
                                     ChangeCredentialsRequest request = (ChangeCredentialsRequest) message.getEncapsulatedMessage();
-                                    User user = users.get(request.getUserId());
+                                    Optional<User> optionalUser = users.stream()
+                                            .filter(element -> request.getUserId() == element.getId())
+                                            .findFirst();
+                                    User user = optionalUser.orElse(new User());
                                     user.setPassword(request.getNewPassword());
                                     user.setFullName(request.getNewFullName());
                                     ChangeCredentialsResponse response = new ChangeCredentialsResponse(true, user);

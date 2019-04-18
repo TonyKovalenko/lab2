@@ -1,8 +1,11 @@
 package com.group4.server.controller;
 
-//import com.group4.server.model.containers.ChatContainer;
+//import com.group4.server.model.containers.ChatRoomsContainer;
 //import com.group4.server.model.containers.UserStreamContainer;
+import com.group4.server.model.containers.ChatRoomsContainer;
+import com.group4.server.model.containers.UserStreamContainer;
 import com.group4.server.model.entities.User;
+import com.group4.server.model.message.handlers.ChatRoomCreationHandler;
 import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
@@ -19,7 +22,8 @@ public class MessageController {
             AuthorizationRequest.class,
             User.class,
             RegistrationRequest.class,
-            RegistrationResponse.class
+            RegistrationResponse.class,
+            ChatRoomCreationRequest.class
     };
 
     private JAXBContext context;
@@ -66,8 +70,8 @@ public class MessageController {
                 RegistrationResponse registrationResponse = RegistrationAuthorizationHandler.INSTANCE.handle(registrationRequest);
                 if (registrationResponse.isRegistrationSuccessful()) {
                     User user = new User(registrationRequest.getUserNickname(), registrationRequest.getPassword(), registrationRequest.getFullName());
-//                    UserStreamContainer.INSTANCE.putStream(user, out);
-//                    ChatContainer.INSTANCE.putToInitialRoom(user);
+                    UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
+                    ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
                 }
                 sendResponse(registrationResponse, out);
                 break;
@@ -75,12 +79,19 @@ public class MessageController {
                 AuthorizationRequest authorizationRequest = (AuthorizationRequest) requestMessage.getEncapsulatedMessage();
                 AuthorizationResponse authorizationResponse = RegistrationAuthorizationHandler.INSTANCE.handle(authorizationRequest);
                 if (authorizationResponse.isConfirmed()) {
-                    User user = RegistrationAuthorizationHandler.INSTANCE.getUser(authorizationRequest.getGeneratedId());
-//                    UserStreamContainer.INSTANCE.putStream(user, out);
-//                    ChatContainer.INSTANCE.putToInitialRoom(user);
+                    User user = RegistrationAuthorizationHandler.INSTANCE.getUser(authorizationRequest.getUserNickname());
+                    UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
+                    ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
                 }
                 sendResponse(authorizationResponse, out);
                 break;
+            case CHAT_CREATION_REQUEST:
+                ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) requestMessage.getEncapsulatedMessage();
+                ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomCreationHandler.INSTANCE.handle(chatRoomCreationRequest);
+                if (chatRoomCreationResponse.isConfirmed()) {
+                //TODO send chat invitations
+                }
+                sendResponse(chatRoomCreationResponse, out);
             case PING:
                 break;
             case USER_DISCONNECT:

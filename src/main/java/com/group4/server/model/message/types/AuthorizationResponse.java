@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 @XmlRootElement(name = "authorizationResponse")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -16,7 +17,7 @@ public class AuthorizationResponse implements TransmittableMessage {
     @XmlElement
     private User user;
     @XmlElement
-    private ChatRoom mainChatRoom;
+    private List<ChatRoom> chatRoomsWithUser;
 
     public AuthorizationResponse() {
     }
@@ -25,10 +26,10 @@ public class AuthorizationResponse implements TransmittableMessage {
         this.isConfirmed = isConfirmed;
     }
 
-    public AuthorizationResponse(boolean isConfirmed, User user, ChatRoom mainChatRoom) {
+    public AuthorizationResponse(boolean isConfirmed, User user, List<ChatRoom> chatRoomsWithUser) {
         this.isConfirmed = isConfirmed;
         this.user = user;
-        this.mainChatRoom = mainChatRoom;
+        this.chatRoomsWithUser = chatRoomsWithUser;
     }
 
     public boolean isConfirmed() {
@@ -47,11 +48,11 @@ public class AuthorizationResponse implements TransmittableMessage {
         this.user = user;
     }
 
-    public ChatRoom getMainChatRoom() {
-        return mainChatRoom;
+    public List<ChatRoom> getChatRoomsWithUser() {
+        return chatRoomsWithUser;
     }
 
-    public void setMainChatRoom(ChatRoom mainChatRoom) {
-        this.mainChatRoom = mainChatRoom;
+    public void setChatRoomsWithUser(List<ChatRoom> chatRoomsWithUser) {
+        this.chatRoomsWithUser = chatRoomsWithUser;
     }
 }

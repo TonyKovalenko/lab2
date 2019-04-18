@@ -203,13 +203,8 @@ public class Controller extends Application {
             chatRoom = new ChatRoom(selectedUser, currentUser);
         } else {
             List<User> users = view.getUsersList();
-            Map<Long, User> usersMap = new HashMap<>();
-            for (User user : users) {
-                usersMap.put(user.getId(), user);
-            }
-            usersMap.put(currentUser.getId(), currentUser);
             String chatName = view.getGroupName();
-            chatRoom = new ChatRoom(chatName, usersMap);
+            chatRoom = new ChatRoom(chatName, users);
         }
         NewGroupChatMessage message = new NewGroupChatMessage(chatRoom);
         thread.sendMessage(message);

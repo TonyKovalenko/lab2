@@ -15,6 +15,7 @@ public class User {
     private String nickname;
     @XmlElement
     private String fullName;
+    @XmlElement
     private String password;
 
     public User() {
@@ -76,7 +77,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nickname);
+        return Objects.hash(nickname);
     }
 
     @Override
