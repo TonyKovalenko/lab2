@@ -70,7 +70,7 @@ public class Controller extends Application {
         return users.get(id);
     }
 
-    public Collection<User> getUsersWithoutCurrent() {
+    public Collection<User> getUsers() {
         return users.values();
     }
 
@@ -79,7 +79,7 @@ public class Controller extends Application {
     }
 
     public List<User> getUsersWithoutPrivateChat() {
-        List<User> usersWithoutPrivateChat = new ArrayList<>(getUsersWithoutCurrent());
+        List<User> usersWithoutPrivateChat = new ArrayList<>(getUsers());
         Controller.getInstance().getChatRooms().values()
                 .stream()
                 .filter(item -> item.isPrivate())
@@ -132,7 +132,7 @@ public class Controller extends Application {
                     if (chatRooms.get(2L) == null) {
                         chatRooms.put(2L, new ChatRoom(2, currentUser, getUserById((currentUser.getId()==10000)?10001:10000)));
                     }
-                    Platform.runLater(() -> mainView.setOnlineUsers(getUsersWithoutCurrent()));
+                    Platform.runLater(() -> mainView.setOnlineUsers(getUsers()));
                     break;
                 case NEW_GROUPCHAT:
                 case NEW_PRIVATECHAT:
@@ -190,7 +190,7 @@ public class Controller extends Application {
         dialogStage.initOwner(stage);
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         CreateChatView createChatView = CreateChatView.getInstance(dialogStage);
-        createChatView.setOnlineUsers(getUsersWithoutCurrent());
+        createChatView.setOnlineUsers(getUsers());
         createChatView.setUsersWithoutPrivateChat(getUsersWithoutPrivateChat());
         dialogStage.showAndWait();
     }
@@ -253,13 +253,36 @@ public class Controller extends Application {
     }
 
     public void saveGroupChatChanges() {
+        ChatInfoView view = ChatInfoView.getInstance();
+        List<User> newUsersList = view.getUsersList();
+        String newName = view.getName();
+        if (newName.isEmpty()) {
+            DialogWindow.showWarningWindow("Invalid name", "Group chat name cannot be empty");
+            return;
+        }
+        if (newUsersList.size() < 1) {
+            DialogWindow.showWarningWindow(null, "Group chat has to have at least 1 member");
+            return;
+        }
 
+        ChatRoom room = mainView.getSelectedChatRoom();
+        List<User> oldMembers = new ArrayList<>(room.getMembers().values());
+        if (!newName.equals(room.getName()) || !oldMembers.equals(newUsersList)) {
+            List<User> membersToAdd = new ArrayList<>(newUsersList);
+            membersToAdd.removeAll(oldMembers);
+            List<User> membersToDelete = new ArrayList<>(oldMembers);
+            membersToDelete.removeAll(newUsersList);
+
+            UpdateGroupChatMessage message = new UpdateGroupChatMessage(room.getId(), newName, membersToAdd, membersToDelete);
+            thread.sendMessage(message);
+        }
+        view.close();
     }
 
     public void showAddMemberToGroupChatView() {
         AddMembersToGroupChatView view = AddMembersToGroupChatView.getInstance();
         Collection<User> members = ChatInfoView.getInstance().getUsersList();
-        List<User> availableUsers = getUsersWithoutCurrent().stream().filter(item -> !members.contains(item)).collect(Collectors.toList());
+        List<User> availableUsers = getUsers().stream().filter(item -> !members.contains(item)).collect(Collectors.toList());
         view.setAvailableUsers(availableUsers);
         view.getStage().showAndWait();
     }

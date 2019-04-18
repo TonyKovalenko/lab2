@@ -1,5 +1,6 @@
 package com.group4.client.view.listcells;
 
+import com.group4.client.controller.Controller;
 import com.group4.server.model.entities.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,7 @@ public class GroupMemberListCellView extends ListCell<User> {
     private Label fullNameLabel;
 
     @FXML
-    private ImageView userImageView;
+    private ImageView imageView;
 
     private FXMLLoader mLLoader;
 
@@ -47,13 +48,15 @@ public class GroupMemberListCellView extends ListCell<User> {
         } else {
             nicknameLabel.setText(user.getNickname());
             fullNameLabel.setText(user.getFullName());
-
+            if (user.equals(Controller.getInstance().getCurrentUser()) || !Controller.getInstance().getCurrentUser().isAdmin()) {
+                stackPane.getChildren().remove(imageView);
+            }
             setText(null);
             setGraphic(stackPane);
         }
     }
 
-    public ImageView getUserImageView() {
-        return userImageView;
+    public ImageView getImageView() {
+        return imageView;
     }
 }

@@ -49,7 +49,7 @@ public class ChatInfoView extends View {
     public void initialize() {
         usersListView.setCellFactory(param -> {
             GroupMemberListCellView cell = new GroupMemberListCellView();
-            cell.getUserImageView().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            cell.getImageView().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 usersListView.getItems().remove(cell.getItem());
             });
             return cell;
@@ -78,5 +78,13 @@ public class ChatInfoView extends View {
 
     public List<User> getUsersList() {
         return usersListView.getItems();
+    }
+
+    public String getName() {
+        return groupNameTextField.getText();
+    }
+
+    public void close() {
+        this.getStage().close();
     }
 }

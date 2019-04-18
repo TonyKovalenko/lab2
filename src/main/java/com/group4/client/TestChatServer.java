@@ -44,7 +44,8 @@ public class TestChatServer {
                 AuthorizationRequest.class, AuthorizationResponse.class,
                 ChatMessage.class, NewGroupChatMessage.class, UsersInChatMessage.class,
                 RegistrationRequest.class, RegistrationResponse.class,
-                ChangeCredentialsRequest.class, ChangeCredentialsResponse.class
+                ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
+                UpdateGroupChatMessage.class
         };
         public JAXBContext context;
         public Marshaller marshaller;
@@ -107,6 +108,7 @@ public class TestChatServer {
                 HashMap<Long, User> users = new HashMap<>();
                 User user1 = new User(10000, "donna",  "Donna Noble", "1");
                 User user2 = new User(10001, "doctor", "The Doctor", "1");
+                user1.setAdmin(true);
                 users.put(10000L, user1);
                 users.put(10001L, user2);
 

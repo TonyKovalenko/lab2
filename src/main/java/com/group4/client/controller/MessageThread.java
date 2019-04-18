@@ -26,7 +26,8 @@ public class MessageThread extends Thread {
             AuthorizationRequest.class, AuthorizationResponse.class,
             ChatMessage.class, NewGroupChatMessage.class, UsersInChatMessage.class,
             RegistrationRequest.class, RegistrationResponse.class,
-            ChangeCredentialsRequest.class, ChangeCredentialsResponse.class
+            ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
+            UpdateGroupChatMessage.class
     };
     private JAXBContext context;
     private Map<MessageType, List<MessageWrapper>> sentMessages = new HashMap<>();

@@ -15,6 +15,10 @@ public class User {
     private String nickname;
     @XmlElement
     private String fullName;
+    @XmlElement
+    private boolean isAdmin;
+    @XmlElement
+    private boolean isBanned;
     private String password;
 
     public User() {
@@ -87,5 +91,21 @@ public class User {
                 ", fullName='" + fullName + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public boolean isBanned() {
+        return isBanned;
+    }
+
+    public void setBanned(boolean banned) {
+        isBanned = banned;
     }
 }
