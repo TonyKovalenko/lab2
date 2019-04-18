@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.stream.Stream;
 
 
 public class TestChatServer {
@@ -105,12 +106,12 @@ public class TestChatServer {
                 marshaller = context.createMarshaller();
                 unmarshaller = context.createUnmarshaller();
 
-                HashMap<Long, User> users = new HashMap<>();
-                User user1 = new User(10000, "donna",  "Donna Noble", "1");
+                List<User> users = new ArrayList<>();
+                User user1 = new User(10000, "donna", "Donna Noble", "1");
                 User user2 = new User(10001, "doctor", "The Doctor", "1");
+                users.add(user1);
+                users.add(user2);
                 user1.setAdmin(true);
-                users.put(10000L, user1);
-                users.put(10001L, user2);
 
                 writers.add(writer);
 
@@ -125,7 +126,7 @@ public class TestChatServer {
                                 User user = new User();
                                 user.setNickname("User#" + i);
                                 user.setId(i);
-                                users.put(i, user);
+                                users.add(user);
                                 i++;
                                 message0.setUsers(users);
                                 for (PrintWriter writer : writers) {
@@ -193,7 +194,10 @@ public class TestChatServer {
                                     break;
                                 case CHANGE_CREDENTIALS_REQUEST:
                                     ChangeCredentialsRequest request = (ChangeCredentialsRequest) message.getEncapsulatedMessage();
-                                    User user = users.get(request.getUserId());
+                                    Optional<User> optionalUser = users.stream()
+                                            .filter(element -> request.getUserId() == element.getId())
+                                            .findFirst();
+                                    User user = optionalUser.orElse(new User());
                                     user.setPassword(request.getNewPassword());
                                     user.setFullName(request.getNewFullName());
                                     ChangeCredentialsResponse response = new ChangeCredentialsResponse(true, user);

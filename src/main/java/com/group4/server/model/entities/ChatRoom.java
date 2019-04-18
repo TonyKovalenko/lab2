@@ -6,10 +6,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @XmlRootElement(name = "chatRoom")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -21,20 +18,20 @@ public class ChatRoom {
     @XmlElement
     private String name;
     @XmlElement
-    private Map<Long, User> members;
+    private List<User> members;
     @XmlElement
     private List<ChatMessage> messages = new ArrayList<>();
 
     public ChatRoom() {}
 
     public ChatRoom(User user1, User user2) {
-        members = new HashMap<>();
-        members.put(user1.getId(), user1);
-        members.put(user2.getId(), user2);
+        members = new ArrayList<>();
+        members.add(user1);
+        members.add(user2);
         this.isPrivate = true;
     }
 
-    public ChatRoom(String name, Map<Long, User> members) {
+    public ChatRoom(String name, List<User> members) {
         this.isPrivate = false;
         this.members = members;
         this.name = name;
@@ -45,7 +42,7 @@ public class ChatRoom {
         this.id = id;
     }
 
-    public ChatRoom(long id, String name, Map<Long, User> members) {
+    public ChatRoom(long id, String name, List<User> members) {
         this(name, members);
         this.id = id;
     }
@@ -65,15 +62,14 @@ public class ChatRoom {
         throw new RuntimeException("Operation can't be used for group chat");
     }
 
-    public User getOtherMember(User user) {
+    public User getOtherMember(User username) {
         if (isPrivate) {
-            List<User> membersList= new ArrayList<>(members.values());
-            if (membersList.get(0).equals(user)) {
-                return membersList.get(1);
-            } else if (membersList.get(1).equals(user)) {
-                return membersList.get(0);
+            if (members.get(0).equals(username)) {
+                return members.get(1);
+            } else if (members.get(1).equals(username)) {
+                return members.get(0);
             }
-            System.out.println("Current user: " + user);
+            System.out.println("Current user: " + username);
             System.out.println("Users in chat: " + getMembers());
             throw new RuntimeException("User was not found.");
         }
@@ -84,11 +80,11 @@ public class ChatRoom {
         return isPrivate;
     }
 
-    public Map<Long, User> getMembers() {
+    public List<User> getMembers() {
         return members;
     }
 
-    public void setMembers(Map<Long, User> members) {
+    public void setMembers(List<User> members) {
         if (!isPrivate) {
             this.members = members;
         }
@@ -96,13 +92,13 @@ public class ChatRoom {
 
     public void addMember(User newMember) {
         if (!isPrivate) {
-            members.put(newMember.getId(), newMember);
+            members.add(newMember);
         }
     }
 
-    public void removeMember(User member) {
+    public void removeMember(String username) {
         if (!isPrivate) {
-            members.remove(member.getId());
+            members.removeIf(user -> user.getNickname().equals(username));
         }
     }
 
@@ -116,6 +112,27 @@ public class ChatRoom {
 
     public void addMessage(ChatMessage message) {
         messages.add(message);
+    }
+
+    public boolean isMemberPresent(String nickname) {
+        Optional<?> optionalUser = members.stream().filter(user -> user.getNickname().equals(nickname)).findFirst();
+        return optionalUser.isPresent();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChatRoom chatRoom = (ChatRoom) o;
+        return id == chatRoom.id &&
+                isPrivate == chatRoom.isPrivate &&
+                name.equals(chatRoom.name) &&
+                members.equals(chatRoom.members);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, isPrivate, name, members);
     }
 
     @Override

@@ -44,7 +44,7 @@
       <items>
         <AnchorPane maxWidth="400.0" minWidth="-Infinity" prefWidth="250.0">
           <children>
-                  <ListView fx:id="chatRooms" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ListView fx:id="chatRoomsWithUser" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
           </children>
         </AnchorPane>
       <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="644.0" prefWidth="517.0">

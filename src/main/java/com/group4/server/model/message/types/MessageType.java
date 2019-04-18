@@ -16,6 +16,8 @@ public enum MessageType {
     CHANGE_CREDENTIALS_REQUEST,
     CHANGE_CREDENTIALS_RESPONSE,
     UPDATE_GROUP_CHAT,
+    CHAT_CREATION_REQUEST,
+    CHAT_CREATION_RESPONSE,
     SERVER_SHUTDOWN,
     USER_DISCONNECT;
 
@@ -31,6 +33,8 @@ public enum MessageType {
         put(ChangeCredentialsRequest.class.getSimpleName(), CHANGE_CREDENTIALS_REQUEST);
         put(ChangeCredentialsResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);
         put(UpdateGroupChatMessage.class.getSimpleName(), UPDATE_GROUP_CHAT);
+        put(ChatRoomCreationRequest.class.getSimpleName(), CHAT_CREATION_REQUEST);
+        put(ChatRoomCreationResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);
        // put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
     }};
 
