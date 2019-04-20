@@ -54,33 +54,33 @@ public class TestChatServer {
         public Unmarshaller unmarshaller;
 
         public List<ChatMessage> messages = new ArrayList<ChatMessage>() {{
-            add(new ChatMessage("user1", 2, "The Library. \nSo big it doesn't need a name. Just a great big The."));
-            add(new ChatMessage("user2", 3, "It's like a city. "));
-            add(new ChatMessage("user2", 2, "It's a world. \nLiterally, a world. \nThe whole core of the planet is the index computer. Biggest hard drive ever. And up here, every book ever written. Whole continents of Jeffrey Archer, Bridget Jones, Monty Python's Big Red Book. Brand new editions, specially printed. "));
-            add(new ChatMessage("user2", 2, "We're near the equator, so this must be biographies. I love biographies. "));
-            add(new ChatMessage("user1", 3, "Yeah, very you. Always a death at the end. "));
-            add(new ChatMessage("user2", 2, "You need a good death. Without death, there'd only be comedies. Dying gives us size. "));
-            add(new ChatMessage("user2", 2, "Way-a. Spoilers. "));
-            add(new ChatMessage("user1", 2, "What? "));
-            add(new ChatMessage("user2", 3, "These books are from your future. \nYou don't want to read ahead. Spoil all the surprises. Like peeking at the end. "));
-            add(new ChatMessage("user1", 2, "Isn't travelling with you one big spoiler? "));
-            add(new ChatMessage("user2", 2, "I try to keep you away from major plot developments. Which, to be honest, I seem to be very bad at, because you know what? This is the biggest library in the universe. So where is everyone? It's silent."));
-            add(new ChatMessage("user1", 2, "The library? "));
-            add(new ChatMessage("user2", 2, "The planet. The whole planet. "));
-            add(new ChatMessage("user1", 2, "Maybe it's a Sunday. "));
-            add(new ChatMessage("user2", 2, "No, I never land on Sundays. Sundays are boring. "));
-            add(new ChatMessage("user1", 2, "Well, maybe everyone's really, really quiet. "));
-            add(new ChatMessage("user2", 2, "Yeah, maybe. But they'd still show up on the system. "));
-            add(new ChatMessage("user1", 2, "Doctor, why are we here? Really, why? "));
-            add(new ChatMessage("user2", 2, "Oh, you know, just passing. "));
-            add(new ChatMessage("user1", 2, "No, seriously. It was all let's hit the beach, then suddenly we're in a library. Why? "));
-            add(new ChatMessage("user2", 3, "Now that's interesting. "));
-            add(new ChatMessage("user1", 3, "What? "));
-            add(new ChatMessage("user2", 3, "Scanning for life forms. If I do a scan looking for your basic humanoids. You know, your book readers, few limbs and a face, apart from us, I get nothing. Zippo, nada. See? Nobody home. But if I widen the parameters to any kind of life. "));
-            add(new ChatMessage("user2", 3, "A million, million. Gives up after that. A million, million. "));
-            add(new ChatMessage("user1", 3, "But there's nothing here. There's no one. "));
-            add(new ChatMessage("user2", 3, "And not a sound. A million. million life forms, and silence in the library. "));
-            add(new ChatMessage("user1", 3, "But there's no one here. There's just books. I mean, it's not the books, is it? I mean, it can't be the books, can it? I mean, books can't be alive. \n"));
+            add(new ChatMessage("doctor", 2, "The Library. \nSo big it doesn't need a name. Just a great big The."));
+            add(new ChatMessage("donna", 3, "It's like a city. "));
+            add(new ChatMessage("donna", 2, "It's a world. \nLiterally, a world. \nThe whole core of the planet is the index computer. Biggest hard drive ever. And up here, every book ever written. Whole continents of Jeffrey Archer, Bridget Jones, Monty Python's Big Red Book. Brand new editions, specially printed. "));
+            add(new ChatMessage("donna", 2, "We're near the equator, so this must be biographies. I love biographies. "));
+            add(new ChatMessage("doctor", 3, "Yeah, very you. Always a death at the end. "));
+            add(new ChatMessage("donna", 2, "You need a good death. Without death, there'd only be comedies. Dying gives us size. "));
+            add(new ChatMessage("donna", 2, "Way-a. Spoilers. "));
+            add(new ChatMessage("doctor", 2, "What? "));
+            add(new ChatMessage("donna", 3, "These books are from your future. \nYou don't want to read ahead. Spoil all the surprises. Like peeking at the end. "));
+            add(new ChatMessage("doctor", 2, "Isn't travelling with you one big spoiler? "));
+            add(new ChatMessage("donna", 2, "I try to keep you away from major plot developments. Which, to be honest, I seem to be very bad at, because you know what? This is the biggest library in the universe. So where is everyone? It's silent."));
+            add(new ChatMessage("doctor", 5, "The library? "));
+            add(new ChatMessage("donna", 5, "The planet. The whole planet. "));
+            add(new ChatMessage("doctor", 2, "Maybe it's a Sunday. "));
+            add(new ChatMessage("donna", 5, "No, I never land on Sundays. Sundays are boring. "));
+            add(new ChatMessage("doctor", 2, "Well, maybe everyone's really, really quiet. "));
+            add(new ChatMessage("donna", 2, "Yeah, maybe. But they'd still show up on the system. "));
+            add(new ChatMessage("doctor", 2, "Doctor, why are we here? Really, why? "));
+            add(new ChatMessage("donna", 2, "Oh, you know, just passing. "));
+            add(new ChatMessage("doctor", 2, "No, seriously. It was all let's hit the beach, then suddenly we're in a library. Why? "));
+            add(new ChatMessage("donna", 3, "Now that's interesting. "));
+            add(new ChatMessage("doctor", 3, "What? "));
+            add(new ChatMessage("donna", 3, "Scanning for life forms. If I do a scan looking for your basic humanoids. You know, your book readers, few limbs and a face, apart from us, I get nothing. Zippo, nada. See? Nobody home. But if I widen the parameters to any kind of life. "));
+            add(new ChatMessage("donna", 5, "A million, million. Gives up after that. A million, million. "));
+            add(new ChatMessage("doctor", 5, "But there's nothing here. There's no one. "));
+            add(new ChatMessage("donna", 3, "And not a sound. A million. million life forms, and silence in the library. "));
+            add(new ChatMessage("doctor", 3, "But there's no one here. There's just books. I mean, it's not the books, is it? I mean, it can't be the books, can it? I mean, books can't be alive. \n"));
         }};
 
 
@@ -145,7 +145,7 @@ public class TestChatServer {
                         }
                     }
                 }).start();
-                int idCounter = 5;
+                int idCounter = 10;
 
                 while (socket.isConnected()) {
                     if(reader.ready()) {
@@ -165,10 +165,12 @@ public class TestChatServer {
                                     }
                                     userCounter++;
                                     Set<ChatRoom> chatRooms = new HashSet<>();
+                                    chatRooms.add(new ChatRoom(2, user1, user2));
                                     chatRooms.add(new ChatRoom(3, "Whovians", users));
                                     chatRooms.add(new ChatRoom(5, "Whovians5", users));
                                     chatRooms.add(new ChatRoom(6, "Whovians6", users));
                                     chatRooms.add(new ChatRoom(7, "Whovians7", users));
+                                    System.out.println("iinitial chatRooms: " + chatRooms);
                                     authorizationResponse.setChatRoomsWithUser(chatRooms);
                                     sendMessage(authorizationResponse, writer);
 
@@ -202,7 +204,7 @@ public class TestChatServer {
                                 case CHANGE_CREDENTIALS_REQUEST:
                                     ChangeCredentialsRequest request = (ChangeCredentialsRequest) message.getEncapsulatedMessage();
                                     Optional<User> optionalUser = users.stream()
-                                            .filter(element -> request.getUserId() == element.getId())
+                                            .filter(element -> request.getUserNickname().equals(element.getNickname()))
                                             .findFirst();
                                     User user = optionalUser.orElse(new User());
                                     user.setPassword(request.getNewPassword());

@@ -1,9 +1,13 @@
 package com.group4.client.controller;
 
 import com.group4.client.view.DialogWindow;
+import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -12,7 +16,7 @@ import java.net.Socket;
 import java.util.*;
 
 public class MessageThread extends Thread {
-    private final static int DELAY = 30000;
+    private final static int DELAY = 3000;
     private final static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
@@ -33,6 +37,7 @@ public class MessageThread extends Thread {
     };
     private JAXBContext context;
     private Map<MessageType, List<MessageWrapper>> sentMessages = new HashMap<>();
+    private ReconnectionThread reconnectionThread;
 
     @Override
     public void run() {
@@ -100,8 +105,13 @@ public class MessageThread extends Thread {
 
     public void disconnect() {
         try {
-            pingTimer.cancel();
             connected = false;
+            if (reconnectionThread != null) {
+                reconnectionThread.finishReconnecting();
+            }
+            if (pingTimer != null) {
+                pingTimer.cancel();
+            }
             if (socket != null) {
                 socket.close();
             }
@@ -118,26 +128,8 @@ public class MessageThread extends Thread {
     }
 
     public void reconnect() {
-        Platform.runLater(() -> DialogWindow.showErrorWindowWithoutButtons("Reconnect"));
-        new Thread(() -> {
-            MessageThread newThread = new MessageThread();
-            while (!connected) {
-                try {
-                    newThread.connect();
-                    Controller.getInstance().setThread(newThread);
-                    newThread.start();
-                    connected = true;
-                    Platform.runLater(() -> DialogWindow.getLastInstance().close());
-                } catch (IOException e) {
-                    System.out.println("Still can't connect!");
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+        reconnectionThread = new ReconnectionThread();
+        reconnectionThread.reconnect();
     }
 
     public void sendMessage(TransmittableMessage innerMessage) {
@@ -159,6 +151,55 @@ public class MessageThread extends Thread {
             writer.println(stringWriter.toString().replaceAll("\n", lineBreakEscape));
         } catch (JAXBException e) {
             e.printStackTrace();
+        }
+    }
+
+    private class ReconnectionThread extends Thread {
+        private boolean isRunning;
+        @Override
+        public void run() {
+            MessageThread newThread = new MessageThread();
+            while (!connected && isRunning) {
+                try {
+                    newThread.connect();
+                    Controller.getInstance().setThread(newThread);
+                    newThread.start();
+                    connected = true;
+                    User currentUser = Controller.getInstance().getCurrentUser();
+                    if (currentUser != null) {
+                        LoginController.getInstance().sendAuthorizationRequest(currentUser.getNickname(), currentUser.getPassword());
+                    }
+                    Platform.runLater(() -> DialogWindow.getLastInstance().close());
+                } catch (IOException e) {
+                    System.out.println("Still can't connect!");
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+            System.out.println("finishReconnecting");
+        }
+
+        public void reconnect() {
+            Platform.runLater(() -> {
+                DialogWindow.showDialogWindow("Error",
+                        "Connection failed",
+                        "Connection was broken!\nPlease try to wait or exit the application.",
+                        Alert.AlertType.ERROR,
+                        "Exit");
+                Optional<ButtonType> result = DialogWindow.getLastInstance().showAndWait();
+                if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
+                    Controller.getInstance().exit();
+                }
+            });
+            isRunning = true;
+            this.start();
+        }
+
+        public void finishReconnecting() {
+            isRunning = false;
         }
     }
 }

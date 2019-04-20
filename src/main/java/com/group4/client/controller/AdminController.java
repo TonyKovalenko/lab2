@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class AdminController {
     private AdminPanelView view;
     private static AdminController instance;
-    private HashMap<Long, User> allUsers;
+    private HashMap<String, User> allUsers;
 
     private AdminController() {
     }
@@ -60,15 +60,15 @@ public class AdminController {
                 AllUsersResponse allUsersResponse = (AllUsersResponse) message.getEncapsulatedMessage();
                 allUsers = new HashMap<>();
                 for (User user : allUsersResponse.getUsers()) {
-                    allUsers.put(user.getId(), user);
+                    allUsers.put(user.getNickname(), user);
                 }
                 Platform.runLater(() -> view.setUsers(allUsers.values()));
                 break;
             case CHANGE_CREDENTIALS_RESPONSE:
                 ChangeCredentialsResponse changeCredentialsResponse = (ChangeCredentialsResponse) message.getEncapsulatedMessage();
                 if (changeCredentialsResponse.isConfirmed()) {
-                    User user = changeCredentialsResponse.getUser();;
-                    allUsers.put(user.getId(), user);
+                    User user = changeCredentialsResponse.getUser();
+                    allUsers.put(user.getNickname(), user);
                     Platform.runLater(() -> {
                         DialogWindow.showInfoWindow("Credentials change was confirmed");
                         EditProfileView.getInstance().cancel();

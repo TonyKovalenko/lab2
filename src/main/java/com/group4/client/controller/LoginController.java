@@ -34,11 +34,7 @@ public class LoginController {
         String nickname = view.getUsername();
         String password = view.getPassword();
         if (!nickname.isEmpty() && !password.isEmpty()) {
-            AuthorizationRequest message = new AuthorizationRequest();
-            message.setUserNickname(nickname);
-            message.setPassword(password);
-
-            Controller.getInstance().getThread().sendMessage(message);
+            sendAuthorizationRequest(nickname, password);
         } else {
             DialogWindow.showWarningWindow("Fill the fields", "Fields can't be empty");
             System.out.println("Fill the fields");
@@ -64,5 +60,13 @@ public class LoginController {
         } else {
             System.out.println("authorization was denied");
         }
+    }
+
+    public void sendAuthorizationRequest(String nickname, String password) {
+        AuthorizationRequest message = new AuthorizationRequest();
+        message.setUserNickname(nickname);
+        message.setPassword(password);
+
+        Controller.getInstance().getThread().sendMessage(message);
     }
 }

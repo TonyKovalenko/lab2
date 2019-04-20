@@ -61,7 +61,6 @@ public class Controller extends Application {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-        System.out.println("isAdmin: " + currentUser.isAdmin());
         Platform.runLater(() -> mainView.updateAdminPanel(currentUser.isAdmin()));
     }
 
@@ -129,9 +128,6 @@ public class Controller extends Application {
                         users.put(user.getNickname(), user);
                     }
                     users.remove(currentUser.getNickname());
-                    if (chatRooms.get(2L) == null) {
-                        chatRooms.put(2L, new ChatRoom(2, currentUser, getUserByNickname((currentUser.getNickname().equals("user1")?"user2":"user1"))));
-                    }
                     updateOnlineUsersView();
                     break;
                 case CHAT_CREATION_RESPONSE:
@@ -155,7 +151,7 @@ public class Controller extends Application {
                     ChangeCredentialsResponse changeCredentialsResponse = (ChangeCredentialsResponse) responseMessage.getEncapsulatedMessage();
                     if (changeCredentialsResponse.isConfirmed()) {
                         User updatedUser = changeCredentialsResponse.getUser();
-                        if (updatedUser.getId() == currentUser.getId()) {
+                        if (updatedUser.getNickname().equals(currentUser.getNickname())) {
                             setCurrentUser(changeCredentialsResponse.getUser());
                             Platform.runLater(() -> {
                                 DialogWindow.showInfoWindow("Credentials change was confirmed");
@@ -254,7 +250,7 @@ public class Controller extends Application {
         }
 
         if (isUpdated) {
-            thread.sendMessage(new ChangeCredentialsRequest(view.getUser().getId(), newFullName, newPassword));
+            thread.sendMessage(new ChangeCredentialsRequest(view.getUser().getNickname(), newFullName, newPassword));
         }
     }
 

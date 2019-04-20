@@ -1,7 +1,9 @@
 package com.group4.client.view;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+
 import java.util.Optional;
 
 /**
@@ -19,11 +21,11 @@ public class DialogWindow {
      * @param text   text to show in the dialog content area
      * @param type   alert type of the dialog window
      */
-    private static void showDialogWindow(String title, String header, String text, Alert.AlertType type) {
-        lastInstance = new Alert(type);
+    public static void showDialogWindow(String title, String header, String text, Alert.AlertType type, String okButtonText) {
+        ButtonType ok = new ButtonType(okButtonText, ButtonBar.ButtonData.OK_DONE);
+        lastInstance = new Alert(type, text, ok);
         lastInstance.setTitle(title);
         lastInstance.setHeaderText(header);
-        lastInstance.setContentText(text);
     }
 
     /**
@@ -33,7 +35,7 @@ public class DialogWindow {
      * @param text   text to show in the dialog content area
      */
     public static void showWarningWindow(String header, String text) {
-        showDialogWindow("Warning!", header, text, Alert.AlertType.WARNING);
+        showDialogWindow("Warning!", header, text, Alert.AlertType.WARNING, "OK");
         lastInstance.showAndWait();
     }
 
@@ -43,7 +45,7 @@ public class DialogWindow {
      * @param text text to show in the dialog content area
      */
     public static void showInfoWindow(String text) {
-        showDialogWindow("Information Dialog", null, text, Alert.AlertType.INFORMATION);
+        showDialogWindow("Information Dialog", null, text, Alert.AlertType.INFORMATION, "OK");
         lastInstance.showAndWait();
     }
 
@@ -53,7 +55,7 @@ public class DialogWindow {
      * @param text text to show in the dialog content area
      */
     public static void showErrorWindow(String text) {
-        showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR);
+        showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK");
         lastInstance.showAndWait();
     }
 
@@ -63,11 +65,10 @@ public class DialogWindow {
      * @param text text to show in the dialog content area
      */
     public static void showErrorWindowWithoutButtons(String text) {
-        showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR);
+        showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK");
         lastInstance.getButtonTypes().clear();
         lastInstance.setResult(ButtonType.OK);
         lastInstance.show();
-        System.out.println("Error Dialog is shown");
     }
 
     /**
@@ -78,7 +79,7 @@ public class DialogWindow {
      * @return {@code true}  if user pressed "OK" button
      */
     public static boolean showConfirmationWindow(String header, String text) {
-        showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION);
+        showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION, "OK");
         Optional<ButtonType> result = lastInstance.showAndWait();
         return result.get() == ButtonType.OK;
     }
