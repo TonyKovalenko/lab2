@@ -34,7 +34,7 @@ public class MessageController {
             RegistrationRequest.class,
             RegistrationResponse.class,
             UpdateChatMessage.class,
-            UserDisconnectMessage.class,
+            UserLogoutMessage.class,
             MessageWrapper.class
     };
 
@@ -155,6 +155,10 @@ public class MessageController {
                     isConnected = false;
                     UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
                     UserStreamContainer.INSTANCE.deleteUser(disconnectMessage.getNickname());
+                    break;
+                case USER_LOGOUT:
+                    UserLogoutMessage logoutMessage = (UserLogoutMessage) requestMessage.getEncapsulatedMessage();
+                    UserStreamContainer.INSTANCE.deleteUser(logoutMessage.getNickname());
                     break;
             }
         }

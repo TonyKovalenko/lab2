@@ -18,6 +18,7 @@ public enum MessageType {
     CHAT_CREATION_RESPONSE,
     ALL_USERS_REQUEST,
     ALL_USERS_RESPONSE,
+    USER_LOGOUT,
     USER_DISCONNECT,
     PING,
     SERVER_SHUTDOWN;
@@ -38,6 +39,7 @@ public enum MessageType {
         put(GetAllUsersRequest.class.getSimpleName(), ALL_USERS_REQUEST);
         put(GetAllUsersResponse.class.getSimpleName(), ALL_USERS_RESPONSE);
         put(PingMessage.class.getSimpleName(), PING);
+        put(UserLogoutMessage.class.getSimpleName(), USER_LOGOUT);
         put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
     }};
 
