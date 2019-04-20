@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 
@@ -38,6 +39,9 @@ public class MainView extends View {
 
     @FXML
     private ListView<User> onlineUsers;
+
+    @FXML
+    private Menu adminMenu;
 
     public static MainView getInstance() {
         try {
@@ -84,7 +88,7 @@ public class MainView extends View {
 
     @FXML
     private void editProfile() {
-        controller.showEditProfileDialog();
+        controller.showEditProfileDialog(controller.getCurrentUser());
     }
 
     @FXML
@@ -102,9 +106,17 @@ public class MainView extends View {
         controller.showChatInfo();
     }
 
+    @FXML
+    void openAdminPanel() {
+        controller.openAdminPanel();
+    }
+
     public void setOnlineUsers(Collection<User> users) {
         System.out.println("users: " + users.size());
-        onlineUsers.setItems(FXCollections.observableArrayList(users));
+        System.out.println(users);
+        onlineUsers.getItems().clear();
+        onlineUsers.getItems().addAll(users);
+        //onlineUsers.setItems(FXCollections.observableArrayList(users));
     }
 
     public void setChatRoomsWithUser(Collection<ChatRoom> chatRoomsWithUser) {
@@ -121,5 +133,9 @@ public class MainView extends View {
 
     public ChatRoom getSelectedChatRoom() {
         return chatRoomsWithUser.getSelectionModel().getSelectedItem();
+    }
+
+    public void updateAdminPanel(boolean isAdmin) {
+        adminMenu.setVisible(isAdmin);
     }
 }

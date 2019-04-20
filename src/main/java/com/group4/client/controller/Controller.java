@@ -7,9 +7,6 @@ import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -24,7 +21,7 @@ public class Controller extends Application {
     private static Controller instance;
     private User currentUser;
     private HashMap<Long, User> users = new HashMap<>();
-    private ObservableMap<Long, ChatRoom> chatRooms = FXCollections.observableHashMap();
+    private HashMap<Long, ChatRoom> chatRooms = new HashMap<>();
 
     public static Controller getInstance() {
         return instance;
@@ -64,6 +61,8 @@ public class Controller extends Application {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+        System.out.println("isAdmin: " + currentUser.isAdmin());
+        Platform.runLater(() -> mainView.updateAdminPanel(currentUser.isAdmin()));
     }
 
     public User getUserById(long id) {
@@ -76,6 +75,10 @@ public class Controller extends Application {
 
     public void updateChatRoomsView() {
         Platform.runLater(() -> mainView.setChatRoomsWithUser(chatRooms.values()));
+    }
+
+    public void updateOnlineUsersView() {
+        Platform.runLater(() -> mainView.setOnlineUsers(getUsers()));
     }
 
     public List<User> getUsersWithoutPrivateChat() {
@@ -108,7 +111,6 @@ public class Controller extends Application {
         instance = this;
         stage = primaryStage;
         Controller.getInstance().getStage().setOnCloseRequest(windowEvent -> exit());
-        chatRooms.addListener((MapChangeListener) change -> updateChatRoomsView());
         thread = new MessageThread();
         LoginView.getInstance().showStage();
         try {
@@ -120,9 +122,6 @@ public class Controller extends Application {
     }
 
     public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
-        System.out.println("process message: " + responseMessage.getMessageType());
-
-        System.out.println("mainView: " + mainView);
         //if (mainView != null) {
             switch (responseMessage.getMessageType()) {
                 case USERS_IN_CHAT:
@@ -135,14 +134,13 @@ public class Controller extends Application {
                     if (chatRooms.get(2L) == null) {
                         chatRooms.put(2L, new ChatRoom(2, currentUser, getUserById((currentUser.getId()==10000)?10001:10000)));
                     }
-                    Platform.runLater(() -> mainView.setOnlineUsers(getUsers()));
+                    updateOnlineUsersView();
                     break;
-                case NEW_GROUPCHAT:
-                case NEW_PRIVATECHAT:
-                    ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
-                    Set<ChatRoom> chatRoom = chatInvitationMessage.getChatRooms();
-                    chatRoom.forEach(room -> chatRooms.put(room.getId(), room));
-                    //updateChatRoomsView();
+                case NEW_CHAT:
+                    NewChatRoomMessage newChatRoomMessage = (NewChatRoomMessage) responseMessage.getEncapsulatedMessage();
+                    ChatRoom chatRoom = newChatRoomMessage.getChatRoom();
+                    chatRooms.put(chatRoom.getId(), chatRoom);
+                    updateChatRoomsView();
                     break;
                 case TO_CHAT:
                     ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
@@ -152,11 +150,23 @@ public class Controller extends Application {
                 case CHANGE_CREDENTIALS_RESPONSE:
                     ChangeCredentialsResponse changeCredentialsResponse = (ChangeCredentialsResponse) responseMessage.getEncapsulatedMessage();
                     if (changeCredentialsResponse.isConfirmed()) {
-                        currentUser = changeCredentialsResponse.getUser();
-                        Platform.runLater(() -> {
-                            DialogWindow.showInfoWindow("Credentials change was confirmed");
-                            EditProfileView.getInstance().cancel();
-                        });
+                        User updatedUser = changeCredentialsResponse.getUser();
+                        if (updatedUser.getId() == currentUser.getId()) {
+                            setCurrentUser(changeCredentialsResponse.getUser());
+                            Platform.runLater(() -> {
+                                DialogWindow.showInfoWindow("Credentials change was confirmed");
+                                EditProfileView.getInstance().cancel();
+                            });
+                        } else {
+                            if (users.containsKey(updatedUser.getId())) {
+                                users.put(updatedUser.getId(), updatedUser);
+                                updateOnlineUsersView();
+                            }
+                        }
+
+                        if (AdminPanelView.isOpened()) {
+                            AdminController.getInstance().processMessage(responseMessage);
+                        }
                     } else {
                         Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
                     }
@@ -205,19 +215,19 @@ public class Controller extends Application {
             User selectedUser = view.getSelectedUser();
             chatRoom = new ChatRoom(selectedUser, currentUser);
         } else {
-            List<User> users = view.getUsersList();
+            List<User> users = new ArrayList<>(view.getUsersList());
             String chatName = view.getGroupName();
+            users.add(currentUser);
             chatRoom = new ChatRoom(chatName, users);
         }
-        ChatInvitationMessage message = new ChatInvitationMessage(chatRoom);
+        NewChatRoomMessage message = new NewChatRoomMessage(chatRoom);
         thread.sendMessage(message);
         view.close();
     }
 
-    public void showEditProfileDialog() {
+    public void showEditProfileDialog(User user) {
         EditProfileView editProfileView = EditProfileView.getInstance();
-        editProfileView.setUserInfo(currentUser);
-        System.out.println("showEditProfileDialog");
+        editProfileView.setUserInfo(user);
         editProfileView.getStage().showAndWait();
     }
 
@@ -225,7 +235,7 @@ public class Controller extends Application {
         String newFullName = view.getFullName();
         String newPassword = view.getPassword();
         boolean isUpdated = false;
-        if (!newFullName.equals(currentUser.getFullName())) {
+        if (!newFullName.equals(view.getUser().getFullName())) {
             isUpdated = true;
         }
 
@@ -240,7 +250,7 @@ public class Controller extends Application {
         }
 
         if (isUpdated) {
-            thread.sendMessage(new ChangeCredentialsRequest(currentUser.getId(), newFullName, newPassword));
+            thread.sendMessage(new ChangeCredentialsRequest(view.getUser().getId(), newFullName, newPassword));
         }
     }
 
@@ -289,5 +299,12 @@ public class Controller extends Application {
         AddMembersToGroupChatView view = AddMembersToGroupChatView.getInstance();
         ChatInfoView.getInstance().addMembersToListView(AddMembersToGroupChatView.getInstance().getSelectedUsers());
         view.close();
+    }
+
+    public void openAdminPanel() {
+        AdminPanelView adminPanelView = AdminPanelView.getInstance();
+        System.out.println("showAdminPanelView");
+        AdminController.getInstance().sendAllUsersRequest();
+        adminPanelView.getStage().showAndWait();
     }
 }

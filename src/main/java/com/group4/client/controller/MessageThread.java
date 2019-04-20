@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.util.*;
 
 public class MessageThread extends Thread {
-    private final static int DELAY = 30000;
+    private final static int DELAY = 3000;
     private final static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
@@ -24,10 +24,11 @@ public class MessageThread extends Thread {
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
             AuthorizationRequest.class, AuthorizationResponse.class,
-            ChatMessage.class, ChatInvitationMessage.class, UsersInChatMessage.class,
+            ChatMessage.class, NewChatRoomMessage.class, UsersInChatMessage.class,
             RegistrationRequest.class, RegistrationResponse.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
-            UpdateGroupChatMessage.class
+            UpdateGroupChatMessage.class,
+            AllUsersRequest.class, AllUsersResponse.class
     };
     private JAXBContext context;
     private Map<MessageType, List<MessageWrapper>> sentMessages = new HashMap<>();
@@ -39,7 +40,7 @@ public class MessageThread extends Thread {
                 if(reader.ready()) {
                     try (StringReader dataReader = new StringReader(reader.readLine().replaceAll(lineBreakEscape, "\n"))) {
                         MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
-                        System.out.println("message accepted: " + message.getMessageId());
+                        System.out.println("message accepted: " + message.getMessageId() + " " + message.getMessageType());
                         switch (message.getMessageType()) {
                             case AUTHORIZATION_RESPONSE:
                                 LoginController.getInstance().processMessage(message, message);
@@ -49,6 +50,9 @@ public class MessageThread extends Thread {
                                 break;
                             case PING:
                                 inPings++;
+                                break;
+                            case ALL_USERS_RESPONSE:
+                                AdminController.getInstance().processMessage(message);
                                 break;
                             default:
                                 Controller.getInstance().processMessage(message, message);
@@ -83,7 +87,7 @@ public class MessageThread extends Thread {
                     PingMessage message = new PingMessage();
                     sendMessage(message);
                     outPings++;
-                    System.out.println(outPings + " out");
+                    //System.out.println(outPings + " out");
                 } else {
                     System.out.println("Connection was broken!");
                     disconnect();
@@ -150,7 +154,7 @@ public class MessageThread extends Thread {
         StringWriter stringWriter = new StringWriter();
         try {
             context.createMarshaller().marshal(message, stringWriter);
-            System.out.println(stringWriter.toString());
+            //System.out.println(stringWriter.toString());
             writer.println(stringWriter.toString().replaceAll("\n", lineBreakEscape));
         } catch (JAXBException e) {
             e.printStackTrace();

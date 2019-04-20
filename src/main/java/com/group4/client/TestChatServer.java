@@ -42,10 +42,11 @@ public class TestChatServer {
 
         private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
                 AuthorizationRequest.class, AuthorizationResponse.class,
-                ChatMessage.class, ChatInvitationMessage.class, UsersInChatMessage.class,
+                ChatMessage.class, NewChatRoomMessage.class, UsersInChatMessage.class,
                 RegistrationRequest.class, RegistrationResponse.class,
                 ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
-                UpdateGroupChatMessage.class
+                UpdateGroupChatMessage.class,
+                AllUsersRequest.class, AllUsersResponse.class
         };
         public JAXBContext context;
         public Marshaller marshaller;
@@ -146,7 +147,7 @@ public class TestChatServer {
                 int idCounter = 5;
 
                 while (socket.isConnected()) {
-                    if (reader.ready()) {
+                    if(reader.ready()) {
                         try (StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"))) {
                             MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
                             System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
@@ -162,9 +163,12 @@ public class TestChatServer {
                                         authorizationResponse.setUser(user2);
                                     }
                                     userCounter++;
-                                    authorizationResponse.setChatRoomsWithUser(new HashSet<ChatRoom>() {{
-                                        add(new ChatRoom(3, "Whovians", users));
-                                    }});
+                                    Set<ChatRoom> chatRooms = new HashSet<>();
+                                    chatRooms.add(new ChatRoom(3, "Whovians", users));
+                                    chatRooms.add(new ChatRoom(5, "Whovians5", users));
+                                    chatRooms.add(new ChatRoom(6, "Whovians6", users));
+                                    chatRooms.add(new ChatRoom(7, "Whovians7", users));
+                                    authorizationResponse.setChatRoomsWithUser(chatRooms);
                                     sendMessage(authorizationResponse, writer);
 
                                     UsersInChatMessage message0 = new UsersInChatMessage();
@@ -175,14 +179,11 @@ public class TestChatServer {
                                     RegistrationResponse registrationResponse = new RegistrationResponse(true, new ChatRoom());
                                     sendMessage(registrationResponse, writer);
                                     break;
-                                case NEW_GROUPCHAT:
-                                case NEW_PRIVATECHAT:
-                                    ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) message.getEncapsulatedMessage();
-                                    for (ChatRoom room : chatInvitationMessage.getChatRooms()) {
-                                        room.setId(idCounter++);
-                                    }
+                                case NEW_CHAT:
+                                    NewChatRoomMessage newChatRoomMessage = (NewChatRoomMessage) message.getEncapsulatedMessage();
+                                    newChatRoomMessage.getChatRoom().setId(idCounter++);
                                     for (PrintWriter writer : writers) {
-                                        sendMessage(chatInvitationMessage, writer);
+                                        sendMessage(newChatRoomMessage, writer);
                                     }
                                     break;
                                 case TO_CHAT:
@@ -205,6 +206,12 @@ public class TestChatServer {
                                     user.setFullName(request.getNewFullName());
                                     ChangeCredentialsResponse response = new ChangeCredentialsResponse(true, user);
                                     sendMessage(response, writer);
+                                    break;
+                                case ALL_USERS_REQUEST:
+                                    AllUsersResponse allUsersResponse = new AllUsersResponse();
+                                    allUsersResponse.setUsers(users);
+                                    sendMessage(allUsersResponse, writer);
+                                    System.out.println("all_users_response sent");
                                     break;
                                 default:
                                     break;

@@ -4,13 +4,12 @@ import com.group4.client.view.DialogWindow;
 import com.group4.client.view.LoginView;
 import com.group4.client.view.MainView;
 import com.group4.client.view.RegistrationView;
+import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.message.types.AuthorizationRequest;
 import com.group4.server.model.message.types.AuthorizationResponse;
 import com.group4.server.model.message.wrappers.MessageWrapper;
-import com.group4.server.model.entities.ChatRoom;
 import javafx.application.Platform;
 
-import java.util.List;
 import java.util.Set;
 
 public class LoginController {
@@ -61,6 +60,7 @@ public class LoginController {
             for (ChatRoom room : chatRooms) {
                 Controller.getInstance().getChatRooms().put(room.getId(), room);
             }
+            Controller.getInstance().updateChatRoomsView();
         } else {
             System.out.println("authorization was denied");
         }

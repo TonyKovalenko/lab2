@@ -9,8 +9,7 @@ public enum MessageType {
     REGISTRATION_REQUEST,
     REGISTRATION_RESPONSE,
     PING,
-    NEW_GROUPCHAT,
-    NEW_PRIVATECHAT,
+    NEW_CHAT,
     TO_CHAT,
     USERS_IN_CHAT,
     CHANGE_CREDENTIALS_REQUEST,
@@ -18,6 +17,8 @@ public enum MessageType {
     UPDATE_GROUP_CHAT,
     CHAT_CREATION_REQUEST,
     CHAT_CREATION_RESPONSE,
+    ALL_USERS_REQUEST,
+    ALL_USERS_RESPONSE,
     SERVER_SHUTDOWN,
     USER_DISCONNECT;
 
@@ -28,13 +29,15 @@ public enum MessageType {
         put(AuthorizationResponse.class.getSimpleName(), AUTHORIZATION_RESPONSE);
         put(PingMessage.class.getSimpleName(), PING);
         put(ChatMessage.class.getSimpleName(), TO_CHAT);
-        put(ChatInvitationMessage.class.getSimpleName(), NEW_GROUPCHAT);
+        put(NewChatRoomMessage.class.getSimpleName(), NEW_CHAT);
         put(UsersInChatMessage.class.getSimpleName(), USERS_IN_CHAT);
         put(ChangeCredentialsRequest.class.getSimpleName(), CHANGE_CREDENTIALS_REQUEST);
         put(ChangeCredentialsResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);
         put(UpdateGroupChatMessage.class.getSimpleName(), UPDATE_GROUP_CHAT);
         put(ChatRoomCreationRequest.class.getSimpleName(), CHAT_CREATION_REQUEST);
-        put(ChatRoomCreationResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);
+        put(ChatRoomCreationResponse.class.getSimpleName(), CHAT_CREATION_RESPONSE);
+        put(AllUsersRequest.class.getSimpleName(), ALL_USERS_REQUEST);
+        put(AllUsersResponse.class.getSimpleName(), ALL_USERS_RESPONSE);
        // put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
     }};
 

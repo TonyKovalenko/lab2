@@ -13,6 +13,7 @@ import java.io.IOException;
 public class EditProfileView extends View {
     private static EditProfileView instance;
     private Controller controller;
+    private User user;
 
     @FXML
     private TextField nicknameTextField;
@@ -36,6 +37,9 @@ public class EditProfileView extends View {
                 instance = (EditProfileView) View.loadViewFromFxml(dialogStage, "/editProfile.fxml", "Edit profile");
                 Controller controller = Controller.getInstance();
                 instance.setController(controller);
+                instance.getStage().setOnCloseRequest(windowEvent -> {
+                    instance = null;
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -51,6 +55,7 @@ public class EditProfileView extends View {
     @FXML
     public void cancel() {
         this.getStage().close();
+        instance = null;
     }
 
     @FXML
@@ -59,9 +64,9 @@ public class EditProfileView extends View {
     }
 
     public void setUserInfo(User currentUser) {
-        nicknameTextField.setText(currentUser.getNickname());
-        fullNameTextField.setText(currentUser.getFullName());
-        passwordTextField.setText(currentUser.getPassword());
+        user = currentUser;
+        nicknameTextField.setText(user.getNickname());
+        fullNameTextField.setText(user.getFullName());
     }
 
     public String getFullName() {
@@ -74,5 +79,9 @@ public class EditProfileView extends View {
 
     public boolean isPasswordConfirmed() {
         return passwordTextField.getText().equals(confirmPasswordTextField.getText());
+    }
+
+    public User getUser() {
+        return user;
     }
 }

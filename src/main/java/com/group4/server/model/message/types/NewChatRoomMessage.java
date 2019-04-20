@@ -9,14 +9,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "newGroupChatMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class NewGroupChatMessage implements TransmittableMessage {
+public class NewChatRoomMessage implements TransmittableMessage {
     @XmlElement
     private ChatRoom chatRoom;
 
-    public NewGroupChatMessage() {
+    public NewChatRoomMessage() {
     }
 
-    public NewGroupChatMessage(ChatRoom chatRoom) {
+    public NewChatRoomMessage(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
     }
 
