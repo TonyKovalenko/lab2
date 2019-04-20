@@ -129,14 +129,20 @@ public class MessageController {
                             }
                         }
                     }
+
+                case ALL_USERS_REQUEST:
+                    TransmittableMessage allUsersResponse = new AllUsersResponse(RegistrationAuthorizationHandler.INSTANCE.getAllUsers());
+                    sendResponse(allUsersResponse, out, stringWriter);
                 case PING:
+                    PingMessage pingRequest = (PingMessage) requestMessage.getEncapsulatedMessage();
+                    TransmittableMessage pingMessageResponse = new PingMessage(pingRequest.getUserNickname(), true);
+                    sendResponse(pingMessageResponse, out, stringWriter);
                     break;
                 case USER_DISCONNECT:
                     isConnected = false;
-//                UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
+                    UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
+                    UserStreamContainer.INSTANCE.deleteUser(disconnectMessage.getNickname());
                     break;
-                    default:
-                        stringReader.close();
             }
         }
     }

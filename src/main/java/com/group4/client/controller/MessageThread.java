@@ -1,6 +1,7 @@
 package com.group4.client.controller;
 
 import com.group4.client.view.DialogWindow;
+import com.group4.server.model.message.handlers.ChatRoomCreationHandler;
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
@@ -24,7 +25,7 @@ public class MessageThread extends Thread {
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
             AuthorizationRequest.class, AuthorizationResponse.class,
-            ChatMessage.class, ChatInvitationMessage.class, UsersInChatMessage.class,
+            ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class, ChatInvitationMessage.class, UsersInChatMessage.class,
             RegistrationRequest.class, RegistrationResponse.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
             UpdateChatMessage.class

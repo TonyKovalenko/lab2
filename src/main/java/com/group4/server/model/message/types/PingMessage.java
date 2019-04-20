@@ -16,8 +16,8 @@ public class PingMessage implements TransmittableMessage {
     public PingMessage() {
     }
 
-    public PingMessage(String userID, boolean isAlive) {
-        this.userNickname = userID;
+    public PingMessage(String userNickname, boolean isAlive) {
+        this.userNickname = userNickname;
         this.isAlive = isAlive;
     }
 

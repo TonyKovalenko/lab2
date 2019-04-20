@@ -9,6 +9,8 @@ import com.group4.server.model.message.types.AuthorizationResponse;
 import com.group4.server.model.message.types.RegistrationRequest;
 import com.group4.server.model.message.types.RegistrationResponse;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -25,6 +27,10 @@ public enum RegistrationAuthorizationHandler {
 
     public User getUser(String nickname) {
         return nicknameToUser.get(nickname);
+    }
+
+    public List<User> getAllUsers() {
+        return new ArrayList<>(nicknameToUser.values());
     }
 
     public <T extends RegistrationRequest> RegistrationResponse handle(T registrationRequest) {

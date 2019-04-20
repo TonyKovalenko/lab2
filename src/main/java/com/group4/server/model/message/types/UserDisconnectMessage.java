@@ -8,8 +8,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "disconnectMessage")
 @XmlAccessorType(XmlAccessType.NONE)
 public class UserDisconnectMessage implements TransmittableMessage {
-
     @XmlElement
     private String nickname;
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public UserDisconnectMessage(String nickname) {
+        this.nickname = nickname;
+    }
 }

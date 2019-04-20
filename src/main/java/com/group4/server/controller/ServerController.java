@@ -26,14 +26,19 @@ public class ServerController {
         this.isRunning = false;
     }
 
-    public void startServer() {
+    public void startServer() throws Exception {
         isRunning = true;
+        process();
     }
 
     public void stopServer() {
         isRunning = false;
     }
 
+    public static void main(String[] args) throws Exception {
+        ServerController controller = new ServerController();
+        controller.startServer();
+    }
     public void process() throws Exception {
         ServerSocket serverSocket = new ServerSocket(port);
         try {
