@@ -20,15 +20,22 @@ public class MessageController {
     private static Class<?>[] clazzes = {
             User.class,
             ChatRoom.class,
-            MessageWrapper.class,
+            AllUsersRequest.class,
+            AllUsersResponse.class,
             AuthorizationRequest.class,
             AuthorizationResponse.class,
-            RegistrationRequest.class,
-            RegistrationResponse.class,
+            ChangeCredentialsRequest.class,
+            ChangeCredentialsResponse.class,
+            ChatInvitationMessage.class,
+            ChatMessage.class,
             ChatRoomCreationRequest.class,
             ChatRoomCreationResponse.class,
-            ChatMessage.class,
             PingMessage.class,
+            RegistrationRequest.class,
+            RegistrationResponse.class,
+            UpdateChatMessage.class,
+            UserDisconnectMessage.class,
+            MessageWrapper.class
     };
 
     private JAXBContext context;
@@ -129,14 +136,20 @@ public class MessageController {
                             }
                         }
                     }
-
+                    break;
                 case ALL_USERS_REQUEST:
                     TransmittableMessage allUsersResponse = new AllUsersResponse(RegistrationAuthorizationHandler.INSTANCE.getAllUsers());
                     sendResponse(allUsersResponse, out, stringWriter);
+                    break;
                 case PING:
                     PingMessage pingRequest = (PingMessage) requestMessage.getEncapsulatedMessage();
                     TransmittableMessage pingMessageResponse = new PingMessage(pingRequest.getUserNickname(), true);
                     sendResponse(pingMessageResponse, out, stringWriter);
+                    break;
+                case CHANGE_CREDENTIALS_REQUEST:
+                    ChangeCredentialsRequest changeCredentialsRequest = (ChangeCredentialsRequest) requestMessage.getEncapsulatedMessage();
+                    ChangeCredentialsResponse changeCredentialsResponse = RegistrationAuthorizationHandler.INSTANCE.handle(changeCredentialsRequest);
+                    sendResponse(changeCredentialsResponse, out, stringWriter);
                     break;
                 case USER_DISCONNECT:
                     isConnected = false;

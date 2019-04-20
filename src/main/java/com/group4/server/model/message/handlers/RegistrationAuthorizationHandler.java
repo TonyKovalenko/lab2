@@ -4,10 +4,7 @@ import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
-import com.group4.server.model.message.types.AuthorizationRequest;
-import com.group4.server.model.message.types.AuthorizationResponse;
-import com.group4.server.model.message.types.RegistrationRequest;
-import com.group4.server.model.message.types.RegistrationResponse;
+import com.group4.server.model.message.types.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +28,17 @@ public enum RegistrationAuthorizationHandler {
 
     public List<User> getAllUsers() {
         return new ArrayList<>(nicknameToUser.values());
+    }
+
+    public <T extends ChangeCredentialsRequest> ChangeCredentialsResponse handle(T changeCredentialsRequest) {
+        String userNickname = changeCredentialsRequest.getUserNickname();
+        String newFullName = changeCredentialsRequest.getNewFullName();
+        String newPassword = changeCredentialsRequest.getNewPassword();
+        if (!nicknameToUser.containsKey(userNickname)) {
+            return new ChangeCredentialsResponse(false);
+        }
+        nicknameToUser.computeIfPresent(userNickname, (k, v) -> v.setPassword(newPassword).setFullName(newFullName));
+        return new ChangeCredentialsResponse(true, nicknameToUser.get(userNickname));
     }
 
     public <T extends RegistrationRequest> RegistrationResponse handle(T registrationRequest) {

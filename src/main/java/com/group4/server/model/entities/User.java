@@ -50,16 +50,18 @@ public class User {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
+    public User setFullName(String fullName) {
         this.fullName = fullName;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String newPassword) {
+    public User setPassword(String newPassword) {
         password = newPassword;
+        return this;
     }
 
     public long getId() {
