@@ -57,9 +57,9 @@ public class AdminController {
     public void processMessage(MessageWrapper message) {
         switch (message.getMessageType()) {
             case ALL_USERS_RESPONSE:
-                AllUsersResponse allUsersResponse = (AllUsersResponse) message.getEncapsulatedMessage();
+                AllUsersResponse getAllUsersResponse = (AllUsersResponse) message.getEncapsulatedMessage();
                 allUsers = new HashMap<>();
-                for (User user : allUsersResponse.getUsers()) {
+                for (User user : getAllUsersResponse.getUsers()) {
                     allUsers.put(user.getNickname(), user);
                 }
                 Platform.runLater(() -> view.setUsers(allUsers.values()));

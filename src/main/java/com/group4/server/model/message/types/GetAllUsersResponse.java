@@ -10,14 +10,14 @@ import java.util.List;
 
 @XmlRootElement(name = "allUsersResponse")
 @XmlAccessorType(XmlAccessType.NONE)
-public class AllUsersResponse implements TransmittableMessage {
+public class GetAllUsersResponse implements TransmittableMessage {
     @XmlElement
     private List<User> users;
 
-    public AllUsersResponse() {
+    public GetAllUsersResponse() {
     }
 
-    public AllUsersResponse(List<User> users) {
+    public GetAllUsersResponse(List<User> users) {
         this.users = users;
     }
 

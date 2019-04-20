@@ -20,8 +20,8 @@ public class MessageController {
     private static Class<?>[] clazzes = {
             User.class,
             ChatRoom.class,
-            AllUsersRequest.class,
-            AllUsersResponse.class,
+            GetAllUsersRequest.class,
+            GetAllUsersResponse.class,
             AuthorizationRequest.class,
             AuthorizationResponse.class,
             ChangeCredentialsRequest.class,
@@ -34,7 +34,7 @@ public class MessageController {
             RegistrationRequest.class,
             RegistrationResponse.class,
             UpdateChatMessage.class,
-            UserDisconnectMessage.class,
+            UserLogoutMessage.class,
             MessageWrapper.class
     };
 
@@ -138,7 +138,7 @@ public class MessageController {
                     }
                     break;
                 case ALL_USERS_REQUEST:
-                    TransmittableMessage allUsersResponse = new AllUsersResponse(RegistrationAuthorizationHandler.INSTANCE.getAllUsers());
+                    TransmittableMessage allUsersResponse = new GetAllUsersResponse(RegistrationAuthorizationHandler.INSTANCE.getAllUsers());
                     sendResponse(allUsersResponse, out, stringWriter);
                     break;
                 case PING:
@@ -155,6 +155,10 @@ public class MessageController {
                     isConnected = false;
                     UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
                     UserStreamContainer.INSTANCE.deleteUser(disconnectMessage.getNickname());
+                    break;
+                case USER_LOGOUT:
+                    UserLogoutMessage logoutMessage = (UserLogoutMessage) requestMessage.getEncapsulatedMessage();
+                    UserStreamContainer.INSTANCE.deleteUser(logoutMessage.getNickname());
                     break;
             }
         }
