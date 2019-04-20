@@ -47,7 +47,7 @@ public class TestChatServer {
                 ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
                 ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
                 UpdateChatMessage.class,
-                AllUsersRequest.class, AllUsersResponse.class
+                GetAllUsersRequest.class, GetAllUsersResponse.class
         };
         public JAXBContext context;
         public Marshaller marshaller;
@@ -202,7 +202,7 @@ public class TestChatServer {
                                 case CHANGE_CREDENTIALS_REQUEST:
                                     ChangeCredentialsRequest request = (ChangeCredentialsRequest) message.getEncapsulatedMessage();
                                     Optional<User> optionalUser = users.stream()
-                                            .filter(element -> request.getUserId() == element.getId())
+                                            .filter(element -> request.getUserNickname().equals(element.getNickname()))
                                             .findFirst();
                                     User user = optionalUser.orElse(new User());
                                     user.setPassword(request.getNewPassword());
@@ -211,9 +211,9 @@ public class TestChatServer {
                                     sendMessage(response, writer);
                                     break;
                                 case ALL_USERS_REQUEST:
-                                    AllUsersResponse allUsersResponse = new AllUsersResponse();
-                                    allUsersResponse.setUsers(users);
-                                    sendMessage(allUsersResponse, writer);
+                                    GetAllUsersResponse getAllUsersResponse = new GetAllUsersResponse();
+                                    getAllUsersResponse.setUsers(users);
+                                    sendMessage(getAllUsersResponse, writer);
                                     System.out.println("all_users_response sent");
                                     break;
                                 default:

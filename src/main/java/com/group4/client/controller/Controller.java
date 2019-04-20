@@ -254,7 +254,7 @@ public class Controller extends Application {
         }
 
         if (isUpdated) {
-            thread.sendMessage(new ChangeCredentialsRequest(view.getUser().getId(), newFullName, newPassword));
+            thread.sendMessage(new ChangeCredentialsRequest(view.getUser().getNickname(), newFullName, newPassword));
         }
     }
 

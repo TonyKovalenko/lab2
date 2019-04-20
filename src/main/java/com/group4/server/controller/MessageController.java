@@ -20,8 +20,8 @@ public class MessageController {
     private static Class<?>[] clazzes = {
             User.class,
             ChatRoom.class,
-            AllUsersRequest.class,
-            AllUsersResponse.class,
+            GetAllUsersRequest.class,
+            GetAllUsersResponse.class,
             AuthorizationRequest.class,
             AuthorizationResponse.class,
             ChangeCredentialsRequest.class,
@@ -138,7 +138,7 @@ public class MessageController {
                     }
                     break;
                 case ALL_USERS_REQUEST:
-                    TransmittableMessage allUsersResponse = new AllUsersResponse(RegistrationAuthorizationHandler.INSTANCE.getAllUsers());
+                    TransmittableMessage allUsersResponse = new GetAllUsersResponse(RegistrationAuthorizationHandler.INSTANCE.getAllUsers());
                     sendResponse(allUsersResponse, out, stringWriter);
                     break;
                 case PING:
