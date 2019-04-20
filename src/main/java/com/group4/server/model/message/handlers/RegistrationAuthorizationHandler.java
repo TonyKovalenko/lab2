@@ -28,7 +28,7 @@ public enum RegistrationAuthorizationHandler {
     }
 
     public <T extends RegistrationRequest> RegistrationResponse handle(T registrationRequest) {
-        User user = new User(registrationRequest.getUserNickname(), registrationRequest.getPassword(), registrationRequest.getFullName());
+        User user = new User(registrationRequest.getUserNickname(), registrationRequest.getFullName(), registrationRequest.getPassword());
         if (nicknameToUser.containsValue(user)) {
             return new RegistrationResponse(false);
         } else {
@@ -40,8 +40,8 @@ public enum RegistrationAuthorizationHandler {
     public <T extends AuthorizationRequest> AuthorizationResponse handle(T authorizationRequest) {
         String authNickname = authorizationRequest.getUserNickname();
         String authPassword = authorizationRequest.getPassword();
-        User user = nicknameToUser.get(authNickname);
-        if(authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
+        User user = getUser(authNickname);
+        if(user != null && authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
             Set<ChatRoom> chatRoomsWithUser = ChatRoomsContainer.INSTANCE.getChatRoomsFor(authNickname);
             chatRoomsWithUser.addAll(ChatInvitationsContainer.INSTANCE.getChatInvitationsFor(authNickname));
             ChatInvitationsContainer.INSTANCE.removeInvitations(authNickname);

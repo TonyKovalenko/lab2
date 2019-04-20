@@ -20,13 +20,16 @@ import java.util.List;
 public class MessageController {
 
     private static Class<?>[] clazzes = {
-            MessageWrapper.class,
-            PingMessage.class,
-            AuthorizationRequest.class,
             User.class,
+            ChatRoom.class,
+            MessageWrapper.class,
+            AuthorizationRequest.class,
+            AuthorizationResponse.class,
             RegistrationRequest.class,
             RegistrationResponse.class,
-            ChatRoomCreationRequest.class
+            ChatRoomCreationRequest.class,
+            ChatRoomCreationResponse.class,
+            PingMessage.class,
     };
 
     private JAXBContext context;
@@ -56,62 +59,70 @@ public class MessageController {
         PrintWriter out;
         StringReader stringReader;
         MessageWrapper requestMessage;
+        boolean isConnected = true;
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
-            stringReader = new StringReader(in.readLine());
-            requestMessage = (MessageWrapper) unmarshaller.unmarshal(stringReader);
-        } catch (IOException | JAXBException ex) {
+        } catch (IOException ex) {
             //log.error("Exception happened", ex);
             ex.printStackTrace();
             return;
         }
-
-        switch (requestMessage.getMessageType()) {
-            case REGISTRATION_REQUEST:
-                RegistrationRequest registrationRequest = (RegistrationRequest) requestMessage.getEncapsulatedMessage();
-                RegistrationResponse registrationResponse = RegistrationAuthorizationHandler.INSTANCE.handle(registrationRequest);
-                if (registrationResponse.isRegistrationSuccessful()) {
-                    User user = new User(registrationRequest.getUserNickname(), registrationRequest.getPassword(), registrationRequest.getFullName());
-                    UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
-                    ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
-                }
-                sendResponse(registrationResponse, out);
-                break;
-            case AUTHORIZATION_REQUEST:
-                AuthorizationRequest authorizationRequest = (AuthorizationRequest) requestMessage.getEncapsulatedMessage();
-                AuthorizationResponse authorizationResponse = RegistrationAuthorizationHandler.INSTANCE.handle(authorizationRequest);
-                if (authorizationResponse.isConfirmed()) {
-                    User user = RegistrationAuthorizationHandler.INSTANCE.getUser(authorizationRequest.getUserNickname());
-                    UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
-                    ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
-                }
-                sendResponse(authorizationResponse, out);
-                break;
-            case CHAT_CREATION_REQUEST:
-                ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) requestMessage.getEncapsulatedMessage();
-                ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomCreationHandler.INSTANCE.handle(chatRoomCreationRequest);
-                if (chatRoomCreationResponse.isSuccessful()) {
-                    List<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
-                    ChatRoom newChatRoom = chatRoomCreationResponse.getChatRoom();
-                    for (User user : members) {
-                        TransmittableMessage chatInvitation = new ChatInvitationMessage(newChatRoom);
-                        PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
-                        if (userStream != null) {
-                            sendResponse(chatInvitation, userStream);
-                        } else {
-                            ChatInvitationsContainer.INSTANCE.saveChatInvitation(user.getNickname(), newChatRoom);
+        while (isConnected) {
+            try {
+                stringReader = new StringReader(in.readLine());
+                requestMessage = (MessageWrapper) unmarshaller.unmarshal(stringReader);
+            } catch (IOException | JAXBException ex) {
+                continue;
+            }
+            switch (requestMessage.getMessageType()) {
+                case REGISTRATION_REQUEST:
+                    RegistrationRequest registrationRequest = (RegistrationRequest) requestMessage.getEncapsulatedMessage();
+                    RegistrationResponse registrationResponse = RegistrationAuthorizationHandler.INSTANCE.handle(registrationRequest);
+                    if (registrationResponse.isRegistrationSuccessful()) {
+                        User user = new User(registrationRequest.getUserNickname(), registrationRequest.getPassword(), registrationRequest.getFullName());
+                        UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
+                        ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
+                    }
+                    sendResponse(registrationResponse, out);
+                    break;
+                case AUTHORIZATION_REQUEST:
+                    AuthorizationRequest authorizationRequest = (AuthorizationRequest) requestMessage.getEncapsulatedMessage();
+                    AuthorizationResponse authorizationResponse = RegistrationAuthorizationHandler.INSTANCE.handle(authorizationRequest);
+                    if (authorizationResponse.isConfirmed()) {
+                        User user = RegistrationAuthorizationHandler.INSTANCE.getUser(authorizationRequest.getUserNickname());
+                        UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
+                        ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
+                    }
+                    sendResponse(authorizationResponse, out);
+                    break;
+                case CHAT_CREATION_REQUEST:
+                    ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) requestMessage.getEncapsulatedMessage();
+                    ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomCreationHandler.INSTANCE.handle(chatRoomCreationRequest);
+                    if (chatRoomCreationResponse.isSuccessful()) {
+                        List<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
+                        ChatRoom newChatRoom = chatRoomCreationResponse.getChatRoom();
+                        for (User user : members) {
+                            TransmittableMessage chatInvitation = new ChatInvitationMessage(newChatRoom);
+                            PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
+                            if (userStream != null) {
+                                sendResponse(chatInvitation, userStream);
+                            } else {
+                                ChatInvitationsContainer.INSTANCE.saveChatInvitation(user.getNickname(), newChatRoom);
+                            }
                         }
                     }
-                }
-                sendResponse(chatRoomCreationResponse, out);
-            case PING:
-                break;
-            case USER_DISCONNECT:
+                    sendResponse(chatRoomCreationResponse, out);
+                    break;
+                case PING:
+                    break;
+                case USER_DISCONNECT:
+                    isConnected = false;
 //                UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
-
+                    break;
+                    default:
+                        stringReader.close();
+            }
         }
     }
-
-
 }

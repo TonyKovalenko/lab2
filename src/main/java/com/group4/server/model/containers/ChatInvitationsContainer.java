@@ -22,7 +22,11 @@ public enum ChatInvitationsContainer {
     }
 
     public Set<ChatRoom> getChatInvitationsFor(String nickname) {
-        return pendingChatInvitations.get(nickname);
+        Set<ChatRoom> chatRoomsWithUser = pendingChatInvitations.get(nickname);
+        if (chatRoomsWithUser == null) {
+            return new HashSet<>();
+        }
+        return chatRoomsWithUser;
     }
 
     public void removeInvitations(String nickname) {

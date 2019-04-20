@@ -11,9 +11,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.CRC32;
 
-@XmlRootElement(name = "newGroupChatMessage")
+@XmlRootElement(name = "chatInvitationMessage")
 @XmlAccessorType(XmlAccessType.NONE)
 public class ChatInvitationMessage implements TransmittableMessage {
+
     @XmlElement
     private Set<ChatRoom> chatRooms;
 

@@ -14,10 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
 @XmlAccessorType(XmlAccessType.NONE)
 public class MessageWrapper {
 
-    @XmlAttribute(name = "msgID")
-    @XmlJavaTypeAdapter(value = AtomicLongAdapter.class)
-    private static AtomicLong messageID;
-
     @XmlElement(name = "messageType")
     private MessageType messageType;
 
@@ -26,14 +22,6 @@ public class MessageWrapper {
 
     @XmlAnyElement(lax=true)
     private TransmittableMessage encapsulatedMessage;
-
-    static {
-        messageID = new AtomicLong();
-    }
-
-    {
-        messageID.incrementAndGet();
-    }
 
     public MessageWrapper() {
     }
@@ -50,9 +38,5 @@ public class MessageWrapper {
 
     public MessageType getMessageType() {
         return messageType;
-    }
-
-    public long getMessageId() {
-        return messageID.longValue();
     }
 }

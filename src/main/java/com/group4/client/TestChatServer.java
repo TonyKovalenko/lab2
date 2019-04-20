@@ -151,7 +151,7 @@ public class TestChatServer {
                     if(reader.ready()) {
                         try (StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"))) {
                             MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
-                            System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
+                            System.out.println(message + " " + message.getMessageType());
                             switch (message.getMessageType()) {
                                 case AUTHORIZATION_REQUEST:
                                     AuthorizationResponse authorizationResponse = new AuthorizationResponse();
