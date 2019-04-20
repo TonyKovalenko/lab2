@@ -2,6 +2,7 @@ package com.group4.server.model.containers;
 
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
+import com.group4.server.model.message.types.ChatMessage;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -42,5 +43,17 @@ public enum ChatRoomsContainer {
         idToChatRoom.put(id.getAndIncrement(), chatRoom);
         chatRoom.setId(id.longValue());
         return true;
+    }
+
+    public ChatRoom getChatRoomById(long id) {
+        ChatRoom room = idToChatRoom.get(id);
+        if (room != null) {
+            return room;
+        }
+        return new ChatRoom();
+    }
+
+    public void addMessageToChat(long id, ChatMessage message) {
+        idToChatRoom.computeIfPresent(id, (k, v) -> v.addMessage(message));
     }
 }

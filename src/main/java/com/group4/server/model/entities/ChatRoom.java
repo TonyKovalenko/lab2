@@ -16,9 +16,9 @@ public class ChatRoom {
     @XmlElement
     private boolean isPrivate;
     @XmlElement
-    private String name;
+    private String name = "default";
     @XmlElement
-    private List<User> members;
+    private List<User> members = new ArrayList<>();
     @XmlElement
     private List<ChatMessage> messages = new ArrayList<>();
 
@@ -108,13 +108,18 @@ public class ChatRoom {
         this.messages = messages;
     }
 
-    public void addMessage(ChatMessage message) {
+    public ChatRoom addMessage(ChatMessage message) {
         messages.add(message);
+        return this;
     }
 
     public boolean isMemberPresent(String nickname) {
         Optional<?> optionalUser = members.stream().filter(user -> user.getNickname().equals(nickname)).findFirst();
         return optionalUser.isPresent();
+    }
+
+    public boolean isEmpty() {
+        return this.equals(new ChatRoom());
     }
 
     @Override

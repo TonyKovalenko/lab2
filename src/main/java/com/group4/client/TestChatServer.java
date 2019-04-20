@@ -46,7 +46,7 @@ public class TestChatServer {
                 RegistrationRequest.class, RegistrationResponse.class,
                 ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
                 ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
-                UpdateGroupChatMessage.class,
+                UpdateChatMessage.class,
                 AllUsersRequest.class, AllUsersResponse.class
         };
         public JAXBContext context;

@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "updateGroupChatMessage")
+@XmlRootElement(name = "updateChatMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class UpdateGroupChatMessage implements TransmittableMessage {
+public class UpdateChatMessage implements TransmittableMessage {
     @XmlElement
     private long id;
     @XmlElement
@@ -20,10 +20,10 @@ public class UpdateGroupChatMessage implements TransmittableMessage {
     @XmlElement
     private List<User> membersToDelete;
 
-    public UpdateGroupChatMessage() {
+    public UpdateChatMessage() {
     }
 
-    public UpdateGroupChatMessage(long id, String newName, List<User> membersToAdd, List<User> membersToDelete) {
+    public UpdateChatMessage(long id, String newName, List<User> membersToAdd, List<User> membersToDelete) {
         this.id = id;
         this.newName = newName;
         this.membersToAdd = membersToAdd;

@@ -8,7 +8,6 @@ public enum MessageType {
     AUTHORIZATION_RESPONSE,
     REGISTRATION_REQUEST,
     REGISTRATION_RESPONSE,
-    PING,
     NEW_CHATS,
     TO_CHAT,
     USERS_IN_CHAT,
@@ -20,7 +19,8 @@ public enum MessageType {
     ALL_USERS_REQUEST,
     ALL_USERS_RESPONSE,
     SERVER_SHUTDOWN,
-    USER_DISCONNECT;
+    USER_DISCONNECT,
+    PING;
 
     private static Map<String , MessageType> stringToMessageType = new HashMap<String, MessageType>() {{
         put(RegistrationRequest.class.getSimpleName(), REGISTRATION_REQUEST);
@@ -33,7 +33,7 @@ public enum MessageType {
         put(UsersInChatMessage.class.getSimpleName(), USERS_IN_CHAT);
         put(ChangeCredentialsRequest.class.getSimpleName(), CHANGE_CREDENTIALS_REQUEST);
         put(ChangeCredentialsResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);
-        put(UpdateGroupChatMessage.class.getSimpleName(), UPDATE_GROUP_CHAT);
+        put(UpdateChatMessage.class.getSimpleName(), UPDATE_GROUP_CHAT);
         put(ChatRoomCreationRequest.class.getSimpleName(), CHAT_CREATION_REQUEST);
         put(ChatRoomCreationResponse.class.getSimpleName(), CHAT_CREATION_RESPONSE);
         put(AllUsersRequest.class.getSimpleName(), ALL_USERS_REQUEST);
