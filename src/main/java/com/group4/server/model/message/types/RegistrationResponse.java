@@ -14,8 +14,7 @@ public class RegistrationResponse implements TransmittableMessage {
 
     @XmlElement
     private boolean registrationState;
-    @XmlElement
-    private ChatRoom mainChatRoom;
+
 
     public RegistrationResponse() {
     }
@@ -24,10 +23,6 @@ public class RegistrationResponse implements TransmittableMessage {
         this.registrationState = registrationState;
     }
 
-    public RegistrationResponse(boolean state, ChatRoom mainChatRoom) {
-        this(state);
-        this.mainChatRoom = mainChatRoom;
-    }
 
     public boolean isRegistrationSuccessful() {
         return registrationState;
@@ -35,13 +30,5 @@ public class RegistrationResponse implements TransmittableMessage {
 
     public void setRegistrationState(boolean registrationState) {
         this.registrationState = registrationState;
-    }
-
-    public ChatRoom getMainChatRoom() {
-        return mainChatRoom;
-    }
-
-    public void setMainChatRoom(ChatRoom mainChatRoom) {
-        this.mainChatRoom = mainChatRoom;
     }
 }

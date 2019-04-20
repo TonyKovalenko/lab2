@@ -33,7 +33,7 @@ public enum RegistrationAuthorizationHandler {
             return new RegistrationResponse(false);
         } else {
             nicknameToUser.put(user.getNickname(), user);
-            return new RegistrationResponse(true, ChatRoomsContainer.INSTANCE.getMainChatRoom());
+            return new RegistrationResponse(true);
         }
     }
 

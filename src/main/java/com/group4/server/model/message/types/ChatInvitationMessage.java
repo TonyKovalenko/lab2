@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.zip.CRC32;
 
 @XmlRootElement(name = "chatInvitationMessage")
 @XmlAccessorType(XmlAccessType.NONE)

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ChatMessage implements TransmittableMessage {
 
     @XmlElement
-    private long fromId;
+    private String sender;
     @XmlElement
     private long chatId;
     @XmlElement
@@ -19,18 +19,18 @@ public class ChatMessage implements TransmittableMessage {
     public ChatMessage() {
     }
 
-    public ChatMessage(long fromId, int chatId, String text) {
-        this.fromId = fromId;
+    public ChatMessage(String sender, int chatId, String text) {
+        this.sender = sender;
         this.chatId = chatId;
         this.text = text;
     }
 
-    public long getFromId() {
-        return fromId;
+    public String getSender() {
+        return sender;
     }
 
-    public void setFromId(long fromId) {
-        this.fromId = fromId;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public long getChatId() {

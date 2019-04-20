@@ -20,7 +20,7 @@ public class Controller extends Application {
     private MessageThread thread;
     private static Controller instance;
     private User currentUser;
-    private HashMap<Long, User> users = new HashMap<>();
+    private HashMap<String, User> users = new HashMap<>();
     private HashMap<Long, ChatRoom> chatRooms = new HashMap<>();
 
     public static Controller getInstance() {
@@ -65,8 +65,8 @@ public class Controller extends Application {
         Platform.runLater(() -> mainView.updateAdminPanel(currentUser.isAdmin()));
     }
 
-    public User getUserById(long id) {
-        return users.get(id);
+    public User getUserByNickname(String nickname) {
+        return users.get(nickname);
     }
 
     public Collection<User> getUsers() {
@@ -85,10 +85,8 @@ public class Controller extends Application {
         List<User> usersWithoutPrivateChat = new ArrayList<>(getUsers());
         Controller.getInstance().getChatRooms().values()
                 .stream()
-                .filter(item -> item.isPrivate())
-                .forEach((item) -> {
-                    usersWithoutPrivateChat.remove(item.getOtherMember(Controller.getInstance().getCurrentUser()));
-                });
+                .filter(ChatRoom::isPrivate)
+                .forEach((item) -> usersWithoutPrivateChat.remove(item.getOtherMember(Controller.getInstance().getCurrentUser())));
         return usersWithoutPrivateChat;
     }
     /**
@@ -128,11 +126,11 @@ public class Controller extends Application {
                     UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
                     users = new HashMap<>();
                     for (User user : usersInChatMessage.getUsers()) {
-                        users.put(user.getId(), user);
+                        users.put(user.getNickname(), user);
                     }
-                    users.remove(currentUser.getId());
+                    users.remove(currentUser.getNickname());
                     if (chatRooms.get(2L) == null) {
-                        chatRooms.put(2L, new ChatRoom(2, currentUser, getUserById((currentUser.getId()==10000)?10001:10000)));
+                        chatRooms.put(2L, new ChatRoom(2, currentUser, getUserByNickname((currentUser.getNickname().equals("user1")?"user2":"user1"))));
                     }
                     updateOnlineUsersView();
                     break;
@@ -164,8 +162,8 @@ public class Controller extends Application {
                                 EditProfileView.getInstance().cancel();
                             });
                         } else {
-                            if (users.containsKey(updatedUser.getId())) {
-                                users.put(updatedUser.getId(), updatedUser);
+                            if (users.containsKey(updatedUser.getNickname())) {
+                                users.put(updatedUser.getNickname(), updatedUser);
                                 updateOnlineUsersView();
                             }
                         }
@@ -197,7 +195,7 @@ public class Controller extends Application {
             return;
         }
         ChatMessage message = new ChatMessage();
-        message.setFromId(this.getCurrentUser().getId());
+        message.setSender(this.getCurrentUser().getNickname());
         message.setText(text);
         message.setChatId(mainView.getSelectedChatRoom().getId());
 

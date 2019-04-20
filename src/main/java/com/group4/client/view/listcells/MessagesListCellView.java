@@ -50,7 +50,7 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
             Optional<User> optionalUser = Controller.getInstance().getChatRoomById(message.getChatId())
                     .getMembers()
                     .stream()
-                    .filter(item -> item.getId() == message.getFromId()).findFirst();
+                    .filter(item -> item.getNickname().equals(message.getSender())).findFirst();
             User user = optionalUser.orElse(new User());
             nameLabel.setText(user.getNickname());
             messageTextLabel.setText(message.getText());

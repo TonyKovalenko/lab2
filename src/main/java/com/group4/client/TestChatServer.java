@@ -20,8 +20,8 @@ public class TestChatServer {
     private static final int PORT = 8888;
     private static int userCounter = 0;
 
-    private static HashSet<String> names = new HashSet<String>();
-    private static HashSet<PrintWriter> writers = new HashSet<PrintWriter>();
+    private static HashSet<String> names = new HashSet<>();
+    private static HashSet<PrintWriter> writers = new HashSet<>();
 
 
     public static void main(String[] args) throws Exception {
@@ -54,33 +54,33 @@ public class TestChatServer {
         public Unmarshaller unmarshaller;
 
         public List<ChatMessage> messages = new ArrayList<ChatMessage>() {{
-            add(new ChatMessage(10001, 2, "The Library. \nSo big it doesn't need a name. Just a great big The."));
-            add(new ChatMessage(10000, 3, "It's like a city. "));
-            add(new ChatMessage(10001, 2, "It's a world. \nLiterally, a world. \nThe whole core of the planet is the index computer. Biggest hard drive ever. And up here, every book ever written. Whole continents of Jeffrey Archer, Bridget Jones, Monty Python's Big Red Book. Brand new editions, specially printed. "));
-            add(new ChatMessage(10001, 2, "We're near the equator, so this must be biographies. I love biographies. "));
-            add(new ChatMessage(10000, 3, "Yeah, very you. Always a death at the end. "));
-            add(new ChatMessage(10001, 2, "You need a good death. Without death, there'd only be comedies. Dying gives us size. "));
-            add(new ChatMessage(10001, 2, "Way-a. Spoilers. "));
-            add(new ChatMessage(10000, 2, "What? "));
-            add(new ChatMessage(10001, 3, "These books are from your future. \nYou don't want to read ahead. Spoil all the surprises. Like peeking at the end. "));
-            add(new ChatMessage(10000, 2, "Isn't travelling with you one big spoiler? "));
-            add(new ChatMessage(10001, 2, "I try to keep you away from major plot developments. Which, to be honest, I seem to be very bad at, because you know what? This is the biggest library in the universe. So where is everyone? It's silent."));
-            add(new ChatMessage(10000, 2, "The library? "));
-            add(new ChatMessage(10001, 2, "The planet. The whole planet. "));
-            add(new ChatMessage(10000, 2, "Maybe it's a Sunday. "));
-            add(new ChatMessage(10001, 2, "No, I never land on Sundays. Sundays are boring. "));
-            add(new ChatMessage(10000, 2, "Well, maybe everyone's really, really quiet. "));
-            add(new ChatMessage(10001, 2, "Yeah, maybe. But they'd still show up on the system. "));
-            add(new ChatMessage(10000, 2, "Doctor, why are we here? Really, why? "));
-            add(new ChatMessage(10001, 2, "Oh, you know, just passing. "));
-            add(new ChatMessage(10000, 2, "No, seriously. It was all let's hit the beach, then suddenly we're in a library. Why? "));
-            add(new ChatMessage(10001, 3, "Now that's interesting. "));
-            add(new ChatMessage(10000, 3, "What? "));
-            add(new ChatMessage(10001, 3, "Scanning for life forms. If I do a scan looking for your basic humanoids. You know, your book readers, few limbs and a face, apart from us, I get nothing. Zippo, nada. See? Nobody home. But if I widen the parameters to any kind of life. "));
-            add(new ChatMessage(10001, 3, "A million, million. Gives up after that. A million, million. "));
-            add(new ChatMessage(10000, 3, "But there's nothing here. There's no one. "));
-            add(new ChatMessage(10001, 3, "And not a sound. A million. million life forms, and silence in the library. "));
-            add(new ChatMessage(10000, 3, "But there's no one here. There's just books. I mean, it's not the books, is it? I mean, it can't be the books, can it? I mean, books can't be alive. \n"));
+            add(new ChatMessage("user1", 2, "The Library. \nSo big it doesn't need a name. Just a great big The."));
+            add(new ChatMessage("user2", 3, "It's like a city. "));
+            add(new ChatMessage("user2", 2, "It's a world. \nLiterally, a world. \nThe whole core of the planet is the index computer. Biggest hard drive ever. And up here, every book ever written. Whole continents of Jeffrey Archer, Bridget Jones, Monty Python's Big Red Book. Brand new editions, specially printed. "));
+            add(new ChatMessage("user2", 2, "We're near the equator, so this must be biographies. I love biographies. "));
+            add(new ChatMessage("user1", 3, "Yeah, very you. Always a death at the end. "));
+            add(new ChatMessage("user2", 2, "You need a good death. Without death, there'd only be comedies. Dying gives us size. "));
+            add(new ChatMessage("user2", 2, "Way-a. Spoilers. "));
+            add(new ChatMessage("user1", 2, "What? "));
+            add(new ChatMessage("user2", 3, "These books are from your future. \nYou don't want to read ahead. Spoil all the surprises. Like peeking at the end. "));
+            add(new ChatMessage("user1", 2, "Isn't travelling with you one big spoiler? "));
+            add(new ChatMessage("user2", 2, "I try to keep you away from major plot developments. Which, to be honest, I seem to be very bad at, because you know what? This is the biggest library in the universe. So where is everyone? It's silent."));
+            add(new ChatMessage("user1", 2, "The library? "));
+            add(new ChatMessage("user2", 2, "The planet. The whole planet. "));
+            add(new ChatMessage("user1", 2, "Maybe it's a Sunday. "));
+            add(new ChatMessage("user2", 2, "No, I never land on Sundays. Sundays are boring. "));
+            add(new ChatMessage("user1", 2, "Well, maybe everyone's really, really quiet. "));
+            add(new ChatMessage("user2", 2, "Yeah, maybe. But they'd still show up on the system. "));
+            add(new ChatMessage("user1", 2, "Doctor, why are we here? Really, why? "));
+            add(new ChatMessage("user2", 2, "Oh, you know, just passing. "));
+            add(new ChatMessage("user1", 2, "No, seriously. It was all let's hit the beach, then suddenly we're in a library. Why? "));
+            add(new ChatMessage("user2", 3, "Now that's interesting. "));
+            add(new ChatMessage("user1", 3, "What? "));
+            add(new ChatMessage("user2", 3, "Scanning for life forms. If I do a scan looking for your basic humanoids. You know, your book readers, few limbs and a face, apart from us, I get nothing. Zippo, nada. See? Nobody home. But if I widen the parameters to any kind of life. "));
+            add(new ChatMessage("user2", 3, "A million, million. Gives up after that. A million, million. "));
+            add(new ChatMessage("user1", 3, "But there's nothing here. There's no one. "));
+            add(new ChatMessage("user2", 3, "And not a sound. A million. million life forms, and silence in the library. "));
+            add(new ChatMessage("user1", 3, "But there's no one here. There's just books. I mean, it's not the books, is it? I mean, it can't be the books, can it? I mean, books can't be alive. \n"));
         }};
 
 
@@ -108,8 +108,8 @@ public class TestChatServer {
                 unmarshaller = context.createUnmarshaller();
 
                 List<User> users = new ArrayList<>();
-                User user1 = new User(10000, "donna", "Donna Noble", "1");
-                User user2 = new User(10001, "doctor", "The Doctor", "1");
+                User user1 = new User( "donna", "Donna Noble", "1");
+                User user2 = new User( "doctor", "The Doctor", "1");
                 users.add(user1);
                 users.add(user2);
                 user1.setAdmin(true);
@@ -177,7 +177,7 @@ public class TestChatServer {
                                     sendMessage(message0, writer);
                                     break;
                                 case REGISTRATION_REQUEST:
-                                    RegistrationResponse registrationResponse = new RegistrationResponse(true, new ChatRoom());
+                                    RegistrationResponse registrationResponse = new RegistrationResponse(true);
                                     sendMessage(registrationResponse, writer);
                                     break;
                                 case CHAT_CREATION_REQUEST:

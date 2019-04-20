@@ -2,10 +2,8 @@ package com.group4.server.model.containers;
 
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +27,7 @@ public enum ChatRoomsContainer {
     }
 
     public ChatRoom getMainChatRoom() {
-        return idToChatRoom.get(0);
+        return idToChatRoom.get(0L);
     }
 
     public Set<ChatRoom> getChatRoomsFor(String nickname) {
