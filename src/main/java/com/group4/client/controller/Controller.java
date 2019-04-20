@@ -136,12 +136,18 @@ public class Controller extends Application {
                     }
                     updateOnlineUsersView();
                     break;
-                case NEW_CHAT:
-                    NewChatRoomMessage newChatRoomMessage = (NewChatRoomMessage) responseMessage.getEncapsulatedMessage();
-                    ChatRoom chatRoom = newChatRoomMessage.getChatRoom();
-                    chatRooms.put(chatRoom.getId(), chatRoom);
-                    updateChatRoomsView();
+                case CHAT_CREATION_RESPONSE:
+                    ChatRoomCreationResponse chatRoomCreationResponse = (ChatRoomCreationResponse) responseMessage.getEncapsulatedMessage();
+                    if (chatRoomCreationResponse.isSuccessful()) {
+                        ChatRoom chatRoom = chatRoomCreationResponse.getChatRoom();
+                        chatRooms.put(chatRoom.getId(), chatRoom);
+                        updateChatRoomsView();
+                    }
                     break;
+                case NEW_CHATS:
+                    ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
+                    Set<ChatRoom> chatRoom = chatInvitationMessage.getChatRooms();
+                    chatRoom.forEach(room -> chatRooms.put(room.getId(), room));
                 case TO_CHAT:
                     ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
                     chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
@@ -220,7 +226,7 @@ public class Controller extends Application {
             users.add(currentUser);
             chatRoom = new ChatRoom(chatName, users);
         }
-        NewChatRoomMessage message = new NewChatRoomMessage(chatRoom);
+        ChatRoomCreationRequest message = new ChatRoomCreationRequest(chatRoom);
         thread.sendMessage(message);
         view.close();
     }

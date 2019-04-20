@@ -42,9 +42,10 @@ public class TestChatServer {
 
         private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
                 AuthorizationRequest.class, AuthorizationResponse.class,
-                ChatMessage.class, NewChatRoomMessage.class, UsersInChatMessage.class,
+                ChatMessage.class, ChatInvitationMessage.class, UsersInChatMessage.class,
                 RegistrationRequest.class, RegistrationResponse.class,
                 ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
+                ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
                 UpdateGroupChatMessage.class,
                 AllUsersRequest.class, AllUsersResponse.class
         };
@@ -179,11 +180,13 @@ public class TestChatServer {
                                     RegistrationResponse registrationResponse = new RegistrationResponse(true, new ChatRoom());
                                     sendMessage(registrationResponse, writer);
                                     break;
-                                case NEW_CHAT:
-                                    NewChatRoomMessage newChatRoomMessage = (NewChatRoomMessage) message.getEncapsulatedMessage();
-                                    newChatRoomMessage.getChatRoom().setId(idCounter++);
+                                case CHAT_CREATION_REQUEST:
+                                    ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) message.getEncapsulatedMessage();
+                                    ChatRoom room = chatRoomCreationRequest.getChatRoom();
+                                    room.setId(idCounter++);
+                                    ChatRoomCreationResponse chatRoomCreationResponse = new ChatRoomCreationResponse(true, room);
                                     for (PrintWriter writer : writers) {
-                                        sendMessage(newChatRoomMessage, writer);
+                                        sendMessage(chatRoomCreationResponse, writer);
                                     }
                                     break;
                                 case TO_CHAT:

@@ -9,7 +9,7 @@ public enum MessageType {
     REGISTRATION_REQUEST,
     REGISTRATION_RESPONSE,
     PING,
-    NEW_CHAT,
+    NEW_CHATS,
     TO_CHAT,
     USERS_IN_CHAT,
     CHANGE_CREDENTIALS_REQUEST,
@@ -29,7 +29,7 @@ public enum MessageType {
         put(AuthorizationResponse.class.getSimpleName(), AUTHORIZATION_RESPONSE);
         put(PingMessage.class.getSimpleName(), PING);
         put(ChatMessage.class.getSimpleName(), TO_CHAT);
-        put(NewChatRoomMessage.class.getSimpleName(), NEW_CHAT);
+        put(ChatInvitationMessage.class.getSimpleName(), NEW_CHATS);
         put(UsersInChatMessage.class.getSimpleName(), USERS_IN_CHAT);
         put(ChangeCredentialsRequest.class.getSimpleName(), CHANGE_CREDENTIALS_REQUEST);
         put(ChangeCredentialsResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);

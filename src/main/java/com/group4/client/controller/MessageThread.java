@@ -24,9 +24,10 @@ public class MessageThread extends Thread {
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
             AuthorizationRequest.class, AuthorizationResponse.class,
-            ChatMessage.class, NewChatRoomMessage.class, UsersInChatMessage.class,
+            ChatMessage.class, ChatInvitationMessage.class, UsersInChatMessage.class,
             RegistrationRequest.class, RegistrationResponse.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
+            ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
             UpdateGroupChatMessage.class,
             AllUsersRequest.class, AllUsersResponse.class
     };
