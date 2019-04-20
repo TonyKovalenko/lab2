@@ -36,7 +36,6 @@ public class ChatInvitationMessage implements TransmittableMessage {
         return chatRooms;
     }
 
-
     public void setChatRooms(Set<ChatRoom> chatRoom) {
         this.chatRooms = chatRoom;
     }

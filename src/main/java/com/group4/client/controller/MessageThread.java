@@ -1,7 +1,6 @@
 package com.group4.client.controller;
 
 import com.group4.client.view.DialogWindow;
-import com.group4.server.model.message.handlers.ChatRoomCreationHandler;
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
@@ -25,10 +24,12 @@ public class MessageThread extends Thread {
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
             AuthorizationRequest.class, AuthorizationResponse.class,
-            ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class, ChatInvitationMessage.class, UsersInChatMessage.class,
+            ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
+            ChatInvitationMessage.class, UsersInChatMessage.class,
             RegistrationRequest.class, RegistrationResponse.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
-            UpdateChatMessage.class
+            UpdateChatMessage.class,
+            AllUsersRequest.class, AllUsersResponse.class
     };
     private JAXBContext context;
     private Map<MessageType, List<MessageWrapper>> sentMessages = new HashMap<>();
@@ -40,7 +41,7 @@ public class MessageThread extends Thread {
                 if(reader.ready()) {
                     try (StringReader dataReader = new StringReader(reader.readLine().replaceAll(lineBreakEscape, "\n"))) {
                         MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
-                        System.out.println("message accepted: ");
+                        System.out.println("message accepted: " + message.getMessageType());
                         switch (message.getMessageType()) {
                             case AUTHORIZATION_RESPONSE:
                                 LoginController.getInstance().processMessage(message, message);
@@ -50,6 +51,9 @@ public class MessageThread extends Thread {
                                 break;
                             case PING:
                                 inPings++;
+                                break;
+                            case ALL_USERS_RESPONSE:
+                                AdminController.getInstance().processMessage(message);
                                 break;
                             default:
                                 Controller.getInstance().processMessage(message, message);

@@ -1,7 +1,5 @@
 package com.group4.client.view.listcells;
 
-import com.group4.client.controller.Controller;
-import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.ChatMessage;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +8,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class MessagesListCellView extends ListCell<ChatMessage> {
 
@@ -47,12 +44,12 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
                 }
 
             }
-            Optional<User> optionalUser = Controller.getInstance().getChatRoomById(message.getChatId())
+            /*Optional<User> optionalUser = Controller.getInstance().getChatRoomById(message.getChatId())
                     .getMembers()
                     .stream()
                     .filter(item -> item.getNickname().equals(message.getSender())).findFirst();
-            User user = optionalUser.orElse(new User());
-            nameLabel.setText(user.getNickname());
+            User user = optionalUser.orElse(new User());*/
+            nameLabel.setText(message.getSender());
             messageTextLabel.setText(message.getText());
 
             messageTextLabel.setWrapText(true);
