@@ -1,5 +1,6 @@
 package com.group4.server.model.containers;
 
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.List;
@@ -11,9 +12,9 @@ public enum UserStreamContainer {
 
     INSTANCE;
 
-    private Map<String, Writer> userToStream = new ConcurrentHashMap<>();
+    private Map<String, PrintWriter> userToStream = new ConcurrentHashMap<>();
 
-    public void putStream(String nickname, Writer stream) {
+    public void putStream(String nickname, PrintWriter stream) {
         userToStream.put(nickname, stream);
     }
 
@@ -21,7 +22,7 @@ public enum UserStreamContainer {
         userToStream.remove(nickname);
     }
 
-    public Writer getStream(String nickname) {
+    public PrintWriter getStream(String nickname) {
         return userToStream.get(nickname);
     }
 

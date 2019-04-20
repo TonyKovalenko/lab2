@@ -28,7 +28,7 @@ public enum MessageType {
         put(AuthorizationResponse.class.getSimpleName(), AUTHORIZATION_RESPONSE);
         put(PingMessage.class.getSimpleName(), PING);
         put(ChatMessage.class.getSimpleName(), TO_CHAT);
-        put(NewGroupChatMessage.class.getSimpleName(), NEW_GROUPCHAT);
+        put(ChatInvitationMessage.class.getSimpleName(), NEW_GROUPCHAT);
         put(UsersInChatMessage.class.getSimpleName(), USERS_IN_CHAT);
         put(ChangeCredentialsRequest.class.getSimpleName(), CHANGE_CREDENTIALS_REQUEST);
         put(ChangeCredentialsResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);

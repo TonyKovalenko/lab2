@@ -12,7 +12,7 @@ public enum ChatRoomCreationHandler {
     public <T extends ChatRoomCreationRequest> ChatRoomCreationResponse handle(T chatCreationRequest) {
         ChatRoom newChatRoom = chatCreationRequest.getChatRoom();
         boolean creationIsSuccessful = ChatRoomsContainer.INSTANCE.createChatRoom(newChatRoom);
-        return new ChatRoomCreationResponse(creationIsSuccessful);
+        return new ChatRoomCreationResponse(creationIsSuccessful, newChatRoom);
     }
 
 }

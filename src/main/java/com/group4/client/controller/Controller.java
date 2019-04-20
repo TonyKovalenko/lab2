@@ -139,9 +139,9 @@ public class Controller extends Application {
                     break;
                 case NEW_GROUPCHAT:
                 case NEW_PRIVATECHAT:
-                    NewGroupChatMessage newGroupChatMessage = (NewGroupChatMessage) responseMessage.getEncapsulatedMessage();
-                    ChatRoom chatRoom = newGroupChatMessage.getChatRoom();
-                    chatRooms.put(chatRoom.getId(), chatRoom);
+                    ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
+                    Set<ChatRoom> chatRoom = chatInvitationMessage.getChatRooms();
+                    chatRoom.forEach(room -> chatRooms.put(room.getId(), room));
                     //updateChatRoomsView();
                     break;
                 case TO_CHAT:
@@ -209,7 +209,7 @@ public class Controller extends Application {
             String chatName = view.getGroupName();
             chatRoom = new ChatRoom(chatName, users);
         }
-        NewGroupChatMessage message = new NewGroupChatMessage(chatRoom);
+        ChatInvitationMessage message = new ChatInvitationMessage(chatRoom);
         thread.sendMessage(message);
         view.close();
     }

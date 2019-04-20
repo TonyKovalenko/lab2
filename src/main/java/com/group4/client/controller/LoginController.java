@@ -11,6 +11,7 @@ import com.group4.server.model.entities.ChatRoom;
 import javafx.application.Platform;
 
 import java.util.List;
+import java.util.Set;
 
 public class LoginController {
     private LoginView view;
@@ -56,7 +57,7 @@ public class LoginController {
             System.out.println("authorization was confirmed");
             Platform.runLater(() -> MainView.getInstance().showStage());
             Controller.getInstance().setCurrentUser(innerMessage.getUser());
-            List<ChatRoom> chatRooms = innerMessage.getChatRoomsWithUser();
+            Set<ChatRoom> chatRooms = innerMessage.getChatRoomsWithUser();
             for (ChatRoom room : chatRooms) {
                 Controller.getInstance().getChatRooms().put(room.getId(), room);
             }

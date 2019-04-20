@@ -1,12 +1,15 @@
 package com.group4.server.model.message.handlers;
 
+import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
+import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.AuthorizationRequest;
 import com.group4.server.model.message.types.AuthorizationResponse;
 import com.group4.server.model.message.types.RegistrationRequest;
 import com.group4.server.model.message.types.RegistrationResponse;
 
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -39,7 +42,10 @@ public enum RegistrationAuthorizationHandler {
         String authPassword = authorizationRequest.getPassword();
         User user = nicknameToUser.get(authNickname);
         if(authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
-            return new AuthorizationResponse(true, user, ChatRoomsContainer.INSTANCE.getChatRoomsFor(authNickname));
+            Set<ChatRoom> chatRoomsWithUser = ChatRoomsContainer.INSTANCE.getChatRoomsFor(authNickname);
+            chatRoomsWithUser.addAll(ChatInvitationsContainer.INSTANCE.getChatInvitationsFor(authNickname));
+            ChatInvitationsContainer.INSTANCE.removeInvitations(authNickname);
+            return new AuthorizationResponse(true, user, chatRoomsWithUser);
         } else {
             return new AuthorizationResponse(false);
         }

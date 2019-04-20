@@ -12,20 +12,37 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ChatRoomCreationResponse implements TransmittableMessage{
 
     @XmlElement
-    private boolean confirmed;
-
-    public boolean isConfirmed() {
-        return confirmed;
-    }
-
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
-    }
+    private boolean successful;
+    @XmlElement
+    private ChatRoom chatRoom;
 
     public ChatRoomCreationResponse() {
     }
 
-    public ChatRoomCreationResponse(boolean confirmed) {
-        this.confirmed = confirmed;
+    public ChatRoomCreationResponse(boolean successful) {
+        this.successful = successful;
+    }
+
+    public ChatRoomCreationResponse(boolean successful, ChatRoom chatRoom) {
+        this.successful = successful;
+        this.chatRoom = chatRoom;
+    }
+
+    public boolean isSuccessful() {
+        return successful;
+    }
+
+    public void setSuccessful(boolean successful) {
+        this.successful = successful;
+    }
+
+
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
     }
 }

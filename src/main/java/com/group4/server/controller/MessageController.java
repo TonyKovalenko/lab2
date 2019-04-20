@@ -2,8 +2,10 @@ package com.group4.server.controller;
 
 //import com.group4.server.model.containers.ChatRoomsContainer;
 //import com.group4.server.model.containers.UserStreamContainer;
+import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.containers.UserStreamContainer;
+import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.handlers.ChatRoomCreationHandler;
 import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
@@ -13,6 +15,7 @@ import com.group4.server.model.message.wrappers.MessageWrapper;
 import javax.xml.bind.*;
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 
 public class MessageController {
 
@@ -88,8 +91,18 @@ public class MessageController {
             case CHAT_CREATION_REQUEST:
                 ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) requestMessage.getEncapsulatedMessage();
                 ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomCreationHandler.INSTANCE.handle(chatRoomCreationRequest);
-                if (chatRoomCreationResponse.isConfirmed()) {
-                //TODO send chat invitations
+                if (chatRoomCreationResponse.isSuccessful()) {
+                    List<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
+                    ChatRoom newChatRoom = chatRoomCreationResponse.getChatRoom();
+                    for (User user : members) {
+                        TransmittableMessage chatInvitation = new ChatInvitationMessage(newChatRoom);
+                        PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
+                        if (userStream != null) {
+                            sendResponse(chatInvitation, userStream);
+                        } else {
+                            ChatInvitationsContainer.INSTANCE.saveChatInvitation(user.getNickname(), newChatRoom);
+                        }
+                    }
                 }
                 sendResponse(chatRoomCreationResponse, out);
             case PING:

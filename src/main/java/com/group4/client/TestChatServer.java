@@ -42,7 +42,7 @@ public class TestChatServer {
 
         private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
                 AuthorizationRequest.class, AuthorizationResponse.class,
-                ChatMessage.class, NewGroupChatMessage.class, UsersInChatMessage.class,
+                ChatMessage.class, ChatInvitationMessage.class, UsersInChatMessage.class,
                 RegistrationRequest.class, RegistrationResponse.class,
                 ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
                 UpdateGroupChatMessage.class
@@ -146,7 +146,7 @@ public class TestChatServer {
                 int idCounter = 5;
 
                 while (socket.isConnected()) {
-                    if(reader.ready()) {
+                    if (reader.ready()) {
                         try (StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"))) {
                             MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
                             System.out.println(message + " " + message.getMessageType() + " " + message.getMessageId());
@@ -162,7 +162,9 @@ public class TestChatServer {
                                         authorizationResponse.setUser(user2);
                                     }
                                     userCounter++;
-                                    authorizationResponse.setChatRoomsWithUser(Collections.singletonList(new ChatRoom(3, "Whovians", users)));
+                                    authorizationResponse.setChatRoomsWithUser(new HashSet<ChatRoom>() {{
+                                        add(new ChatRoom(3, "Whovians", users));
+                                    }});
                                     sendMessage(authorizationResponse, writer);
 
                                     UsersInChatMessage message0 = new UsersInChatMessage();
@@ -175,10 +177,12 @@ public class TestChatServer {
                                     break;
                                 case NEW_GROUPCHAT:
                                 case NEW_PRIVATECHAT:
-                                    NewGroupChatMessage newGroupChatMessage = (NewGroupChatMessage) message.getEncapsulatedMessage();
-                                    newGroupChatMessage.getChatRoom().setId(idCounter++);
+                                    ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) message.getEncapsulatedMessage();
+                                    for (ChatRoom room : chatInvitationMessage.getChatRooms()) {
+                                        room.setId(idCounter++);
+                                    }
                                     for (PrintWriter writer : writers) {
-                                        sendMessage(newGroupChatMessage, writer);
+                                        sendMessage(chatInvitationMessage, writer);
                                     }
                                     break;
                                 case TO_CHAT:
