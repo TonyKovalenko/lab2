@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ChangeCredentialsRequest implements TransmittableMessage {
 
     @XmlElement
-    private long userId;
+    private String userNickname;
     @XmlElement
     private String newFullName;
     @XmlElement
@@ -19,8 +19,8 @@ public class ChangeCredentialsRequest implements TransmittableMessage {
     public ChangeCredentialsRequest() {
     }
 
-    public ChangeCredentialsRequest(long userId, String newFullName, String newPassword) {
-        this.userId = userId;
+    public ChangeCredentialsRequest(String userNickname, String newFullName, String newPassword) {
+        this.userNickname = userNickname;
         this.newFullName = newFullName;
         this.newPassword = newPassword;
     }
@@ -41,11 +41,11 @@ public class ChangeCredentialsRequest implements TransmittableMessage {
         this.newPassword = newPassword;
     }
 
-    public long getUserId() {
-        return userId;
+    public String getUserNickname() {
+        return userNickname;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
     }
 }

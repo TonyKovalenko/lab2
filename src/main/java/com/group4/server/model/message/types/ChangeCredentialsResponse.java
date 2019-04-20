@@ -18,6 +18,10 @@ public class ChangeCredentialsResponse implements TransmittableMessage {
     public ChangeCredentialsResponse() {
     }
 
+    public ChangeCredentialsResponse(boolean isConfirmed) {
+        this.isConfirmed = isConfirmed;
+    }
+
     public ChangeCredentialsResponse(boolean isConfirmed, User user) {
         this.isConfirmed = isConfirmed;
         this.user = user;

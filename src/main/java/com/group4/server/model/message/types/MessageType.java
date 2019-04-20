@@ -18,27 +18,27 @@ public enum MessageType {
     CHAT_CREATION_RESPONSE,
     ALL_USERS_REQUEST,
     ALL_USERS_RESPONSE,
-    SERVER_SHUTDOWN,
     USER_DISCONNECT,
-    PING;
+    PING,
+    SERVER_SHUTDOWN;
 
     private static Map<String , MessageType> stringToMessageType = new HashMap<String, MessageType>() {{
         put(RegistrationRequest.class.getSimpleName(), REGISTRATION_REQUEST);
         put(RegistrationResponse.class.getSimpleName(), REGISTRATION_RESPONSE);
         put(AuthorizationRequest.class.getSimpleName(), AUTHORIZATION_REQUEST);
         put(AuthorizationResponse.class.getSimpleName(), AUTHORIZATION_RESPONSE);
-        put(PingMessage.class.getSimpleName(), PING);
         put(ChatMessage.class.getSimpleName(), TO_CHAT);
         put(ChatInvitationMessage.class.getSimpleName(), NEW_CHATS);
+        put(UpdateChatMessage.class.getSimpleName(), UPDATE_GROUP_CHAT);
         put(UsersInChatMessage.class.getSimpleName(), USERS_IN_CHAT);
         put(ChangeCredentialsRequest.class.getSimpleName(), CHANGE_CREDENTIALS_REQUEST);
         put(ChangeCredentialsResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);
-        put(UpdateChatMessage.class.getSimpleName(), UPDATE_GROUP_CHAT);
         put(ChatRoomCreationRequest.class.getSimpleName(), CHAT_CREATION_REQUEST);
         put(ChatRoomCreationResponse.class.getSimpleName(), CHAT_CREATION_RESPONSE);
         put(AllUsersRequest.class.getSimpleName(), ALL_USERS_REQUEST);
         put(AllUsersResponse.class.getSimpleName(), ALL_USERS_RESPONSE);
-       // put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
+        put(PingMessage.class.getSimpleName(), PING);
+        put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
     }};
 
     public static MessageType getMessageType(String type) throws IllegalArgumentException {
