@@ -28,4 +28,8 @@ public class ChatSuspensionMessage implements TransmittableMessage {
     public long getChatId() {
         return chatId;
     }
+
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
 }

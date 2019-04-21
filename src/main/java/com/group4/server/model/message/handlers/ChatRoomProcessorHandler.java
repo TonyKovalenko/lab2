@@ -68,7 +68,6 @@ public enum ChatRoomProcessorHandler {
             }
             sw.getBuffer().setLength(0);
         }
-        sw = null;
         return true;
     }
 
@@ -90,13 +89,12 @@ public enum ChatRoomProcessorHandler {
             }
             sw.getBuffer().setLength(0);
         }
-        sw = null;
         return true;
     }
 
     private boolean updateChatName(ChatRoom room, String name) {
         if (name == null) return true;
-        if (name.equals("")) return false;
+        if ("".equals(name)) return false;
         room.setName(name);
         return true;
     }

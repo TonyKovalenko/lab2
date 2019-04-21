@@ -1,8 +1,8 @@
 package com.group4.server.model.message.wrappers;
 
-import com.group4.server.model.message.adapters.InstantAdapter;
 import com.group4.server.model.message.types.MessageType;
 import com.group4.server.model.message.types.TransmittableMessage;
+import com.group4.server.model.message.adapters.InstantAdapter;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
