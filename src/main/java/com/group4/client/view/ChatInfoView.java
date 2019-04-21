@@ -67,6 +67,10 @@ public class ChatInfoView extends View {
         controller.saveGroupChatChanges();
     }
 
+    @FXML
+    void leaveChat() {
+        controller.leaveChatRoom();
+    }
     public void setChatRoom(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
         groupNameTextField.setText(chatRoom.getName());

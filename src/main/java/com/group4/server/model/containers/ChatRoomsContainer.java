@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,15 +29,15 @@ public enum ChatRoomsContainer {
 
     ChatRoomsContainer() {
         id = new AtomicLong(0);
-        idToChatRoom.put(id.getAndIncrement(), new ChatRoom(id.longValue(), "mainChatRoom", new HashSet<>()));
+        idToChatRoom.put(id.incrementAndGet(), new ChatRoom(id.longValue(), "mainChatRoom", new HashSet<>()));
     }
 
     public void putToInitialRoom(User user) {
-        idToChatRoom.get(0L).addMember(user);
+        idToChatRoom.get(1L).addMember(user);
     }
 
     public ChatRoom getMainChatRoom() {
-        return idToChatRoom.get(0L);
+        return idToChatRoom.get(1L);
     }
 
     public Set<ChatRoom> getChatRoomsFor(String nickname) {
@@ -50,7 +49,7 @@ public enum ChatRoomsContainer {
             chatRoom.setId(-1);
             return false;
         }
-        idToChatRoom.put(id.getAndIncrement(), chatRoom);
+        idToChatRoom.put(id.incrementAndGet(), chatRoom);
         chatRoom.setId(id.longValue());
         return true;
     }

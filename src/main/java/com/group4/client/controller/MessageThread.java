@@ -42,6 +42,10 @@ public class MessageThread extends Thread {
     private JAXBContext context;
     private ReconnectionThread reconnectionThread;
 
+    public boolean isConnected() {
+        return connected;
+    }
+
     @Override
     public void run() {
         while (connected) {

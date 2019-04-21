@@ -3,6 +3,7 @@ package com.group4.client.view;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.stage.StageStyle;
 
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ public class DialogWindow {
     public static void showDialogWindow(String title, String header, String text, Alert.AlertType type, String okButtonText) {
         ButtonType ok = new ButtonType(okButtonText, ButtonBar.ButtonData.OK_DONE);
         lastInstance = new Alert(type, text, ok);
+        lastInstance.initStyle(StageStyle.UNDECORATED);
         lastInstance.setTitle(title);
         lastInstance.setHeaderText(header);
     }

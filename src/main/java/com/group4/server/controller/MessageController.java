@@ -1,8 +1,8 @@
 package com.group4.server.controller;
 
+import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.containers.UserStreamContainer;
-import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.handlers.ChatRoomProcessorHandler;
@@ -11,7 +11,10 @@ import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import org.apache.log4j.Logger;
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.net.Socket;
 import java.util.Set;
@@ -115,6 +118,8 @@ class MessageController {
                         UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
                         ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
                         log.info("Confirmed user registration from:[" + user.getNickname() + "]");
+                    } else {
+                        log.info("Denied user registration");
                     }
                     sendResponse(registrationResponse, out, stringWriter);
                     break;
@@ -131,6 +136,8 @@ class MessageController {
                         StringWriter sw = new StringWriter();
                         broadcastToOnlineUsers(onlineList, sw);
                         log.info("Successful user authorization from:[" + authorizationRequest.getUserNickname() + "]");
+                    } else {
+                        log.info("Denied user authorization");
                     }
                     sendResponse(authorizationResponse, out, stringWriter);
                     break;
@@ -159,6 +166,7 @@ class MessageController {
                     log.info("New chat message  chatId:[" + chatMessage.getChatId() + "]");
                     ChatRoom targetRoom = ChatRoomsContainer.INSTANCE.getChatRoomById(chatMessage.getChatId());
                     if (targetRoom.isEmpty()) {
+                        log.info("Room is empty");
                         break;
                     } else {
                         ChatRoomsContainer.INSTANCE.addMessageToChat(chatMessage.getChatId(), chatMessage);

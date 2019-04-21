@@ -143,6 +143,7 @@ public class Controller extends Application {
                 ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
                 Set<ChatRoom> chatRoom = chatInvitationMessage.getChatRooms();
                 chatRoom.forEach(room -> chatRooms.put(room.getId(), room));
+                break;
             case TO_CHAT:
                 ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
                 chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
@@ -182,10 +183,12 @@ public class Controller extends Application {
     }
 
     public void exit() {
-        if (currentUser != null) {
-            thread.sendMessage(new UserLogoutMessage(currentUser.getNickname()));
+        if (thread.isConnected()) {
+            if (currentUser != null) {
+                thread.sendMessage(new UserLogoutMessage(currentUser.getNickname()));
+            }
+            thread.sendMessage(new UserDisconnectMessage());
         }
-        thread.sendMessage(new UserDisconnectMessage());
         thread.disconnect();
         stage.close();
     }

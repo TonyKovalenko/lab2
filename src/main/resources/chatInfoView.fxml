@@ -7,7 +7,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="496.0" prefWidth="418.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.ChatInfoView">
    <children>
       <Label layoutX="182.0" layoutY="72.0" text="Users:" />
-      <ListView fx:id="usersListView" layoutX="13.0" layoutY="83.0" prefHeight="380.0" prefWidth="398.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="105.0" />
+      <ListView fx:id="usersListView" layoutX="13.0" layoutY="83.0" prefHeight="354.0" prefWidth="398.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="105.0" />
       <GridPane fx:id="groupFieldsPane" hgap="10.0" layoutY="22.0" prefHeight="30.0" prefWidth="309.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="109.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="10.0" prefWidth="69.0" />
@@ -30,5 +30,6 @@
             <Font size="14.0" />
          </font>
       </Button>
+      <Hyperlink layoutX="173.0" layoutY="461.0" onAction="#leaveChat" text="Leave chat" AnchorPane.bottomAnchor="5.0" />
    </children>
 </AnchorPane>
