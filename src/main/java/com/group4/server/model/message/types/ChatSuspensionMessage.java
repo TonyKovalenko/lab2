@@ -21,4 +21,12 @@ public class ChatSuspensionMessage implements TransmittableMessage {
     public ChatSuspensionMessage(ChatRoom room) {
         this.chatId = room.getId();
     }
+
+    public long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
 }
