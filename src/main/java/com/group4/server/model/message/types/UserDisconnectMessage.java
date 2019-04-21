@@ -2,27 +2,9 @@ package com.group4.server.model.message.types;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "disconnectMessage")
 @XmlAccessorType(XmlAccessType.NONE)
 public class UserDisconnectMessage implements TransmittableMessage {
-    @XmlElement
-    private String nickname;
-
-    public UserDisconnectMessage() {
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public UserDisconnectMessage(String nickname) {
-        this.nickname = nickname;
-    }
 }

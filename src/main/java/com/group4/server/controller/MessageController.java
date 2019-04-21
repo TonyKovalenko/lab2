@@ -159,8 +159,6 @@ public class MessageController {
                     break;
                 case USER_DISCONNECT:
                     isConnected = false;
-                    UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
-                    UserStreamContainer.INSTANCE.deleteUser(disconnectMessage.getNickname());
                     break;
                 case USER_LOGOUT:
                     UserLogoutMessage logoutMessage = (UserLogoutMessage) requestMessage.getEncapsulatedMessage();

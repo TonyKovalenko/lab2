@@ -32,6 +32,7 @@ public class ServerController {
     }
 
     public void stopServer() {
+
         isRunning = false;
     }
 

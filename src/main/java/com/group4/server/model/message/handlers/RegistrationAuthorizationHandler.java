@@ -6,15 +6,23 @@ import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.*;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+
 public enum RegistrationAuthorizationHandler {
 
     INSTANCE;
+
+    private String marshallFilePath = "nicknameToUser.xml";
 
     private ConcurrentMap<String, User> nicknameToUser;
 
@@ -65,5 +73,12 @@ public enum RegistrationAuthorizationHandler {
         }
     }
 
+    public String getMarshallingFilePath() {
+        return marshallFilePath;
+    }
+
+    public Map<String, User> getContainer() {
+        return new ConcurrentHashMap<>(nicknameToUser);
+    }
 
 }

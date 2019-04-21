@@ -4,6 +4,10 @@ import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.ChatMessage;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public enum ChatRoomsContainer {
 
     INSTANCE;
@@ -21,6 +27,8 @@ public enum ChatRoomsContainer {
     }
 
     private AtomicLong id;
+    private String marshallFilePath = "idToChatRoom.xml";
+    @XmlElement
     private Map<Long, ChatRoom> idToChatRoom = new ConcurrentHashMap<>();
 
     public void putToInitialRoom(User user) {
@@ -55,5 +63,13 @@ public enum ChatRoomsContainer {
 
     public void addMessageToChat(long id, ChatMessage message) {
         idToChatRoom.computeIfPresent(id, (k, v) -> v.addMessage(message));
+    }
+
+    public String getMarshallingFilePath() {
+        return marshallFilePath;
+    }
+
+    public Map<Long, ChatRoom> getContainer() {
+        return new ConcurrentHashMap<>(idToChatRoom);
     }
 }

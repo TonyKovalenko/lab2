@@ -121,7 +121,7 @@ public class Controller extends Application {
     public void processMessage(MessageWrapper responseMessage) {
         //if (mainView != null) {
             switch (responseMessage.getMessageType()) {
-                case USERS_IN_CHAT:
+                case ONLINE_LIST:
                     UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
                     users = new HashMap<>();
                     for (User user : usersInChatMessage.getUsers()) {
@@ -181,7 +181,7 @@ public class Controller extends Application {
     }
 
     public void exit() {
-        thread.sendMessage(new UserDisconnectMessage(currentUser.getNickname()));
+        thread.sendMessage(new UserDisconnectMessage());
         thread.disconnect();
         stage.close();
     }
