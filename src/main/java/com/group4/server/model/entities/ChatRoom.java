@@ -21,6 +21,8 @@ public class ChatRoom {
     private List<User> members = new ArrayList<>();
     @XmlElement
     private List<ChatMessage> messages = new ArrayList<>();
+    @XmlElement
+    private String adminNickname;
 
     public ChatRoom() {}
 
@@ -151,5 +153,13 @@ public class ChatRoom {
                 ", members=" + members +
                 ", messages=" + messages +
                 '}';
+    }
+
+    public String getAdminNickname() {
+        return adminNickname;
+    }
+
+    public void setAdminNickname(String adminNickname) {
+        this.adminNickname = adminNickname;
     }
 }

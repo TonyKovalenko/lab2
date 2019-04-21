@@ -1,6 +1,8 @@
 package com.group4.client.view.listcells;
 
 import com.group4.client.controller.Controller;
+import com.group4.client.view.ChatInfoView;
+import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,14 +44,16 @@ public class GroupMemberListCellView extends ListCell<User> {
     protected void updateItem(User user, boolean empty) {
         super.updateItem(user, empty);
 
+        ChatRoom room = ChatInfoView.getInstance().getChatRoom();
+        User currentUser = Controller.getInstance().getCurrentUser();
         if(empty || user == null) {
             setText(null);
             setGraphic(null);
         } else {
             nicknameLabel.setText(user.getNickname());
             fullNameLabel.setText(user.getFullName());
-            if (user.equals(Controller.getInstance().getCurrentUser()) || !Controller.getInstance().getCurrentUser().isAdmin()) {
-                stackPane.getChildren().remove(imageView);
+            if (user.equals(currentUser) || !currentUser.getNickname().equals(room.getAdminNickname())) {
+                    stackPane.getChildren().remove(imageView);
             }
             setText(null);
             setGraphic(stackPane);

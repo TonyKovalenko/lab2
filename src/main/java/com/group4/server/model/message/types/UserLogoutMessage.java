@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "disconnectMessage")
+@XmlRootElement(name = "logoutMessage")
 @XmlAccessorType(XmlAccessType.NONE)
 public class UserLogoutMessage implements TransmittableMessage {
     @XmlElement

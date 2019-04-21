@@ -77,8 +77,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
-                Objects.equals(nickname, user.nickname);
+        return Objects.equals(nickname, user.nickname);
     }
 
     @Override

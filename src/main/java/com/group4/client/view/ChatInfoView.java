@@ -19,6 +19,7 @@ import java.util.List;
 public class ChatInfoView extends View {
     public static ChatInfoView instance;
     private Controller controller;
+    private ChatRoom chatRoom;
 
     @FXML
     private ListView<User> usersListView;
@@ -67,9 +68,14 @@ public class ChatInfoView extends View {
     }
 
     public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
         groupNameTextField.setText(chatRoom.getName());
         ObservableList<User> users = FXCollections.observableArrayList(chatRoom.getMembers());
         usersListView.setItems(users);
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
     }
 
     public void addMembersToListView(List<User> selectedUsers) {

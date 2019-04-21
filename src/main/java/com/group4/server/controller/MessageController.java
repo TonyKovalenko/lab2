@@ -1,8 +1,8 @@
 package com.group4.server.controller;
 
+import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.containers.UserStreamContainer;
-import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.handlers.ChatRoomProcessorHandler;
@@ -10,7 +10,10 @@ import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
@@ -36,6 +39,7 @@ public class MessageController {
             RegistrationRequest.class,
             RegistrationResponse.class,
             UserLogoutMessage.class,
+            UserDisconnectMessage.class,
             MessageWrapper.class
     };
 
@@ -159,8 +163,8 @@ public class MessageController {
                     break;
                 case USER_DISCONNECT:
                     isConnected = false;
-                    UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
-                    UserStreamContainer.INSTANCE.deleteUser(disconnectMessage.getNickname());
+                    /*UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
+                    UserStreamContainer.INSTANCE.deleteUser(disconnectMessage.getNickname());*/
                     break;
                 case USER_LOGOUT:
                     UserLogoutMessage logoutMessage = (UserLogoutMessage) requestMessage.getEncapsulatedMessage();

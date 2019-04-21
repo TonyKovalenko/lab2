@@ -181,7 +181,10 @@ public class Controller extends Application {
     }
 
     public void exit() {
-        thread.sendMessage(new UserDisconnectMessage(currentUser.getNickname()));
+        if (currentUser != null) {
+            thread.sendMessage(new UserLogoutMessage(currentUser.getNickname()));
+        }
+        thread.sendMessage(new UserDisconnectMessage());
         thread.disconnect();
         stage.close();
     }
@@ -231,6 +234,7 @@ public class Controller extends Application {
             String chatName = view.getGroupName();
             users.add(currentUser);
             chatRoom = new ChatRoom(chatName, users);
+            chatRoom.setAdminNickname(currentUser.getNickname());
         }
         ChatRoomCreationRequest message = new ChatRoomCreationRequest(chatRoom);
         thread.sendMessage(message);

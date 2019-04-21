@@ -48,7 +48,8 @@ public class TestChatServer {
                 UsersInChatMessage.class,
                 ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
                 ChatUpdateMessageRequest.class, ChatUpdateMessageResponse.class,
-                GetAllUsersRequest.class, GetAllUsersResponse.class
+                GetAllUsersRequest.class, GetAllUsersResponse.class,
+                UserLogoutMessage.class, UserDisconnectMessage.class
         };
         public JAXBContext context;
         public Marshaller marshaller;
