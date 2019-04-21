@@ -13,7 +13,7 @@ public enum ChatInvitationsContainer {
 
     private Map<String, Set<ChatRoom>> pendingChatInvitations;
 
-    private ChatInvitationsContainer() {
+    ChatInvitationsContainer() {
         pendingChatInvitations = new ConcurrentHashMap<>();
     }
 
