@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="458.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.AdminPanelView">
+   <children>
+      <ToolBar fx:id="tasksToolbar" prefHeight="46.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <items>
+            <Button fx:id="editButton" mnemonicParsing="false" onAction="#editUser" text="Edit user" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteUser" text="Delete user" />
+            <Button fx:id="banButton" mnemonicParsing="false" onAction="#banUser" text="Ban user" />
+            <Button fx:id="unbanButton" mnemonicParsing="false" onAction="#unbanUser" text="Unban user" />
+            <Button mnemonicParsing="false" onAction="#refreshTable" text="Refresh table" />
+         </items>
+      </ToolBar>
+      <TableView fx:id="usersTableView" layoutX="14.0" layoutY="55.0" prefHeight="393.0" prefWidth="780.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="55.0">
+        <columns>
+            <TableColumn fx:id="idColumn" minWidth="50.0" prefWidth="114.0" text="Id" />
+          <TableColumn fx:id="nicknameColumn" minWidth="50.0" prefWidth="174.0" text="Nickname" />
+          <TableColumn fx:id="fullNameColumn" minWidth="50.0" prefWidth="344.0" text="Full name" />
+            <TableColumn fx:id="isAdminColumn" minWidth="50.0" prefWidth="74.0" text="Admin" />
+            <TableColumn fx:id="isBannedColumn" minWidth="50.0" prefWidth="73.0" text="Banned" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </children>
+</AnchorPane>
