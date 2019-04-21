@@ -34,10 +34,10 @@
   <build>
     <resources>
       <resource>
-        <directory>resources</directory>
-        <!--<includes>
+        <directory>src/main/resources</directory>
+        <includes>
           <include>log4j.properties</include>
-        </includes>-->
+        </includes>
       </resource>
     </resources>
     <plugins>

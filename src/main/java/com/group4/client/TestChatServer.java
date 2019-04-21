@@ -45,7 +45,7 @@ public class TestChatServer {
                 AuthorizationRequest.class, AuthorizationResponse.class,
                 ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
                 ChatInvitationMessage.class, ChatSuspensionMessage.class,
-                UsersInChatMessage.class,
+                OnlineListMessage.class,
                 ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
                 ChatUpdateMessageRequest.class, ChatUpdateMessageResponse.class,
                 GetAllUsersRequest.class, GetAllUsersResponse.class
@@ -108,9 +108,9 @@ public class TestChatServer {
                 marshaller = context.createMarshaller();
                 unmarshaller = context.createUnmarshaller();
 
-                List<User> users = new ArrayList<>();
-                User user1 = new User( "donna", "Donna Noble", "1");
-                User user2 = new User( "doctor", "The Doctor", "1");
+                Set<User> users = new HashSet<>();
+                User user1 = new User("donna", "Donna Noble", "1");
+                User user2 = new User("doctor", "The Doctor", "1");
                 users.add(user1);
                 users.add(user2);
                 user1.setAdmin(true);
@@ -124,10 +124,9 @@ public class TestChatServer {
                     while (true) {
                         switch (scanner.nextInt()) {
                             case 1:
-                                UsersInChatMessage message0 = new UsersInChatMessage();
+                                OnlineListMessage message0 = new OnlineListMessage();
                                 User user = new User();
                                 user.setNickname("User#" + i);
-                                user.setId(i);
                                 users.add(user);
                                 i++;
                                 message0.setUsers(users);
@@ -149,7 +148,7 @@ public class TestChatServer {
                 int idCounter = 10;
 
                 while (socket.isConnected()) {
-                    if(reader.ready()) {
+                    if (reader.ready()) {
                         try (StringReader dataReader = new StringReader(reader.readLine().replaceAll("<br />", "\n"))) {
                             MessageWrapper message = (MessageWrapper) unmarshaller.unmarshal(dataReader);
                             System.out.println(message + " " + message.getMessageType());
@@ -175,7 +174,7 @@ public class TestChatServer {
                                     authorizationResponse.setChatRoomsWithUser(chatRooms);
                                     sendMessage(authorizationResponse, writer);
 
-                                    UsersInChatMessage message0 = new UsersInChatMessage();
+                                    OnlineListMessage message0 = new OnlineListMessage();
                                     message0.setUsers(users);
                                     sendMessage(message0, writer);
                                     break;
