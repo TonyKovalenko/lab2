@@ -21,7 +21,6 @@ public enum ShutdownController {
 
     INSTANCE;
 
-    private JAXBContext context;
     private Marshaller marshaller;
 
     private Class<?>[] clazzes = {
@@ -36,7 +35,7 @@ public enum ShutdownController {
     }
 
     public void init() throws JAXBException {
-        context = JAXBContext.newInstance(clazzes);
+        JAXBContext context = JAXBContext.newInstance(clazzes);
         context.createMarshaller();
     }
 

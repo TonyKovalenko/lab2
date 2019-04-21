@@ -22,15 +22,16 @@ public enum ChatRoomsContainer {
 
     INSTANCE;
 
+    private AtomicLong id;
+
+    private String marshallFilePath = "idToChatRoom.xml";
+    @XmlElement
+    private Map<Long, ChatRoom> idToChatRoom = new ConcurrentHashMap<>();
+
     ChatRoomsContainer() {
         id = new AtomicLong(0);
         idToChatRoom.put(id.getAndIncrement(), new ChatRoom(id.longValue(), "mainChatRoom", new HashSet<>()));
     }
-
-    private AtomicLong id;
-    private String marshallFilePath = "idToChatRoom.xml";
-    @XmlElement
-    private Map<Long, ChatRoom> idToChatRoom = new ConcurrentHashMap<>();
 
     public void putToInitialRoom(User user) {
         idToChatRoom.get(0L).addMember(user);

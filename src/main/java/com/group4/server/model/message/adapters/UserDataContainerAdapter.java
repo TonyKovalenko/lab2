@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 
 @XmlRootElement(name = "userDataContainer")
 @XmlAccessorType(XmlAccessType.NONE)
