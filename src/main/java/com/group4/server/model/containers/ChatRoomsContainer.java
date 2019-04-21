@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +24,7 @@ public enum ChatRoomsContainer {
 
     ChatRoomsContainer() {
         id = new AtomicLong(0);
-        idToChatRoom.put(id.getAndIncrement(), new ChatRoom(id.longValue(), "mainChatRoom", new ArrayList<>()));
+        idToChatRoom.put(id.getAndIncrement(), new ChatRoom(id.longValue(), "mainChatRoom", new HashSet<>()));
     }
 
     private AtomicLong id;
@@ -44,7 +45,7 @@ public enum ChatRoomsContainer {
     }
 
     public boolean createChatRoom(ChatRoom chatRoom) {
-        if(idToChatRoom.values().contains(chatRoom)) {
+        if (idToChatRoom.values().contains(chatRoom)) {
             chatRoom.setId(-1);
             return false;
         }

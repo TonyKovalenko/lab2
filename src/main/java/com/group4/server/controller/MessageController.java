@@ -14,6 +14,7 @@ import javax.xml.bind.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
+import java.util.Set;
 
 public class MessageController {
 
@@ -61,6 +62,20 @@ public class MessageController {
         stringWriter.getBuffer().setLength(0);
     }
 
+    private void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
+        Set<PrintWriter> userStreams = UserStreamContainer.INSTANCE.getCurrentUserStreams();
+        try {
+            marshaller.marshal(new MessageWrapper(message), stringWriter);
+        } catch (JAXBException ex) {
+            //log.error("Exception happened", ex);
+            return;
+        }
+        for (PrintWriter out : userStreams) {
+            out.println(stringWriter.toString());
+        }
+        stringWriter.getBuffer().setLength(0);
+    }
+
     void handle() {
         BufferedReader in;
         PrintWriter out;
@@ -103,6 +118,10 @@ public class MessageController {
                         User user = RegistrationAuthorizationHandler.INSTANCE.getUser(authorizationRequest.getUserNickname());
                         UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
                         ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
+                        Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
+                        TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
+                        StringWriter sw = new StringWriter();
+                        broadcastToOnlineUsers(onlineList, sw);
                     }
                     sendResponse(authorizationResponse, out, stringWriter);
                     break;
@@ -110,7 +129,7 @@ public class MessageController {
                     ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) requestMessage.getEncapsulatedMessage();
                     ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomProcessorHandler.INSTANCE.handle(chatRoomCreationRequest);
                     if (chatRoomCreationResponse.isSuccessful()) {
-                        List<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
+                        Set<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
                         ChatRoom newChatRoom = chatRoomCreationResponse.getChatRoom();
                         for (User user : members) {
                             TransmittableMessage chatInvitation = new ChatInvitationMessage(newChatRoom);

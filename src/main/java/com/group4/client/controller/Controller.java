@@ -88,6 +88,7 @@ public class Controller extends Application {
                 .forEach((item) -> usersWithoutPrivateChat.remove(item.getOtherMember(Controller.getInstance().getCurrentUser())));
         return usersWithoutPrivateChat;
     }
+
     /**
      * The main entry point for all JavaFX applications.
      * The start method is called after the init method has returned,
@@ -120,63 +121,63 @@ public class Controller extends Application {
 
     public void processMessage(MessageWrapper responseMessage) {
         //if (mainView != null) {
-            switch (responseMessage.getMessageType()) {
-                case ONLINE_LIST:
-                    UsersInChatMessage usersInChatMessage = (UsersInChatMessage) responseMessage.getEncapsulatedMessage();
-                    users = new HashMap<>();
-                    for (User user : usersInChatMessage.getUsers()) {
-                        users.put(user.getNickname(), user);
-                    }
-                    users.remove(currentUser.getNickname());
-                    updateOnlineUsersView();
-                    break;
-                case CHAT_CREATION_RESPONSE:
-                    ChatRoomCreationResponse chatRoomCreationResponse = (ChatRoomCreationResponse) responseMessage.getEncapsulatedMessage();
-                    if (chatRoomCreationResponse.isSuccessful()) {
-                        ChatRoom chatRoom = chatRoomCreationResponse.getChatRoom();
-                        chatRooms.put(chatRoom.getId(), chatRoom);
-                        updateChatRoomsView();
-                    }
-                    break;
-                case NEW_CHATS:
-                    ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
-                    Set<ChatRoom> chatRoom = chatInvitationMessage.getChatRooms();
-                    chatRoom.forEach(room -> chatRooms.put(room.getId(), room));
-                case TO_CHAT:
-                    ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
-                    chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
+        switch (responseMessage.getMessageType()) {
+            case ONLINE_LIST:
+                OnlineListMessage onlineListMessage = (OnlineListMessage) responseMessage.getEncapsulatedMessage();
+                users = new HashMap<>();
+                for (User user : onlineListMessage.getUsers()) {
+                    users.put(user.getNickname(), user);
+                }
+                users.remove(currentUser.getNickname());
+                updateOnlineUsersView();
+                break;
+            case CHAT_CREATION_RESPONSE:
+                ChatRoomCreationResponse chatRoomCreationResponse = (ChatRoomCreationResponse) responseMessage.getEncapsulatedMessage();
+                if (chatRoomCreationResponse.isSuccessful()) {
+                    ChatRoom chatRoom = chatRoomCreationResponse.getChatRoom();
+                    chatRooms.put(chatRoom.getId(), chatRoom);
                     updateChatRoomsView();
-                    break;
-                case CHANGE_CREDENTIALS_RESPONSE:
-                    ChangeCredentialsResponse changeCredentialsResponse = (ChangeCredentialsResponse) responseMessage.getEncapsulatedMessage();
-                    if (changeCredentialsResponse.isConfirmed()) {
-                        User updatedUser = changeCredentialsResponse.getUser();
-                        if (updatedUser.getNickname().equals(currentUser.getNickname())) {
-                            setCurrentUser(changeCredentialsResponse.getUser());
-                            Platform.runLater(() -> {
-                                DialogWindow.showInfoWindow("Credentials change was confirmed");
-                                EditProfileView.getInstance().cancel();
-                            });
-                        } else {
-                            if (users.containsKey(updatedUser.getNickname())) {
-                                users.put(updatedUser.getNickname(), updatedUser);
-                                updateOnlineUsersView();
-                            }
-                        }
-
-                        if (AdminPanelView.isOpened()) {
-                            AdminController.getInstance().processMessage(responseMessage);
-                        }
+                }
+                break;
+            case NEW_CHATS:
+                ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
+                Set<ChatRoom> chatRoom = chatInvitationMessage.getChatRooms();
+                chatRoom.forEach(room -> chatRooms.put(room.getId(), room));
+            case TO_CHAT:
+                ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
+                chatRooms.get(chatMessage.getChatId()).addMessage(chatMessage);
+                updateChatRoomsView();
+                break;
+            case CHANGE_CREDENTIALS_RESPONSE:
+                ChangeCredentialsResponse changeCredentialsResponse = (ChangeCredentialsResponse) responseMessage.getEncapsulatedMessage();
+                if (changeCredentialsResponse.isConfirmed()) {
+                    User updatedUser = changeCredentialsResponse.getUser();
+                    if (updatedUser.getNickname().equals(currentUser.getNickname())) {
+                        setCurrentUser(changeCredentialsResponse.getUser());
+                        Platform.runLater(() -> {
+                            DialogWindow.showInfoWindow("Credentials change was confirmed");
+                            EditProfileView.getInstance().cancel();
+                        });
                     } else {
-                        Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
+                        if (users.containsKey(updatedUser.getNickname())) {
+                            users.put(updatedUser.getNickname(), updatedUser);
+                            updateOnlineUsersView();
+                        }
                     }
-                    break;
-                case CHAT_SUSPENSION:
-                    ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
-                    chatRooms.remove(chatSuspensionMessage.getChatId());
-                default:
-                    break;
-            }
+
+                    if (AdminPanelView.isOpened()) {
+                        AdminController.getInstance().processMessage(responseMessage);
+                    }
+                } else {
+                    Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
+                }
+                break;
+            case CHAT_SUSPENSION:
+                ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
+                chatRooms.remove(chatSuspensionMessage.getChatId());
+            default:
+                break;
+        }
         //}
     }
 
@@ -227,7 +228,7 @@ public class Controller extends Application {
             User selectedUser = view.getSelectedUser();
             chatRoom = new ChatRoom(selectedUser, currentUser);
         } else {
-            List<User> users = new ArrayList<>(view.getUsersList());
+            Set<User> users = new HashSet<>(view.getUsersList());
             String chatName = view.getGroupName();
             users.add(currentUser);
             chatRoom = new ChatRoom(chatName, users);

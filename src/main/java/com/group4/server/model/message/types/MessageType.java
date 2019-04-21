@@ -32,7 +32,7 @@ public enum MessageType {
         put(AuthorizationResponse.class.getSimpleName(), AUTHORIZATION_RESPONSE);
         put(ChatMessage.class.getSimpleName(), TO_CHAT);
         put(ChatInvitationMessage.class.getSimpleName(), NEW_CHATS);
-        put(UsersInChatMessage.class.getSimpleName(), ONLINE_LIST);
+        put(OnlineListMessage.class.getSimpleName(), ONLINE_LIST);
         put(ChangeCredentialsRequest.class.getSimpleName(), CHANGE_CREDENTIALS_REQUEST);
         put(ChangeCredentialsResponse.class.getSimpleName(), CHANGE_CREDENTIALS_RESPONSE);
         put(ChatRoomCreationRequest.class.getSimpleName(), CHAT_CREATION_REQUEST);

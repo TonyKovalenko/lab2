@@ -10,8 +10,6 @@ import java.util.Objects;
 @XmlAccessorType(XmlAccessType.NONE)
 public class User {
     @XmlElement
-    private long id;
-    @XmlElement
     private String nickname;
     @XmlElement
     private String fullName;
@@ -26,13 +24,6 @@ public class User {
     }
 
     public User(String nickname, String fullName, String password) {
-        this.nickname = nickname;
-        this.fullName = fullName;
-        this.password = password;
-    }
-
-    public User(int id, String nickname, String fullName, String password) {
-        this.id = id;
         this.nickname = nickname;
         this.fullName = fullName;
         this.password = password;
@@ -64,21 +55,13 @@ public class User {
         return this;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
-                Objects.equals(nickname, user.nickname);
+        return Objects.equals(nickname, user.nickname);
     }
 
     @Override
@@ -89,7 +72,6 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", nickname='" + nickname + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", password='" + password + '\'' +

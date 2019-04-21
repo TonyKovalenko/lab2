@@ -10,10 +10,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -34,8 +31,8 @@ public enum RegistrationAuthorizationHandler {
         return nicknameToUser.get(nickname);
     }
 
-    public List<User> getAllUsers() {
-        return new ArrayList<>(nicknameToUser.values());
+    public Set<User> getAllUsers() {
+        return new HashSet<>(nicknameToUser.values());
     }
 
     public <T extends ChangeCredentialsRequest> ChangeCredentialsResponse handle(T changeCredentialsRequest) {
@@ -63,7 +60,7 @@ public enum RegistrationAuthorizationHandler {
         String authNickname = authorizationRequest.getUserNickname();
         String authPassword = authorizationRequest.getPassword();
         User user = getUser(authNickname);
-        if(user != null && authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
+        if (user != null && authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
             Set<ChatRoom> chatRoomsWithUser = ChatRoomsContainer.INSTANCE.getChatRoomsFor(authNickname);
             chatRoomsWithUser.addAll(ChatInvitationsContainer.INSTANCE.getChatInvitationsFor(authNickname));
             ChatInvitationsContainer.INSTANCE.removeInvitations(authNickname);
