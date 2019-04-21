@@ -1,0 +1,14 @@
+.list-cell {
+    -fx-background-color: -fx-control-inner-background;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #ffa274;
+}
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
+    -fx-background-color: #ff5a08;
+}
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected #nameLabel 
+{
+    -fx-text-fill: white;
+}
