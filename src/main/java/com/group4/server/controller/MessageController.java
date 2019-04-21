@@ -128,8 +128,10 @@ class MessageController {
                         Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
                         TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
                         StringWriter sw = new StringWriter();
+                        sendResponse(authorizationResponse, out, stringWriter);
                         broadcastToOnlineUsers(onlineList, sw);
                         log.info("Successful user authorization from:[" + authorizationRequest.getUserNickname() + "]");
+                        break;
                     }
                     sendResponse(authorizationResponse, out, stringWriter);
                     break;
