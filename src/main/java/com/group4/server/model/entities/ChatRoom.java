@@ -37,6 +37,10 @@ public class ChatRoom {
         this.name = name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public ChatRoom(long id, User user1, User user2) {
         this(user1, user2);
         this.id = id;

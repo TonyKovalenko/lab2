@@ -1,7 +1,6 @@
 package com.group4.client.controller;
 
 import com.group4.client.view.DialogWindow;
-import com.group4.server.model.message.handlers.ChatRoomCreationHandler;
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
@@ -28,7 +27,7 @@ public class MessageThread extends Thread {
             ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class, ChatInvitationMessage.class, UsersInChatMessage.class,
             RegistrationRequest.class, RegistrationResponse.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
-            UpdateChatMessage.class
+            ChatUpdateMessageRequest.class
     };
     private JAXBContext context;
     private Map<MessageType, List<MessageWrapper>> sentMessages = new HashMap<>();

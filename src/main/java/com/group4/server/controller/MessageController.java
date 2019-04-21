@@ -5,7 +5,7 @@ import com.group4.server.model.containers.UserStreamContainer;
 import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
-import com.group4.server.model.message.handlers.ChatRoomCreationHandler;
+import com.group4.server.model.message.handlers.ChatRoomProcessorHandler;
 import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
@@ -30,10 +30,11 @@ public class MessageController {
             ChatMessage.class,
             ChatRoomCreationRequest.class,
             ChatRoomCreationResponse.class,
+            ChatUpdateMessageRequest.class,
+            ChatUpdateMessageResponse.class,
             PingMessage.class,
             RegistrationRequest.class,
             RegistrationResponse.class,
-            UpdateChatMessage.class,
             UserLogoutMessage.class,
             MessageWrapper.class
     };
@@ -50,7 +51,7 @@ public class MessageController {
         this.unmarshaller = context.createUnmarshaller();
     }
 
-    void sendResponse(TransmittableMessage message, PrintWriter out, StringWriter stringWriter) {
+    private void sendResponse(TransmittableMessage message, PrintWriter out, StringWriter stringWriter) {
         try {
             marshaller.marshal(new MessageWrapper(message), stringWriter);
         } catch (JAXBException ex) {
@@ -76,6 +77,7 @@ public class MessageController {
             ex.printStackTrace();
             return;
         }
+
         while (isConnected) {
             try {
                 stringReader = new StringReader(in.readLine());
@@ -106,7 +108,7 @@ public class MessageController {
                     break;
                 case CHAT_CREATION_REQUEST:
                     ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) requestMessage.getEncapsulatedMessage();
-                    ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomCreationHandler.INSTANCE.handle(chatRoomCreationRequest);
+                    ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomProcessorHandler.INSTANCE.handle(chatRoomCreationRequest);
                     if (chatRoomCreationResponse.isSuccessful()) {
                         List<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
                         ChatRoom newChatRoom = chatRoomCreationResponse.getChatRoom();
@@ -141,6 +143,10 @@ public class MessageController {
                     TransmittableMessage allUsersResponse = new GetAllUsersResponse(RegistrationAuthorizationHandler.INSTANCE.getAllUsers());
                     sendResponse(allUsersResponse, out, stringWriter);
                     break;
+                case CHAT_UPDATE_REQUEST:
+                    ChatUpdateMessageRequest chatUpdateRequest = (ChatUpdateMessageRequest) requestMessage.getEncapsulatedMessage();
+                    TransmittableMessage chatUpdateResponse = ChatRoomProcessorHandler.INSTANCE.handle(chatUpdateRequest, marshaller);
+                    sendResponse(chatUpdateResponse, out, stringWriter);
                 case PING:
                     PingMessage pingRequest = (PingMessage) requestMessage.getEncapsulatedMessage();
                     TransmittableMessage pingMessageResponse = new PingMessage(pingRequest.getUserNickname(), true);

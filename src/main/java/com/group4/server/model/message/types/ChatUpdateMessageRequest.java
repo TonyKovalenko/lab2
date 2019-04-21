@@ -8,11 +8,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "updateChatMessage")
+@XmlRootElement(name = "chatUpdateMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class UpdateChatMessage implements TransmittableMessage {
+public class ChatUpdateMessageRequest implements TransmittableMessage {
     @XmlElement
-    private long id;
+    private long chatRoomId;
     @XmlElement
     private String newName;
     @XmlElement
@@ -20,22 +20,22 @@ public class UpdateChatMessage implements TransmittableMessage {
     @XmlElement
     private List<User> membersToDelete;
 
-    public UpdateChatMessage() {
+    public ChatUpdateMessageRequest() {
     }
 
-    public UpdateChatMessage(long id, String newName, List<User> membersToAdd, List<User> membersToDelete) {
-        this.id = id;
+    public ChatUpdateMessageRequest(long chatRoomId, String newName, List<User> membersToAdd, List<User> membersToDelete) {
+        this.chatRoomId = chatRoomId;
         this.newName = newName;
         this.membersToAdd = membersToAdd;
         this.membersToDelete = membersToDelete;
     }
 
-    public long getId() {
-        return id;
+    public long getChatRoomId() {
+        return chatRoomId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setChatRoomId(long chatRoomId) {
+        this.chatRoomId = chatRoomId;
     }
 
     public String getNewName() {

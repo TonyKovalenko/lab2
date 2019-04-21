@@ -285,7 +285,7 @@ public class Controller extends Application {
             List<User> membersToDelete = new ArrayList<>(oldMembers);
             membersToDelete.removeAll(newUsersList);
 
-            UpdateChatMessage message = new UpdateChatMessage(room.getId(), newName, membersToAdd, membersToDelete);
+            ChatUpdateMessageRequest message = new ChatUpdateMessageRequest(room.getId(), newName, membersToAdd, membersToDelete);
             thread.sendMessage(message);
         }
         view.close();
