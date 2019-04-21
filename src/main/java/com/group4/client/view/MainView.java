@@ -92,6 +92,11 @@ public class MainView extends View {
     }
 
     @FXML
+    private void logout() {
+        controller.logout();
+    }
+
+    @FXML
     private void exit() {
         controller.exit();
     }

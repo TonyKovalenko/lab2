@@ -11,6 +11,9 @@ public class UserLogoutMessage implements TransmittableMessage {
     @XmlElement
     private String nickname;
 
+    public UserLogoutMessage() {
+    }
+
     public String getNickname() {
         return nickname;
     }

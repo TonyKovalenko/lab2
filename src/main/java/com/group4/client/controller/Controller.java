@@ -118,7 +118,7 @@ public class Controller extends Application {
         }
     }
 
-    public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
+    public void processMessage(MessageWrapper responseMessage) {
         //if (mainView != null) {
             switch (responseMessage.getMessageType()) {
                 case USERS_IN_CHAT:
@@ -171,6 +171,9 @@ public class Controller extends Application {
                         Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
                     }
                     break;
+                case CHAT_SUSPENSION:
+                    ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
+                    chatRooms.remove(chatSuspensionMessage.getChatId());
                 default:
                     break;
             }
@@ -178,8 +181,17 @@ public class Controller extends Application {
     }
 
     public void exit() {
+        thread.sendMessage(new UserDisconnectMessage(currentUser.getNickname()));
         thread.disconnect();
         stage.close();
+    }
+
+    public void logout() {
+        thread.sendMessage(new UserLogoutMessage(currentUser.getNickname()));
+        LoginView.getInstance().showStage();
+        currentUser = null;
+        users = new HashMap<>();
+        chatRooms = new HashMap<>();
     }
 
     public void sendMessageToChat() {

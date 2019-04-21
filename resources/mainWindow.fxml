@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
-<VBox minHeight="200.0" minWidth="700.0" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.MainView">
+<VBox minHeight="200.0" minWidth="700.0" prefHeight="700.0" prefWidth="1000.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.group4.client.view.MainView">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -17,6 +17,7 @@
                 <MenuItem fx:id="newGroupChatButton" mnemonicParsing="false" onAction="#createNewChat" text="New chat" />
                 <MenuItem fx:id="editProfileButton" mnemonicParsing="false" onAction="#editProfile" text="Edit profile" />
                 <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="logoutButton" mnemonicParsing="false" onAction="#logout" text="Log out" />
                 <MenuItem fx:id="exitButton" mnemonicParsing="false" onAction="#exit" text="Exit" />
             </items>
         </Menu>

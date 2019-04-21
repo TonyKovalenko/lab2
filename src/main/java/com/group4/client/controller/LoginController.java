@@ -46,7 +46,7 @@ public class LoginController {
         RegistrationView.getInstance().showStage();
     }
 
-    public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
+    public void processMessage(MessageWrapper responseMessage) {
         AuthorizationResponse innerMessage = (AuthorizationResponse) responseMessage.getEncapsulatedMessage();
         if (innerMessage.isConfirmed()) {
             System.out.println("authorization was confirmed");
@@ -58,7 +58,7 @@ public class LoginController {
             }
             Controller.getInstance().updateChatRoomsView();
         } else {
-            System.out.println("authorization was denied");
+            Platform.runLater(() -> DialogWindow.showWarningWindow("Authorization failed", "Authorization was denied"));
         }
     }
 

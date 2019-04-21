@@ -4,9 +4,9 @@ import com.group4.client.view.AdminPanelView;
 import com.group4.client.view.DialogWindow;
 import com.group4.client.view.EditProfileView;
 import com.group4.server.model.entities.User;
-import com.group4.server.model.message.types.AllUsersRequest;
-import com.group4.server.model.message.types.AllUsersResponse;
 import com.group4.server.model.message.types.ChangeCredentialsResponse;
+import com.group4.server.model.message.types.GetAllUsersRequest;
+import com.group4.server.model.message.types.GetAllUsersResponse;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
 
@@ -39,7 +39,7 @@ public class AdminController {
         if (selectedUser != null) {
             if (DialogWindow.showConfirmationWindow("Are you sure to delete this user?", selectedUser.toString())) {
 
-                allUsers.remove(selectedUser.getId());
+                //allUsers.remove(selectedUser.getId());
             }
         }
     }
@@ -57,7 +57,7 @@ public class AdminController {
     public void processMessage(MessageWrapper message) {
         switch (message.getMessageType()) {
             case ALL_USERS_RESPONSE:
-                AllUsersResponse getAllUsersResponse = (AllUsersResponse) message.getEncapsulatedMessage();
+                GetAllUsersResponse getAllUsersResponse = (GetAllUsersResponse) message.getEncapsulatedMessage();
                 allUsers = new HashMap<>();
                 for (User user : getAllUsersResponse.getUsers()) {
                     allUsers.put(user.getNickname(), user);
@@ -83,7 +83,7 @@ public class AdminController {
     }
 
     public void sendAllUsersRequest() {
-        AllUsersRequest request = new AllUsersRequest();
+        GetAllUsersRequest request = new GetAllUsersRequest();
         Controller.getInstance().getThread().sendMessage(request);
     }
 }

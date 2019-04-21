@@ -13,7 +13,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.net.Socket;
-import java.util.*;
+import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MessageThread extends Thread {
     private final static int DELAY = 3000;
@@ -27,16 +29,16 @@ public class MessageThread extends Thread {
     private boolean connected;
 
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
+            RegistrationRequest.class, RegistrationResponse.class,
             AuthorizationRequest.class, AuthorizationResponse.class,
             ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
-            ChatInvitationMessage.class, UsersInChatMessage.class,
-            RegistrationRequest.class, RegistrationResponse.class,
+            ChatInvitationMessage.class, ChatSuspensionMessage.class,
+            UsersInChatMessage.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
-            ChatUpdateMessageRequest.class,
+            ChatUpdateMessageRequest.class, ChatUpdateMessageResponse.class,
             GetAllUsersRequest.class, GetAllUsersResponse.class
     };
     private JAXBContext context;
-    private Map<MessageType, List<MessageWrapper>> sentMessages = new HashMap<>();
     private ReconnectionThread reconnectionThread;
 
     @Override
@@ -49,10 +51,10 @@ public class MessageThread extends Thread {
                         System.out.println("message accepted: " + message.getMessageType());
                         switch (message.getMessageType()) {
                             case AUTHORIZATION_RESPONSE:
-                                LoginController.getInstance().processMessage(message, message);
+                                LoginController.getInstance().processMessage(message);
                                 break;
                             case REGISTRATION_RESPONSE:
-                                RegistrationController.getInstance().processMessage(message, message);
+                                RegistrationController.getInstance().processMessage(message);
                                 break;
                             case PING:
                                 inPings++;
@@ -61,7 +63,7 @@ public class MessageThread extends Thread {
                                 AdminController.getInstance().processMessage(message);
                                 break;
                             default:
-                                Controller.getInstance().processMessage(message, message);
+                                Controller.getInstance().processMessage(message);
                                 break;
                         }
                     }
@@ -134,16 +136,6 @@ public class MessageThread extends Thread {
 
     public void sendMessage(TransmittableMessage innerMessage) {
         MessageWrapper message = new MessageWrapper(innerMessage);
-        MessageType type = message.getMessageType();
-        List<MessageWrapper> messageList = sentMessages.get(type);
-        if (messageList == null) {
-            messageList = new LinkedList<>();
-            messageList.add(message);
-            sentMessages.put(type, messageList);
-        } else {
-            messageList.add(message);
-        }
-
         StringWriter stringWriter = new StringWriter();
         try {
             context.createMarshaller().marshal(message, stringWriter);

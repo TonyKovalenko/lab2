@@ -41,12 +41,13 @@ public class TestChatServer {
         public PrintWriter writer;
 
         private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
-                AuthorizationRequest.class, AuthorizationResponse.class,
-                ChatMessage.class, ChatInvitationMessage.class, UsersInChatMessage.class,
                 RegistrationRequest.class, RegistrationResponse.class,
+                AuthorizationRequest.class, AuthorizationResponse.class,
+                ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
+                ChatInvitationMessage.class, ChatSuspensionMessage.class,
+                UsersInChatMessage.class,
                 ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
-                ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
-                ChatUpdateMessageRequest.class,
+                ChatUpdateMessageRequest.class, ChatUpdateMessageResponse.class,
                 GetAllUsersRequest.class, GetAllUsersResponse.class
         };
         public JAXBContext context;

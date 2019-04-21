@@ -11,6 +11,9 @@ public class UserDisconnectMessage implements TransmittableMessage {
     @XmlElement
     private String nickname;
 
+    public UserDisconnectMessage() {
+    }
+
     public String getNickname() {
         return nickname;
     }

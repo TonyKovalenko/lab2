@@ -54,14 +54,14 @@ public class RegistrationController {
         }
     }
 
-    public void processMessage(MessageWrapper requestMessage, MessageWrapper responseMessage) {
+    public void processMessage(MessageWrapper responseMessage) {
         RegistrationResponse innerMessage = (RegistrationResponse) responseMessage.getEncapsulatedMessage();
         if (innerMessage.isRegistrationSuccessful()) {
             System.out.println("registered successfully");
             Platform.runLater(() -> cancel());
         } else {
             System.out.println("authorization was denied");
-            DialogWindow.showWarningWindow("Registration failed", "Registration was denied");
+            Platform.runLater(() -> DialogWindow.showWarningWindow("Registration failed", "Registration was denied"));
         }
     }
 }

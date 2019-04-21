@@ -14,11 +14,18 @@ public class ChatSuspensionMessage implements TransmittableMessage {
     @XmlElement
     private long chatId;
 
+    public ChatSuspensionMessage() {
+    }
+
     public ChatSuspensionMessage(long chatId) {
         this.chatId = chatId;
     }
 
     public ChatSuspensionMessage(ChatRoom room) {
         this.chatId = room.getId();
+    }
+
+    public long getChatId() {
+        return chatId;
     }
 }
