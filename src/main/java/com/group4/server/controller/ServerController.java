@@ -32,6 +32,7 @@ public class ServerController {
     }
 
     public void stopServer() {
+
         isRunning = false;
     }
 
@@ -39,6 +40,7 @@ public class ServerController {
         ServerController controller = new ServerController();
         controller.startServer();
     }
+
     public void process() throws Exception {
         ServerSocket serverSocket = new ServerSocket(port);
         try {

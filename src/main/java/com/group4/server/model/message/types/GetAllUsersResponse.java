@@ -7,25 +7,26 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+import java.util.Set;
 
 @XmlRootElement(name = "allUsersResponse")
 @XmlAccessorType(XmlAccessType.NONE)
 public class GetAllUsersResponse implements TransmittableMessage {
     @XmlElement
-    private List<User> users;
+    private Set<User> users;
 
     public GetAllUsersResponse() {
     }
 
-    public GetAllUsersResponse(List<User> users) {
+    public GetAllUsersResponse(Set<User> users) {
         this.users = users;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 }

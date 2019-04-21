@@ -1,24 +1,18 @@
 package com.group4.server.model.containers;
 
 import com.group4.server.model.entities.ChatRoom;
-import com.group4.server.model.message.adapters.ChatInvitationsAdapter;
 
-import javax.xml.bind.annotation.*;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.NONE)
+
 public enum ChatInvitationsContainer {
 
     INSTANCE;
 
     private String marshallFilePath = "invitationsContainer.xml";
-    @XmlElement
-    @XmlJavaTypeAdapter(ChatInvitationsAdapter.class)
     private Map<String, Set<ChatRoom>> pendingChatInvitations;
 
     ChatInvitationsContainer() {
@@ -45,7 +39,7 @@ public enum ChatInvitationsContainer {
         return marshallFilePath;
     }
 
-    public Map<String, Set<ChatRoom>> getPendingChatInvitations() {
+    public Map<String, Set<ChatRoom>> getContainer() {
         return new ConcurrentHashMap<>(pendingChatInvitations);
     }
 }

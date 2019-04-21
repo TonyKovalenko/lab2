@@ -6,15 +6,18 @@ import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
 
 public enum RegistrationAuthorizationHandler {
 
     INSTANCE;
+
+    private String marshallFilePath = "nicknameToUser.xml";
 
     private ConcurrentMap<String, User> nicknameToUser;
 
@@ -26,8 +29,8 @@ public enum RegistrationAuthorizationHandler {
         return nicknameToUser.get(nickname);
     }
 
-    public List<User> getAllUsers() {
-        return new ArrayList<>(nicknameToUser.values());
+    public Set<User> getAllUsers() {
+        return new HashSet<>(nicknameToUser.values());
     }
 
     public <T extends ChangeCredentialsRequest> ChangeCredentialsResponse handle(T changeCredentialsRequest) {
@@ -55,7 +58,7 @@ public enum RegistrationAuthorizationHandler {
         String authNickname = authorizationRequest.getUserNickname();
         String authPassword = authorizationRequest.getPassword();
         User user = getUser(authNickname);
-        if(user != null && authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
+        if (user != null && authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
             Set<ChatRoom> chatRoomsWithUser = ChatRoomsContainer.INSTANCE.getChatRoomsFor(authNickname);
             chatRoomsWithUser.addAll(ChatInvitationsContainer.INSTANCE.getChatInvitationsFor(authNickname));
             ChatInvitationsContainer.INSTANCE.removeInvitations(authNickname);
@@ -65,5 +68,12 @@ public enum RegistrationAuthorizationHandler {
         }
     }
 
+    public String getMarshallingFilePath() {
+        return marshallFilePath;
+    }
+
+    public Map<String, User> getContainer() {
+        return new ConcurrentHashMap<>(nicknameToUser);
+    }
 
 }

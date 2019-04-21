@@ -33,7 +33,7 @@ public class MessageThread extends Thread {
             AuthorizationRequest.class, AuthorizationResponse.class,
             ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
             ChatInvitationMessage.class, ChatSuspensionMessage.class,
-            UsersInChatMessage.class,
+            OnlineListMessage.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
             ChatUpdateMessageRequest.class, ChatUpdateMessageResponse.class,
             GetAllUsersRequest.class, GetAllUsersResponse.class,
@@ -46,7 +46,7 @@ public class MessageThread extends Thread {
     public void run() {
         while (connected) {
             try {
-                if(reader.ready()) {
+                if (reader.ready()) {
                     try (StringReader dataReader = new StringReader(reader.readLine().replaceAll(lineBreakEscape, "\n"))) {
                         MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
                         System.out.println("message accepted: " + message.getMessageType());
@@ -81,7 +81,7 @@ public class MessageThread extends Thread {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new PrintWriter(socket.getOutputStream(), true);
             context = JAXBContext.newInstance(clazzes);
-        } catch ( JAXBException e) {
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
 
@@ -149,6 +149,7 @@ public class MessageThread extends Thread {
 
     private class ReconnectionThread extends Thread {
         private boolean isRunning;
+
         @Override
         public void run() {
             MessageThread newThread = new MessageThread();

@@ -1,9 +1,10 @@
 package com.group4.server.model.containers;
 
+import com.group4.server.model.entities.User;
+import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
+
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public enum UserStreamContainer {
@@ -28,7 +29,16 @@ public enum UserStreamContainer {
         userToStream.remove(nickname);
     }
 
-    public Set<String> getCurrentUsers() {
-        return new HashSet<>(userToStream.keySet());
+    public Set<User> getCurrentUsers() {
+        Set<User> currentUserSet = new HashSet<>();
+        Set<String> currentUserNicknames = userToStream.keySet();
+        for (String nickname : currentUserNicknames) {
+            currentUserSet.add(RegistrationAuthorizationHandler.INSTANCE.getUser(nickname));
+        }
+        return currentUserSet;
+    }
+
+    public Set<PrintWriter> getCurrentUserStreams() {
+        return new HashSet<>(userToStream.values());
     }
 }

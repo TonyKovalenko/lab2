@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ChatInvitationsAdapter extends XmlAdapter<ListOfEntries, Map<String, Set<ChatRoom>>> {
+public class ChatInvitationsMapAdapter extends XmlAdapter<ListOfEntries, Map<String, Set<ChatRoom>>> {
 
     @Override
     public Map<String, Set<ChatRoom>> unmarshal(ListOfEntries listOfEntries) {

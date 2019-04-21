@@ -18,22 +18,23 @@ public class ChatRoom {
     @XmlElement
     private String name = "default";
     @XmlElement
-    private List<User> members = new ArrayList<>();
+    private Set<User> members = new HashSet<>();
     @XmlElement
     private List<ChatMessage> messages = new ArrayList<>();
     @XmlElement
     private String adminNickname;
 
-    public ChatRoom() {}
+    public ChatRoom() {
+    }
 
     public ChatRoom(User user1, User user2) {
-        members = new ArrayList<>();
+        members = new HashSet<>();
         members.add(user1);
         members.add(user2);
         this.isPrivate = true;
     }
 
-    public ChatRoom(String name, List<User> members) {
+    public ChatRoom(String name, Set<User> members) {
         this.isPrivate = false;
         this.members = members;
         this.name = name;
@@ -48,7 +49,7 @@ public class ChatRoom {
         this.id = id;
     }
 
-    public ChatRoom(long id, String name, List<User> members) {
+    public ChatRoom(long id, String name, Set<User> members) {
         this(name, members);
         this.id = id;
     }
@@ -68,14 +69,14 @@ public class ChatRoom {
         throw new UnsupportedOperationException("Operation can't be used for group chat");
     }
 
-    public User getOtherMember(User username) {
+    public User getOtherMember(User user) {
         if (isPrivate) {
-            if (members.get(0).equals(username)) {
-                return members.get(1);
-            } else if (members.get(1).equals(username)) {
-                return members.get(0);
+            Optional<User> otherMember = members.stream().filter(e -> !e.equals(user)).findFirst();
+            if (otherMember.isPresent()) {
+                return otherMember.get();
+            } else {
+                throw new NoSuchElementException("User was not found.");
             }
-            throw new NoSuchElementException("User was not found.");
         }
         throw new UnsupportedOperationException("Operation can't be used for private chat.");
     }
@@ -84,11 +85,11 @@ public class ChatRoom {
         return isPrivate;
     }
 
-    public List<User> getMembers() {
+    public Set<User> getMembers() {
         return members;
     }
 
-    public void setMembers(List<User> members) {
+    public void setMembers(Set<User> members) {
         if (!isPrivate) {
             this.members = members;
         }

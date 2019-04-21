@@ -1,8 +1,8 @@
 package com.group4.server.controller;
 
-import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.containers.UserStreamContainer;
+import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.handlers.ChatRoomProcessorHandler;
@@ -10,15 +10,12 @@ import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
+import java.util.Set;
 
-public class MessageController {
+class MessageController {
 
     private static Class<?>[] clazzes = {
             User.class,
@@ -65,6 +62,20 @@ public class MessageController {
         stringWriter.getBuffer().setLength(0);
     }
 
+    private void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
+        Set<PrintWriter> userStreams = UserStreamContainer.INSTANCE.getCurrentUserStreams();
+        try {
+            marshaller.marshal(new MessageWrapper(message), stringWriter);
+        } catch (JAXBException ex) {
+            //log.error("Exception happened", ex);
+            return;
+        }
+        for (PrintWriter out : userStreams) {
+            out.println(stringWriter.toString());
+        }
+        stringWriter.getBuffer().setLength(0);
+    }
+
     void handle() {
         BufferedReader in;
         PrintWriter out;
@@ -107,6 +118,10 @@ public class MessageController {
                         User user = RegistrationAuthorizationHandler.INSTANCE.getUser(authorizationRequest.getUserNickname());
                         UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
                         ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
+                        Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
+                        TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
+                        StringWriter sw = new StringWriter();
+                        broadcastToOnlineUsers(onlineList, sw);
                     }
                     sendResponse(authorizationResponse, out, stringWriter);
                     break;
@@ -114,7 +129,7 @@ public class MessageController {
                     ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) requestMessage.getEncapsulatedMessage();
                     ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomProcessorHandler.INSTANCE.handle(chatRoomCreationRequest);
                     if (chatRoomCreationResponse.isSuccessful()) {
-                        List<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
+                        Set<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
                         ChatRoom newChatRoom = chatRoomCreationResponse.getChatRoom();
                         for (User user : members) {
                             TransmittableMessage chatInvitation = new ChatInvitationMessage(newChatRoom);
@@ -163,12 +178,14 @@ public class MessageController {
                     break;
                 case USER_DISCONNECT:
                     isConnected = false;
-                    /*UserDisconnectMessage disconnectMessage = (UserDisconnectMessage) requestMessage.getEncapsulatedMessage();
-                    UserStreamContainer.INSTANCE.deleteUser(disconnectMessage.getNickname());*/
                     break;
                 case USER_LOGOUT:
                     UserLogoutMessage logoutMessage = (UserLogoutMessage) requestMessage.getEncapsulatedMessage();
                     UserStreamContainer.INSTANCE.deleteUser(logoutMessage.getNickname());
+                    Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
+                    TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
+                    StringWriter sw = new StringWriter();
+                    broadcastToOnlineUsers(onlineList, sw);
                     break;
             }
         }
