@@ -13,10 +13,9 @@ import com.group4.server.model.message.wrappers.MessageWrapper;
 import javax.xml.bind.*;
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
 import java.util.Set;
 
-public class MessageController {
+class MessageController {
 
     private static Class<?>[] clazzes = {
             User.class,
@@ -182,6 +181,10 @@ public class MessageController {
                 case USER_LOGOUT:
                     UserLogoutMessage logoutMessage = (UserLogoutMessage) requestMessage.getEncapsulatedMessage();
                     UserStreamContainer.INSTANCE.deleteUser(logoutMessage.getNickname());
+                    Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
+                    TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
+                    StringWriter sw = new StringWriter();
+                    broadcastToOnlineUsers(onlineList, sw);
                     break;
             }
         }
