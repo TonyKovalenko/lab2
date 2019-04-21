@@ -1,8 +1,8 @@
 package com.group4.server.controller;
 
-import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.containers.UserStreamContainer;
+import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.handlers.ChatRoomProcessorHandler;
@@ -11,10 +11,7 @@ import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import org.apache.log4j.Logger;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import java.io.*;
 import java.net.Socket;
 import java.util.Set;
@@ -134,8 +131,10 @@ class MessageController {
                         Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
                         TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
                         StringWriter sw = new StringWriter();
+                        sendResponse(authorizationResponse, out, stringWriter);
                         broadcastToOnlineUsers(onlineList, sw);
                         log.info("Successful user authorization from:[" + authorizationRequest.getUserNickname() + "]");
+                        break;
                     } else {
                         log.info("Denied user authorization");
                     }
