@@ -1,7 +1,6 @@
 package com.group4.server.controller;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import java.net.ServerSocket;
 import java.net.Socket;
