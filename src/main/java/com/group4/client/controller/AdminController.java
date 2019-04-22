@@ -36,7 +36,6 @@ public class AdminController {
     public void deleteUser(User selectedUser) {
         if (selectedUser != null && DialogWindow.showConfirmationWindow("Are you sure to delete this user?", selectedUser.toString())) {
             DeleteUserRequest request = new DeleteUserRequest(selectedUser.getNickname());
-            System.out.println(request);
             Controller.getInstance().getThread().sendMessage(request);
         }
     }
@@ -52,6 +51,7 @@ public class AdminController {
     }
 
     public void processMessage(MessageWrapper message) {
+        System.out.println("Admin process message");
         switch (message.getMessageType()) {
             case ALL_USERS_RESPONSE:
                 GetAllUsersResponse getAllUsersResponse = (GetAllUsersResponse) message.getEncapsulatedMessage();

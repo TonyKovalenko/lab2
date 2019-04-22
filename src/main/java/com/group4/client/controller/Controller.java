@@ -60,7 +60,7 @@ public class Controller extends Application {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-        Platform.runLater(() -> mainView.updateAdminPanel(/*currentUser.isAdmin()*/ true));
+        Platform.runLater(() -> mainView.updateAdminPanel(currentUser.isAdmin()));
     }
 
     public User getUserByNickname(String nickname) {
@@ -205,9 +205,11 @@ public class Controller extends Application {
             case DELETE_USER_RESPONSE:
                 DeleteUserResponse deleteUserResponse = (DeleteUserResponse) responseMessage.getEncapsulatedMessage();
                 if (deleteUserResponse.getUserNickname().equals(currentUser.getNickname())) {
-                    Platform.runLater(() -> DialogWindow.showWarningWindow("Your profile was deleted", null));
                     currentUser = null;
-                    logout();
+                    Platform.runLater(() -> {
+                        DialogWindow.showWarningWindow("Your profile was deleted", null);
+                        logout();
+                    });
                 }
                 if (AdminPanelView.isOpened()) {
                     AdminController.getInstance().processMessage(responseMessage);
@@ -236,6 +238,7 @@ public class Controller extends Application {
             currentUser = null;
         }
         LoginView.getInstance().showStage();
+        System.out.println("log out");
         users = new HashMap<>();
         chatRooms = new HashMap<>();
     }

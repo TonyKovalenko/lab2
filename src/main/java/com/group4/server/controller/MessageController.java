@@ -226,6 +226,7 @@ class MessageController {
                     SetBanStatusMessage setBanStatus = (SetBanStatusMessage) requestMessage.getEncapsulatedMessage();
                     log.info("User ban message for [" + setBanStatus.getUserNickname() + "]");
                     RegistrationAuthorizationHandler.INSTANCE.getUser(setBanStatus.getUserNickname()).setBanned(setBanStatus.isBanned());
+                    break;
                 case DELETE_USER_REQUEST:
                     DeleteUserRequest userToDelete = (DeleteUserRequest) requestMessage.getEncapsulatedMessage();
                     ChatInvitationsContainer.INSTANCE.removeInvitations(userToDelete.getUserNickname());

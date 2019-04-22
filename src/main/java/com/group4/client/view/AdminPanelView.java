@@ -3,6 +3,7 @@ package com.group4.client.view;
 import com.group4.client.controller.AdminController;
 import com.group4.client.controller.Controller;
 import com.group4.server.model.entities.User;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -72,8 +73,10 @@ public class AdminPanelView extends View {
     public void initialize() {
         nicknameColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
-        isAdminColumn.setCellValueFactory(new PropertyValueFactory<>("isAdmin"));
         isBannedColumn.setCellValueFactory(new PropertyValueFactory<>("isBanned"));
+
+        isAdminColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper((p.getValue().isAdmin())? "+" : "-"));
+        isBannedColumn.setCellValueFactory(p -> new ReadOnlyObjectWrapper((p.getValue().isBanned())? "+" : "-"));
     }
 
     @FXML

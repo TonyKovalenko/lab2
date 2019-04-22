@@ -48,6 +48,7 @@ public enum MessageType {
         put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
         put(ChatSuspensionMessage.class.getSimpleName(), CHAT_SUSPENSION);
         put(DeleteUserRequest.class.getSimpleName(), DELETE_USER_REQUEST);
+        put(DeleteUserResponse.class.getSimpleName(), DELETE_USER_RESPONSE);
         put(SetBanStatusMessage.class.getSimpleName(), SET_BAN_STATUS);
     }};
 

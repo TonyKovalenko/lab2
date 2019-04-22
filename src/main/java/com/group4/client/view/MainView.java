@@ -125,9 +125,7 @@ public class MainView extends View {
     }
 
     public void setChatRoomsWithUser(Collection<ChatRoom> chatRoomsWithUser) {
-        this.chatRoomsWithUser.getItems().clear();
-        this.chatRoomsWithUser.getItems().addAll(chatRoomsWithUser);
-        //this.chatRoomsWithUser.setItems(FXCollections.observableArrayList(chatRoomsWithUser));
+        this.chatRoomsWithUser.setItems(FXCollections.observableArrayList(chatRoomsWithUser));
     }
 
     public String getMessageInput() {
