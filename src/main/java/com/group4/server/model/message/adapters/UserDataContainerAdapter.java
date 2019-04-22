@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @XmlRootElement(name = "userDataContainer")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -23,7 +24,7 @@ public class UserDataContainerAdapter {
     }
 
     public Map<String, User> getNicknameToUser() {
-        return nicknameToUser;
+        return new ConcurrentHashMap<>(nicknameToUser);
     }
 
     public void setNicknameToUser(Map<String, User> nicknameToUser) {

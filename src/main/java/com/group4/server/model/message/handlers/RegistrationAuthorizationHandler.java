@@ -4,25 +4,48 @@ import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
+import com.group4.server.model.message.adapters.UserDataContainerAdapter;
 import com.group4.server.model.message.types.*;
+import org.apache.log4j.Logger;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 
 public enum RegistrationAuthorizationHandler {
 
     INSTANCE;
 
+    private final Logger log = Logger.getLogger(RegistrationAuthorizationHandler.class);
     private String marshallFilePath = "nicknameToUser.xml";
 
-    private ConcurrentMap<String, User> nicknameToUser;
+    private Map<String, User> nicknameToUser = new ConcurrentHashMap<>();
 
     RegistrationAuthorizationHandler() {
-        nicknameToUser = new ConcurrentHashMap<>();
+        unmarshallOnStart();
+    }
+
+    private void unmarshallOnStart() {
+        UserDataContainerAdapter adapter;
+        try (BufferedReader br = new BufferedReader(new FileReader(new File(marshallFilePath)))) {
+            JAXBContext context = JAXBContext.newInstance(UserDataContainerAdapter.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            adapter = (UserDataContainerAdapter) unmarshaller.unmarshal(br);
+            nicknameToUser = adapter.getNicknameToUser();
+            nicknameToUser.forEach((k, v) -> System.out.println(k + " - " + v));
+            log.info("User data container loaded from a file [" + marshallFilePath + "]");
+        } catch (IOException | JAXBException ex) {
+            log.error("Error while unmarshalling user data container from file " + marshallFilePath + " " + ex);
+        }
     }
 
     public User getUser(String nickname) {
