@@ -59,7 +59,7 @@ public class EditProfileView extends View {
     }
 
     @FXML
-    private void saveChanges() {
+    public void saveChanges() {
         controller.saveProfileChanges(instance);
     }
 

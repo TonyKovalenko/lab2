@@ -82,37 +82,37 @@ public class MainView extends View {
     }
 
     @FXML
-    private void createNewChat() {
+    public void createNewChat() {
         controller.showCreateNewChatDialog();
     }
 
     @FXML
-    private void editProfile() {
+    public void editProfile() {
         controller.showEditProfileDialog(controller.getCurrentUser());
     }
 
     @FXML
-    private void logout() {
+    public void logout() {
         controller.logout();
     }
 
     @FXML
-    private void exit() {
+    public void exit() {
         controller.exit();
     }
 
     @FXML
-    private void onSendButtonClick() {
+    public void onSendButtonClick() {
         controller.sendMessageToChat();
     }
 
     @FXML
-    private void showChatInfo() {
+    public void showChatInfo() {
         controller.showChatInfo();
     }
 
     @FXML
-    void openAdminPanel() {
+    public void openAdminPanel() {
         controller.openAdminPanel();
     }
 

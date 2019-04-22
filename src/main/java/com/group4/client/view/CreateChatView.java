@@ -92,7 +92,7 @@ public class CreateChatView extends View {
     }
 
     @FXML
-    private void changeFields() {
+    public void changeFields() {
         if (isPrivateCheckbox.isSelected()) {
             groupFieldsPane.setVisible(false);
             usersListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -106,7 +106,7 @@ public class CreateChatView extends View {
     }
 
     @FXML
-    private void handleCreateClick() {
+    public void handleCreateClick() {
         controller.handleCreateChatClick(instance);
     }
 

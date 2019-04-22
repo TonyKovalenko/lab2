@@ -18,7 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MessageThread extends Thread {
-    private final static int DELAY = 3000;
+    private final static int DELAY = 10000;
     private final static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
@@ -32,7 +32,7 @@ public class MessageThread extends Thread {
             RegistrationRequest.class, RegistrationResponse.class,
             AuthorizationRequest.class, AuthorizationResponse.class,
             ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
-            ChatInvitationMessage.class, ChatSuspensionMessage.class,
+            ChatInvitationMessage.class, ChatSuspensionMessage.class, LeaveChatRoomMessage.class,
             OnlineListMessage.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
             ChatUpdateMessageRequest.class, ChatUpdateMessageResponse.class,

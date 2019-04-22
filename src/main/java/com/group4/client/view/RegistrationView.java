@@ -41,12 +41,12 @@ public class RegistrationView extends View {
     }
 
     @FXML
-    private void cancel() {
+    public void cancel() {
         controller.cancel();
     }
 
     @FXML
-    private void register() {
+    public void register() {
         controller.register();
     }
 

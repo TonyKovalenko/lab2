@@ -7,6 +7,8 @@ import com.group4.server.model.entities.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +28,12 @@ public class ChatInfoView extends View {
 
     @FXML
     private TextField groupNameTextField;
+
+    @FXML
+    private Button addMemberButton;
+
+    @FXML
+    private Hyperlink leaveChatLink;
 
     public static ChatInfoView getInstance() {
         if (instance == null) {
@@ -58,24 +66,29 @@ public class ChatInfoView extends View {
     }
 
     @FXML
-    private void handleAddMemberClick() {
+    public void handleAddMemberClick() {
         controller.showAddMemberToGroupChatView();
     }
 
     @FXML
-    private void handleSaveClick() {
+    public void handleSaveClick() {
         controller.saveGroupChatChanges();
     }
 
     @FXML
-    void leaveChat() {
+    public void leaveChat() {
         controller.leaveChatRoom();
     }
+
     public void setChatRoom(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
         groupNameTextField.setText(chatRoom.getName());
         ObservableList<User> users = FXCollections.observableArrayList(chatRoom.getMembers());
         usersListView.setItems(users);
+        if (chatRoom.getId() == 1) {
+            addMemberButton.setVisible(false);
+            leaveChatLink.setVisible(false);
+        }
     }
 
     public ChatRoom getChatRoom() {

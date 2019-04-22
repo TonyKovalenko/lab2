@@ -21,9 +21,6 @@ public class AdminPanelView extends View {
     private TableView<User> usersTableView;
 
     @FXML
-    private TableColumn<User, Long> idColumn;
-
-    @FXML
     private TableColumn<User, String> nicknameColumn;
 
     @FXML
@@ -73,7 +70,6 @@ public class AdminPanelView extends View {
     }
 
     public void initialize() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nicknameColumn.setCellValueFactory(new PropertyValueFactory<>("nickname"));
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         isAdminColumn.setCellValueFactory(new PropertyValueFactory<>("isAdmin"));
@@ -81,27 +77,27 @@ public class AdminPanelView extends View {
     }
 
     @FXML
-    private void banUser() {
+    public void banUser() {
         controller.banUser(getSelectedUser());
     }
 
     @FXML
-    private void deleteUser() {
+    public void deleteUser() {
         controller.deleteUser(getSelectedUser());
     }
 
     @FXML
-    private void editUser() {
+    public void editUser() {
         controller.editUser(getSelectedUser());
     }
 
     @FXML
-    private void unbanUser() {
+    public void unbanUser() {
         controller.unbanUser(getSelectedUser());
     }
 
     @FXML
-    private void refreshTable() {
+    public void refreshTable() {
         controller.sendAllUsersRequest();
     }
 }

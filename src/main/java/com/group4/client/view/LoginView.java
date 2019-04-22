@@ -3,6 +3,7 @@ package com.group4.client.view;
 import com.group4.client.controller.Controller;
 import com.group4.client.controller.LoginController;
 import javafx.fxml.FXML;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class LoginView extends View{
     private TextField usernameTextField;
 
     @FXML
-    private TextField passwordTextField;
+    private PasswordField passwordTextField;
 
     public static LoginView getInstance() {
         try {
@@ -34,12 +35,12 @@ public class LoginView extends View{
     }
 
     @FXML
-    private void onLoginClick() {
+    public void onLoginClick() {
         controller.login();
     }
 
     @FXML
-    private void onRegisterClick() {
+    public void onRegisterClick() {
         System.out.println(controller);
         controller.register();
     }

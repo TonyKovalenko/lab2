@@ -15,11 +15,10 @@
       </ToolBar>
       <TableView fx:id="usersTableView" layoutX="14.0" layoutY="55.0" prefHeight="393.0" prefWidth="780.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="55.0">
         <columns>
-            <TableColumn fx:id="idColumn" minWidth="50.0" prefWidth="114.0" text="Id" />
-          <TableColumn fx:id="nicknameColumn" minWidth="50.0" prefWidth="174.0" text="Nickname" />
-          <TableColumn fx:id="fullNameColumn" minWidth="50.0" prefWidth="344.0" text="Full name" />
-            <TableColumn fx:id="isAdminColumn" minWidth="50.0" prefWidth="74.0" text="Admin" />
-            <TableColumn fx:id="isBannedColumn" minWidth="50.0" prefWidth="73.0" text="Banned" />
+          <TableColumn fx:id="nicknameColumn" editable="false" minWidth="50.0" prefWidth="279.0" text="Nickname" />
+          <TableColumn fx:id="fullNameColumn" editable="false" minWidth="50.0" prefWidth="329.0" text="Full name" />
+            <TableColumn fx:id="isAdminColumn" editable="false" minWidth="50.0" prefWidth="92.0" text="Admin" />
+            <TableColumn fx:id="isBannedColumn" editable="false" minWidth="50.0" prefWidth="78.0" text="Banned" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -52,8 +52,11 @@ public class GroupMemberListCellView extends ListCell<User> {
         } else {
             nicknameLabel.setText(user.getNickname());
             fullNameLabel.setText(user.getFullName());
-            if (user.equals(currentUser) || !currentUser.getNickname().equals(room.getAdminNickname())) {
-                    stackPane.getChildren().remove(imageView);
+            if ((user.equals(currentUser)
+                    || !currentUser.getNickname().equals(room.getAdminNickname())
+                    || room.getId() == 1)
+                    && room.isMemberPresent(user.getNickname())) {
+                stackPane.getChildren().remove(imageView);
             }
             setText(null);
             setGraphic(stackPane);

@@ -30,6 +30,6 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <Hyperlink layoutX="173.0" layoutY="461.0" onAction="#leaveChat" text="Leave chat" AnchorPane.bottomAnchor="5.0" />
+      <Hyperlink fx:id="leaveChatLink" layoutX="173.0" layoutY="461.0" onAction="#leaveChat" text="Leave chat" AnchorPane.bottomAnchor="5.0" />
    </children>
 </AnchorPane>

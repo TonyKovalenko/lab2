@@ -61,7 +61,7 @@ public class Controller extends Application {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-        Platform.runLater(() -> mainView.updateAdminPanel(currentUser.isAdmin()));
+        Platform.runLater(() -> mainView.updateAdminPanel(/*currentUser.isAdmin()*/ true));
     }
 
     public User getUserByNickname(String nickname) {
@@ -143,6 +143,7 @@ public class Controller extends Application {
                 ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
                 Set<ChatRoom> chatRoom = chatInvitationMessage.getChatRooms();
                 chatRoom.forEach(room -> chatRooms.put(room.getId(), room));
+                updateChatRoomsView();
                 break;
             case TO_CHAT:
                 ChatMessage chatMessage = (ChatMessage) responseMessage.getEncapsulatedMessage();
@@ -166,19 +167,19 @@ public class Controller extends Application {
                         }
                     }
 
-                        if (AdminPanelView.isOpened()) {
-                            AdminController.getInstance().processMessage(responseMessage);
-                        }
-                    } else {
-                        Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
+                    if (AdminPanelView.isOpened()) {
+                        AdminController.getInstance().processMessage(responseMessage);
                     }
-                    break;
-                case CHAT_SUSPENSION:
-                    ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
-                    chatRooms.remove(chatSuspensionMessage.getChatId());
-                default:
-                    break;
-            }
+                } else {
+                    Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
+                }
+                break;
+            case CHAT_SUSPENSION:
+                ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
+                chatRooms.remove(chatSuspensionMessage.getChatId());
+            default:
+                break;
+        }
         //}
     }
 
@@ -326,5 +327,13 @@ public class Controller extends Application {
         System.out.println("showAdminPanelView");
         AdminController.getInstance().sendAllUsersRequest();
         adminPanelView.getStage().showAndWait();
+    }
+
+    public void leaveChatRoom() {
+        ChatInfoView view = ChatInfoView.getInstance();
+        ChatRoom room = mainView.getSelectedChatRoom();
+        LeaveChatRoomMessage message = new LeaveChatRoomMessage(room.getId(), currentUser.getNickname());
+        thread.sendMessage(message);
+        view.close();
     }
 }

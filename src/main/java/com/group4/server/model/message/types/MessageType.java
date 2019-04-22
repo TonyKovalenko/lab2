@@ -23,6 +23,7 @@ public enum MessageType {
     USER_DISCONNECT,
     PING,
     CHAT_SUSPENSION,
+    LEAVE_CHAT_ROOM,
     SERVER_SHUTDOWN;
 
     private static Map<String , MessageType> stringToMessageType = new HashMap<String, MessageType>() {{
@@ -45,6 +46,7 @@ public enum MessageType {
         put(UserLogoutMessage.class.getSimpleName(), USER_LOGOUT);
         put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
         put(ChatSuspensionMessage.class.getSimpleName(), CHAT_SUSPENSION);
+        put(LeaveChatRoomMessage.class.getSimpleName(), LEAVE_CHAT_ROOM);
     }};
 
     public static MessageType getMessageType(String type) throws IllegalArgumentException {
