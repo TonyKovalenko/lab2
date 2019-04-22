@@ -26,6 +26,7 @@ public class StartupShutdownController {
     private static final Logger log = Logger.getLogger(StartupShutdownController.class);
     private Marshaller marshaller;
     private ServerController serverController = new ServerController();
+    private BufferedReader buff;
 
     private Class<?>[] clazzes = {
             User.class,
@@ -37,8 +38,6 @@ public class StartupShutdownController {
             UserDataContainerAdapter.class,
             RegistrationAuthorizationHandler.class
     };
-
-    private BufferedReader buff;
 
     private StartupShutdownController() {
         initContext();
@@ -175,16 +174,6 @@ public class StartupShutdownController {
             marshaller.marshal(chatInvitationsEnumAdapter, new File(userDataContainerFile));
         } catch (JAXBException ex) {
             log.error("User data was not marshalled" + ex);
-        }
-    }
-
-    private void pokeServerController(boolean state) {
-        if (state) {
-            serverController = new ServerController();
-            serverController.setPriority(Thread.MAX_PRIORITY);
-            serverController.start();
-        } else {
-            serverController.interrupt();
         }
     }
 }

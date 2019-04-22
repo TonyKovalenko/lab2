@@ -1,5 +1,6 @@
 package com.group4.server.model.entities;
 
+import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
 import com.group4.server.model.message.types.ChatMessage;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -87,6 +88,10 @@ public class ChatRoom {
 
     public Set<User> getMembers() {
         return members;
+    }
+
+    public boolean containsMember(String nickname) {
+        return members.contains(RegistrationAuthorizationHandler.INSTANCE.getUser(nickname));
     }
 
     public void setMembers(Set<User> members) {

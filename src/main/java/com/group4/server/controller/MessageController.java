@@ -114,7 +114,7 @@ class MessageController {
                 requestMessage = (MessageWrapper) unmarshaller.unmarshal(stringReader);
             } catch (IOException | JAXBException ex) {
                 log.error("Exception happened while reading user request message", ex);
-                continue;
+                break;
             }
             switch (requestMessage.getMessageType()) {
                 case REGISTRATION_REQUEST:
@@ -174,6 +174,12 @@ class MessageController {
                     ChatMessage chatMessage = (ChatMessage) requestMessage.getEncapsulatedMessage();
                     log.info("New chat message  chatId:[" + chatMessage.getChatId() + "]");
                     ChatRoom targetRoom = ChatRoomsContainer.INSTANCE.getChatRoomById(chatMessage.getChatId());
+
+                    boolean senderBanned = RegistrationAuthorizationHandler.INSTANCE.getUser(chatMessage.getSender()).isBanned();
+                    if (targetRoom.getId() == 0 && senderBanned) {
+                        break;
+                    }
+
                     if (targetRoom.isEmpty()) {
                         log.info("Room is empty");
                         break;
@@ -215,6 +221,25 @@ class MessageController {
                     log.info("Change credentials requested from:[" + changeCredentialsRequest.getUserNickname() + "]");
                     ChangeCredentialsResponse changeCredentialsResponse = RegistrationAuthorizationHandler.INSTANCE.handle(changeCredentialsRequest);
                     sendResponse(changeCredentialsResponse, out, stringWriter);
+                    break;
+                case SET_BAN_STATUS:
+                    SetBanStatusMessage setBanStatus = (SetBanStatusMessage) requestMessage.getEncapsulatedMessage();
+                    log.info("User ban message for [" + setBanStatus.getUserNickname() + "]");
+                    RegistrationAuthorizationHandler.INSTANCE.getUser(setBanStatus.getUserNickname()).setBanned(setBanStatus.isBanned());
+                case DELETE_USER_REQUEST:
+                    DeleteUserRequest userToDelete = (DeleteUserRequest) requestMessage.getEncapsulatedMessage();
+                    ChatInvitationsContainer.INSTANCE.removeInvitations(userToDelete.getUserNickname());
+                    ChatRoomsContainer.INSTANCE.deleteUserFromChatRooms(userToDelete.getUserNickname());
+                    boolean wasDeleted = RegistrationAuthorizationHandler.INSTANCE.deleteUser(userToDelete.getUserNickname());
+                    PrintWriter adminStream = UserStreamContainer.INSTANCE.getStream("admin");
+                    TransmittableMessage deleteUserResponse = new DeleteUserResponse(userToDelete.getUserNickname(), wasDeleted);
+                    if (wasDeleted) {
+                        PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(userToDelete.getUserNickname());
+                        if (userStream != null) {
+                            sendResponse(deleteUserResponse, userStream, stringWriter);
+                        }
+                    }
+                    sendResponse(deleteUserResponse, adminStream, stringWriter);
                     break;
                 case USER_DISCONNECT:
                     isConnected = false;

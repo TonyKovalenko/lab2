@@ -25,8 +25,7 @@ public enum MessageType {
     CHAT_SUSPENSION,
     DELETE_USER_REQUEST,
     DELETE_USER_RESPONSE,
-    SET_BAN_STATUS,
-    SERVER_SHUTDOWN;
+    SET_BAN_STATUS;
 
     private static Map<String , MessageType> stringToMessageType = new HashMap<String, MessageType>() {{
         put(RegistrationRequest.class.getSimpleName(), REGISTRATION_REQUEST);

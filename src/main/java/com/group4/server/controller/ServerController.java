@@ -18,11 +18,11 @@ public class ServerController extends Thread {
     private ExecutorService executor;
     private volatile boolean isRunning;
 
-    boolean isRunning() {
+    public boolean isRunning() {
         return isRunning;
     }
 
-    void setRunning(boolean running) {
+    public void setRunning(boolean running) {
         isRunning = running;
     }
 

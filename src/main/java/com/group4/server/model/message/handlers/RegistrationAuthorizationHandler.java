@@ -45,6 +45,9 @@ public enum RegistrationAuthorizationHandler {
         } catch (IOException | JAXBException ex) {
             log.error("Error while unmarshalling user data container from file " + marshallFilePath + " " + ex);
         }
+        User defaultAdmin = new User("admin", "admin", "admin");
+        defaultAdmin.setAdmin(true);
+        nicknameToUser.put(defaultAdmin.getNickname(), defaultAdmin);
     }
 
     public User getUser(String nickname) {
@@ -100,6 +103,10 @@ public enum RegistrationAuthorizationHandler {
 
     public Map<String, User> getContainer() {
         return new ConcurrentHashMap<>(nicknameToUser);
+    }
+
+    public boolean deleteUser(String nickname) {
+        return nicknameToUser.remove(nickname) != null;
     }
 
 }
