@@ -53,6 +53,8 @@ public class ServerController extends Thread {
                 log.error("Exception while closing the socket");
             } catch (InterruptedException ex) {
                 executor.shutdownNow();
+            } finally {
+                executor.shutdown();
             }
             setRunning(false);
         }
