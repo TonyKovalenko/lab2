@@ -35,7 +35,7 @@ public class MessageThread extends Thread {
             ChatInvitationMessage.class, ChatSuspensionMessage.class, LeaveChatRoomMessage.class,
             OnlineListMessage.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
-            ChatUpdateMessageRequest.class, ChatUpdateMessageResponse.class,
+            ChatUpdateMessage.class, ChatUpdateMessageResponse.class,
             GetAllUsersRequest.class, GetAllUsersResponse.class,
             UserLogoutMessage.class, UserDisconnectMessage.class,
             DeleteUserRequest.class, DeleteUserResponse.class, SetBanStatusMessage.class

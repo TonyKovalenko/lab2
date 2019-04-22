@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @XmlRootElement(name = "pendingChatInvitations")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -16,10 +17,10 @@ public class ChatInvitationsEnumAdapter {
 
     @XmlElement
     @XmlJavaTypeAdapter(ChatInvitationsMapAdapter.class)
-    private Map<String, Set<ChatRoom>> pendingChatInvitations;
+    private Map<String, Set<ChatRoom>> pendingChatInvitations = new ConcurrentHashMap<>();
 
     public Map<String, Set<ChatRoom>> getPendingChatInvitations() {
-        return pendingChatInvitations;
+        return new ConcurrentHashMap<>(pendingChatInvitations);
     }
 
     public void setPendingChatInvitations(Map<String, Set<ChatRoom>> pendingChatInvitations) {

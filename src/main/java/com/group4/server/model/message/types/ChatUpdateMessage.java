@@ -10,7 +10,7 @@ import java.util.List;
 
 @XmlRootElement(name = "chatUpdateMessage")
 @XmlAccessorType(XmlAccessType.NONE)
-public class ChatUpdateMessageRequest implements TransmittableMessage {
+public class ChatUpdateMessage implements TransmittableMessage {
     @XmlElement
     private long chatRoomId;
     @XmlElement
@@ -20,10 +20,10 @@ public class ChatUpdateMessageRequest implements TransmittableMessage {
     @XmlElement
     private List<User> membersToDelete;
 
-    public ChatUpdateMessageRequest() {
+    public ChatUpdateMessage() {
     }
 
-    public ChatUpdateMessageRequest(long chatRoomId, String newName, List<User> membersToAdd, List<User> membersToDelete) {
+    public ChatUpdateMessage(long chatRoomId, String newName, List<User> membersToAdd, List<User> membersToDelete) {
         this.chatRoomId = chatRoomId;
         this.newName = newName;
         this.membersToAdd = membersToAdd;

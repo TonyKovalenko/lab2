@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @XmlRootElement(name = "chatRoomContainer")
 @XmlAccessorType(XmlAccessType.NONE)
@@ -22,7 +23,7 @@ public class ChatContainerEnumAdapter {
     }
 
     public Map<Long, ChatRoom> getIdToChatRoom() {
-        return idToChatRoom;
+        return new ConcurrentHashMap<>(idToChatRoom);
     }
 
     public void setIdToChatRoom(Map<Long, ChatRoom> idToChatRoom) {
