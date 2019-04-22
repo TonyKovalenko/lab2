@@ -85,10 +85,9 @@ public class ChatInfoView extends View {
         groupNameTextField.setText(chatRoom.getName());
         ObservableList<User> users = FXCollections.observableArrayList(chatRoom.getMembers());
         usersListView.setItems(users);
-        if (chatRoom.getId() == 1) {
-            addMemberButton.setVisible(false);
-            leaveChatLink.setVisible(false);
-        }
+        System.out.println(chatRoom);
+        addMemberButton.setVisible(!(chatRoom.getId() == 1));
+        leaveChatLink.setVisible(!(chatRoom.getId() == 1));
     }
 
     public ChatRoom getChatRoom() {

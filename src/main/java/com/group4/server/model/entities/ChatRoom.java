@@ -151,6 +151,7 @@ public class ChatRoom {
                 "id=" + id +
                 ", isPrivate=" + isPrivate +
                 ", name='" + name + '\'' +
+                ", adminNickname='" + adminNickname + '\'' +
                 ", members=" + members +
                 ", messages=" + messages +
                 '}';

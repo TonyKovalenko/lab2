@@ -7,8 +7,8 @@ import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.*;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -40,7 +40,7 @@ public enum RegistrationAuthorizationHandler {
         if (!nicknameToUser.containsKey(userNickname)) {
             return new ChangeCredentialsResponse(false);
         }
-        if (newPassword == null) {
+        if (newPassword.isEmpty()) {
             nicknameToUser.computeIfPresent(userNickname, (k, v) -> v.setFullName(newFullName));
         } else {
             nicknameToUser.computeIfPresent(userNickname, (k, v) -> v.setPassword(newPassword).setFullName(newFullName));

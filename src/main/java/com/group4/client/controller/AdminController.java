@@ -81,10 +81,12 @@ public class AdminController {
                 SetBanStatusMessage setBanStatusMessage = (SetBanStatusMessage) message.getEncapsulatedMessage();
                 allUsers.get(setBanStatusMessage.getUserNickname()).setBanned(setBanStatusMessage.isBanned());
                 Platform.runLater(() -> view.setUsers(allUsers.values()));
+                break;
             case DELETE_USER_RESPONSE:
                 DeleteUserResponse deleteUserResponse = (DeleteUserResponse) message.getEncapsulatedMessage();
                 allUsers.remove(deleteUserResponse.getUserNickname());
                 Platform.runLater(() -> view.setUsers(allUsers.values()));
+                break;
             default:
                 break;
         }

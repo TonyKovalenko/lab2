@@ -174,9 +174,19 @@ public class Controller extends Application {
                     Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
                 }
                 break;
+            case CHAT_UPDATE_REQUEST:
+                ChatUpdateMessageRequest chatUpdateMessageRequest = (ChatUpdateMessageRequest) responseMessage.getEncapsulatedMessage();
+                ChatRoom updatedRoom = chatRooms.get(chatUpdateMessageRequest.getChatRoomId());
+                updatedRoom.getMembers().addAll(chatUpdateMessageRequest.getMembersToAdd());
+                updatedRoom.getMembers().removeAll(chatUpdateMessageRequest.getMembersToDelete());
+                updatedRoom.setName(chatUpdateMessageRequest.getNewName());
+                updateChatRoomsView();
+                break;
             case CHAT_SUSPENSION:
                 ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
+                System.out.println("Delete chat: " + chatSuspensionMessage.getChatId());
                 chatRooms.remove(chatSuspensionMessage.getChatId());
+                updateChatRoomsView();
                 break;
             case SET_BAN_STATUS:
                 SetBanStatusMessage setBanStatusMessage = (SetBanStatusMessage) responseMessage.getEncapsulatedMessage();
