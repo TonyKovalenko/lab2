@@ -26,6 +26,7 @@ public class StartupShutdownController {
     private static final Logger log = Logger.getLogger(StartupShutdownController.class);
     private Marshaller marshaller;
     private ServerController serverController = new ServerController();
+    private BufferedReader buff;
 
     private Class<?>[] clazzes = {
             User.class,
@@ -121,7 +122,7 @@ public class StartupShutdownController {
     private String getTrimmedInput() {
         System.out.print("\n>>> Your input: ");
         String input = "";
-        BufferedReader buff = new BufferedReader(new InputStreamReader(System.in));
+        buff = new BufferedReader(new InputStreamReader(System.in));
         do {
             try {
                 input = buff.readLine();
