@@ -185,7 +185,7 @@ class MessageController {
                 case CHAT_UPDATE_REQUEST:
                     ChatUpdateMessageRequest chatUpdateRequest = (ChatUpdateMessageRequest) requestMessage.getEncapsulatedMessage();
                     ChatRoom updatedChatRoom = ChatRoomsContainer.INSTANCE.getChatRoomById(chatUpdateRequest.getChatRoomId());
-                    ChatUpdateMessageResponse chatUpdateMessageResponse = ChatRoomProcessorHandler.INSTANCE.handle(chatUpdateRequest, marshaller);
+                    ChatRoomProcessorHandler.INSTANCE.handle(chatUpdateRequest, marshaller);
                     log.info("Chat update requested  chatId:[" + chatUpdateRequest.getChatRoomId() + "]");
                     Set<User> members = updatedChatRoom.getMembers();
                     for (User user : members) {

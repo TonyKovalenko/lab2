@@ -6,9 +6,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.stream.Stream;
 
-public class LoginView extends View{
+public class LoginView extends View {
     private static LoginView instance;
     private LoginController controller;
 

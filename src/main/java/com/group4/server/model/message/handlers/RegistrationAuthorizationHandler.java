@@ -40,7 +40,11 @@ public enum RegistrationAuthorizationHandler {
         if (!nicknameToUser.containsKey(userNickname)) {
             return new ChangeCredentialsResponse(false);
         }
-        nicknameToUser.computeIfPresent(userNickname, (k, v) -> v.setPassword(newPassword).setFullName(newFullName));
+        if (newPassword == null) {
+            nicknameToUser.computeIfPresent(userNickname, (k, v) -> v.setFullName(newFullName));
+        } else {
+            nicknameToUser.computeIfPresent(userNickname, (k, v) -> v.setPassword(newPassword).setFullName(newFullName));
+        }
         return new ChangeCredentialsResponse(true, nicknameToUser.get(userNickname));
     }
 
