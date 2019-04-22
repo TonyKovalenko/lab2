@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -66,6 +67,14 @@ public enum ChatRoomsContainer {
 
     public Set<ChatRoom> getChatRoomsFor(String nickname) {
         return idToChatRoom.values().stream().filter(room -> room.isMemberPresent(nickname)).collect(Collectors.toSet());
+    }
+
+    public void deleteUserFromChatRooms(String nickname) {
+        idToChatRoom.values()
+                .stream()
+                .parallel()
+                .filter(chatRoom -> chatRoom.containsMember(nickname))
+                .forEach(members -> members.removeMember(nickname));
     }
 
     public boolean createChatRoom(ChatRoom chatRoom) {

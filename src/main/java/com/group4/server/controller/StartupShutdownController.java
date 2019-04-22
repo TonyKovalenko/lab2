@@ -38,8 +38,6 @@ public class StartupShutdownController {
             RegistrationAuthorizationHandler.class
     };
 
-    private BufferedReader buff;
-
     private StartupShutdownController() {
         initContext();
     }
@@ -123,7 +121,7 @@ public class StartupShutdownController {
     private String getTrimmedInput() {
         System.out.print("\n>>> Your input: ");
         String input = "";
-        buff = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader buff = new BufferedReader(new InputStreamReader(System.in));
         do {
             try {
                 input = buff.readLine();
@@ -175,16 +173,6 @@ public class StartupShutdownController {
             marshaller.marshal(chatInvitationsEnumAdapter, new File(userDataContainerFile));
         } catch (JAXBException ex) {
             log.error("User data was not marshalled" + ex);
-        }
-    }
-
-    private void pokeServerController(boolean state) {
-        if (state) {
-            serverController = new ServerController();
-            serverController.setPriority(Thread.MAX_PRIORITY);
-            serverController.start();
-        } else {
-            serverController.interrupt();
         }
     }
 }
