@@ -112,6 +112,7 @@ class MessageController {
                     log.info("New user registration from:[" + registrationRequest.getUserNickname() + "]");
                     if (registrationResponse.isRegistrationSuccessful()) {
                         User user = new User(registrationRequest.getUserNickname(), registrationRequest.getPassword(), registrationRequest.getFullName());
+                        ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
                         log.info("Confirmed user registration from:[" + user.getNickname() + "]");
                     } else {
                         log.info("Denied user registration");
