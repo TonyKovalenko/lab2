@@ -60,8 +60,7 @@
             <configuration>
               <archive>
               <manifest>
-                <!-- TODO change to real server -->
-                <mainClass>com.group4.client.TestChatServer</mainClass>
+                <mainClass>com.group4.server.controller.StartupShutdownController</mainClass>
               </manifest>
             </archive>
               <descriptorRefs>

@@ -55,11 +55,15 @@ class MessageController {
     private Unmarshaller unmarshaller;
     private Socket socket;
 
-    MessageController(Socket socket) throws JAXBException {
-        this.socket = socket;
-        this.context = JAXBContext.newInstance(clazzes);
-        this.marshaller = context.createMarshaller();
-        this.unmarshaller = context.createUnmarshaller();
+    MessageController(Socket socket) {
+        try {
+            this.socket = socket;
+            this.context = JAXBContext.newInstance(clazzes);
+            this.marshaller = context.createMarshaller();
+            this.unmarshaller = context.createUnmarshaller();
+        } catch (JAXBException ex) {
+            log.error("Message controller context was not initialized correctly" + ex);
+        }
     }
 
     private void sendResponse(TransmittableMessage message, PrintWriter out, StringWriter stringWriter) {
