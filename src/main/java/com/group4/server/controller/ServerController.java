@@ -5,10 +5,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class ServerController extends Thread {
 
@@ -38,10 +35,8 @@ public class ServerController extends Thread {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (isRunning) {
                 if(isInterrupted()) {
-                    System.out.println("HERE");
-                    executor.shutdown();
                     serverSocket.close();
-                    s.close();
+                    break;
                 }
                 Future<Socket> futureSocket = executor.submit(serverSocket::accept);
                 s = futureSocket.get();
@@ -49,13 +44,16 @@ public class ServerController extends Thread {
                 executor.submit(messageController::handle);
             }
         } catch (IOException | ExecutionException | InterruptedException ex) {
-            log.error("Server failed to run properly" + ex);
+            log.error("Server failed to close properly" + ex);
+        } finally {
             try {
                 s.close();
+                executor.awaitTermination(5, TimeUnit.SECONDS);
             } catch (IOException e) {
                 log.error("Exception while closing the socket");
+            } catch (InterruptedException ex) {
+                executor.shutdownNow();
             }
-            executor.shutdown();
             setRunning(false);
         }
     }
