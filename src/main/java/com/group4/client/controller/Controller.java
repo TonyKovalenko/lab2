@@ -174,11 +174,17 @@ public class Controller extends Application {
                     Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
                 }
                 break;
-            case CHAT_UPDATE_REQUEST:
-                ChatUpdateMessageRequest chatUpdateMessageRequest = (ChatUpdateMessageRequest) responseMessage.getEncapsulatedMessage();
+            case CHAT_UPDATE:
+                ChatUpdateMessage chatUpdateMessageRequest = (ChatUpdateMessage) responseMessage.getEncapsulatedMessage();
                 ChatRoom updatedRoom = chatRooms.get(chatUpdateMessageRequest.getChatRoomId());
-                updatedRoom.getMembers().addAll(chatUpdateMessageRequest.getMembersToAdd());
-                updatedRoom.getMembers().removeAll(chatUpdateMessageRequest.getMembersToDelete());
+                List<User> membersToAdd = chatUpdateMessageRequest.getMembersToAdd();
+                List<User> membersToDelete = chatUpdateMessageRequest.getMembersToDelete();
+                if (membersToAdd != null) {
+                    updatedRoom.getMembers().addAll(membersToAdd);
+                }
+                if (membersToDelete != null) {
+                    updatedRoom.getMembers().removeAll(chatUpdateMessageRequest.getMembersToDelete());
+                }
                 updatedRoom.setName(chatUpdateMessageRequest.getNewName());
                 updateChatRoomsView();
                 break;
@@ -306,7 +312,6 @@ public class Controller extends Application {
                 isUpdated = false;
             }
         }
-
         if (isUpdated) {
             thread.sendMessage(new ChangeCredentialsRequest(view.getUser().getNickname(), newFullName, newPassword));
         }

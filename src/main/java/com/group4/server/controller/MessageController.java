@@ -1,8 +1,8 @@
 package com.group4.server.controller;
 
+import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.containers.UserStreamContainer;
-import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.handlers.ChatRoomProcessorHandler;
@@ -11,7 +11,10 @@ import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import org.apache.log4j.Logger;
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.net.Socket;
 import java.util.Set;
@@ -32,12 +35,16 @@ class MessageController {
             ChatMessage.class,
             ChatRoomCreationRequest.class,
             ChatRoomCreationResponse.class,
+            ChatSuspensionMessage.class,
             ChatUpdateMessage.class,
             ChatUpdateMessageResponse.class,
+            DeleteUserRequest.class,
+            DeleteUserResponse.class,
             OnlineListMessage.class,
             PingMessage.class,
             RegistrationRequest.class,
             RegistrationResponse.class,
+            SetBanStatusMessage.class,
             UserLogoutMessage.class,
             UserDisconnectMessage.class,
             MessageWrapper.class
@@ -180,7 +187,7 @@ class MessageController {
                     log.info("User list requested");
                     sendResponse(allUsersResponse, out, stringWriter);
                     break;
-                case CHAT_UPDATE_REQUEST:
+                case CHAT_UPDATE:
                     ChatUpdateMessage chatUpdate = (ChatUpdateMessage) requestMessage.getEncapsulatedMessage();
                     ChatRoom updatedChatRoom = ChatRoomsContainer.INSTANCE.getChatRoomById(chatUpdate.getChatRoomId());
                     ChatRoomProcessorHandler.INSTANCE.handle(chatUpdate, marshaller);

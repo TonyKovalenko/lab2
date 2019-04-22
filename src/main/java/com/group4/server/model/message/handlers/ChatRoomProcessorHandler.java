@@ -6,6 +6,7 @@ import com.group4.server.model.containers.UserStreamContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.types.*;
+import com.group4.server.model.message.wrappers.MessageWrapper;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -57,7 +58,7 @@ public enum ChatRoomProcessorHandler {
             PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
             if (userStream != null) {
                 try {
-                    marshaller.marshal(chatInvitation, sw);
+                    marshaller.marshal(new MessageWrapper(chatInvitation), sw);
                 } catch (JAXBException ex) {
                     //log.error("Exception happened", ex);
                     return false;
@@ -80,7 +81,7 @@ public enum ChatRoomProcessorHandler {
             PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
             if (userStream != null) {
                 try {
-                    marshaller.marshal(chatSuspension, sw);
+                    marshaller.marshal(new MessageWrapper(chatSuspension), sw);
                 } catch (JAXBException ex) {
                     //log.error("Exception happened", ex);
                     return false;

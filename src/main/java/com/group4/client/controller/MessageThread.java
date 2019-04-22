@@ -52,7 +52,9 @@ public class MessageThread extends Thread {
         while (connected) {
             try {
                 if (reader.ready()) {
-                    try (StringReader dataReader = new StringReader(reader.readLine().replaceAll(lineBreakEscape, "\n"))) {
+                    String s = reader.readLine();
+                    System.out.println(s);
+                    try (StringReader dataReader = new StringReader(/*reader.readLine()*/s.replaceAll(lineBreakEscape, "\n"))) {
                         MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
                         System.out.println("message accepted: " + message.getMessageType());
                         switch (message.getMessageType()) {

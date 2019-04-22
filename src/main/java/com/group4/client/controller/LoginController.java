@@ -58,7 +58,10 @@ public class LoginController {
             }
             Controller.getInstance().updateChatRoomsView();
         } else {
-            Platform.runLater(() -> DialogWindow.showWarningWindow("Authorization failed", "Authorization was denied"));
+            Platform.runLater(() -> {
+                DialogWindow.showWarningWindow("Authorization failed", "Authorization was denied");
+                Controller.getInstance().logout();
+            });
         }
     }
 

@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "chatUpdateMessage")
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class DeleteUserResponse implements TransmittableMessage {
     @XmlElement
