@@ -37,19 +37,16 @@ public class LoginController {
             sendAuthorizationRequest(nickname, password);
         } else {
             DialogWindow.showWarningWindow("Fill the fields", "Fields can't be empty");
-            System.out.println("Fill the fields");
         }
     }
 
     public void register() {
-        System.out.println("register");
         RegistrationView.getInstance().showStage();
     }
 
     public void processMessage(MessageWrapper responseMessage) {
         AuthorizationResponse innerMessage = (AuthorizationResponse) responseMessage.getEncapsulatedMessage();
         if (innerMessage.isConfirmed()) {
-            System.out.println("authorization was confirmed");
             Platform.runLater(() -> MainView.getInstance().showStage());
             Controller.getInstance().setCurrentUser(innerMessage.getUser());
             Set<ChatRoom> chatRooms = innerMessage.getChatRoomsWithUser();

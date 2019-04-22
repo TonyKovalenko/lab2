@@ -189,7 +189,6 @@ public class Controller extends Application {
                 break;
             case CHAT_SUSPENSION:
                 ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
-                System.out.println("Delete chat: " + chatSuspensionMessage.getChatId());
                 chatRooms.remove(chatSuspensionMessage.getChatId());
                 updateChatRoomsView();
                 break;
@@ -238,7 +237,6 @@ public class Controller extends Application {
             currentUser = null;
         }
         LoginView.getInstance().showStage();
-        System.out.println("log out");
         users = new HashMap<>();
         chatRooms = new HashMap<>();
     }
@@ -307,7 +305,6 @@ public class Controller extends Application {
                 isUpdated = true;
             } else {
                 DialogWindow.showWarningWindow("Passwords don't match", "The password and confirm password fields do not match.");
-                System.out.println("password doesn't match");
                 isUpdated = false;
             }
         }
@@ -365,7 +362,6 @@ public class Controller extends Application {
 
     public void openAdminPanel() {
         AdminPanelView adminPanelView = AdminPanelView.getInstance();
-        System.out.println("showAdminPanelView");
         AdminController.getInstance().sendAllUsersRequest();
         adminPanelView.getStage().showAndWait();
     }

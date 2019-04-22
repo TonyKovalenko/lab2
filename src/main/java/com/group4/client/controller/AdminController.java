@@ -51,7 +51,6 @@ public class AdminController {
     }
 
     public void processMessage(MessageWrapper message) {
-        System.out.println("Admin process message");
         switch (message.getMessageType()) {
             case ALL_USERS_RESPONSE:
                 GetAllUsersResponse getAllUsersResponse = (GetAllUsersResponse) message.getEncapsulatedMessage();

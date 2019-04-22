@@ -44,11 +44,6 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
                 }
 
             }
-            /*Optional<User> optionalUser = Controller.getInstance().getChatRoomById(message.getChatId())
-                    .getMembers()
-                    .stream()
-                    .filter(item -> item.getNickname().equals(message.getSender())).findFirst();
-            User user = optionalUser.orElse(new User());*/
             nameLabel.setText(message.getSender());
             messageTextLabel.setText(message.getText());
 

@@ -18,7 +18,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MessageThread extends Thread {
-    private final static int DELAY = 10000;
+    private final static int DELAY = 5000;
     private final static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
@@ -52,9 +52,7 @@ public class MessageThread extends Thread {
         while (connected) {
             try {
                 if (reader.ready()) {
-                    String s = reader.readLine();
-                    System.out.println(s);
-                    try (StringReader dataReader = new StringReader(/*reader.readLine()*/s.replaceAll(lineBreakEscape, "\n"))) {
+                    try (StringReader dataReader = new StringReader(reader.readLine().replaceAll(lineBreakEscape, "\n"))) {
                         MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
                         System.out.println("message accepted: " + message.getMessageType());
                         switch (message.getMessageType()) {
@@ -92,7 +90,7 @@ public class MessageThread extends Thread {
             e.printStackTrace();
         }
 
-        System.out.println("connected");
+        System.out.println("Connected");
         inPings = outPings = 0;
         connected = true;
         pingTimer = new Timer();
@@ -103,9 +101,7 @@ public class MessageThread extends Thread {
                     PingMessage message = new PingMessage();
                     sendMessage(message);
                     outPings++;
-                    System.out.println(outPings + " out");
                 } else {
-                    System.out.println("Connection was broken!");
                     disconnect();
                     reconnect();
                 }
@@ -134,7 +130,7 @@ public class MessageThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("disconnected");
+        System.out.println("Disconnected");
     }
 
     public void reconnect() {
@@ -147,7 +143,6 @@ public class MessageThread extends Thread {
         StringWriter stringWriter = new StringWriter();
         try {
             context.createMarshaller().marshal(message, stringWriter);
-            System.out.println(stringWriter.toString());
             writer.println(stringWriter.toString().replaceAll("\n", lineBreakEscape));
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -180,7 +175,6 @@ public class MessageThread extends Thread {
                     }
                 }
             }
-            System.out.println("finishReconnecting");
         }
 
         public void reconnect() {

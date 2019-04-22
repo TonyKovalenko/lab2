@@ -27,12 +27,10 @@ public class RegistrationController {
     }
 
     public void cancel() {
-        System.out.println("cancel reg");
         LoginView.getInstance().showStage();
     }
 
     public void register() {
-        System.out.println("register");
         if (view.isFieldsFilled()) {
             if (view.isPasswordConfirmed()) {
                 String nickname = view.getUsername();
@@ -46,21 +44,17 @@ public class RegistrationController {
                 Controller.getInstance().getThread().sendMessage(message);
             } else {
                 DialogWindow.showWarningWindow("Passwords don't match", "The password and confirm password fields do not match.");
-                System.out.println("password doesn't match");
             }
         } else {
             DialogWindow.showWarningWindow("Fill the fields", "Fields can't be empty");
-            System.out.println("Fill the fields");
         }
     }
 
     public void processMessage(MessageWrapper responseMessage) {
         RegistrationResponse innerMessage = (RegistrationResponse) responseMessage.getEncapsulatedMessage();
         if (innerMessage.isRegistrationSuccessful()) {
-            System.out.println("registered successfully");
             Platform.runLater(() -> cancel());
         } else {
-            System.out.println("authorization was denied");
             Platform.runLater(() -> DialogWindow.showWarningWindow("Registration failed", "Registration was denied"));
         }
     }

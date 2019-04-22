@@ -87,7 +87,6 @@ public class ChatInfoView extends View {
         ObservableList<User> users = FXCollections.observableArrayList(chatRoom.getMembers());
         users.sort(Comparator.comparing(User::getNickname));
         usersListView.setItems(users);
-        System.out.println(chatRoom);
         addMemberButton.setVisible(chatRoom.getId() != 1);
         leaveChatLink.setVisible(chatRoom.getId() != 1);
     }
