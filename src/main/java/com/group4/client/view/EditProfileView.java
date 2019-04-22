@@ -30,7 +30,6 @@ public class EditProfileView extends View {
     public static EditProfileView getInstance() {
         if (instance == null) {
             try {
-                System.out.println("EditProfileView getInstance");
                 Stage dialogStage = new Stage();
                 dialogStage.initOwner(Controller.getInstance().getStage());
                 dialogStage.initModality(Modality.APPLICATION_MODAL);
@@ -44,7 +43,6 @@ public class EditProfileView extends View {
                 e.printStackTrace();
             }
         }
-        System.out.println("EditProfileView getInstance return");
         return instance;
     }
 

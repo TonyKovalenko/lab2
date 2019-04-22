@@ -7,7 +7,6 @@ import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -61,7 +60,7 @@ public class Controller extends Application {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-        Platform.runLater(() -> mainView.updateAdminPanel(/*currentUser.isAdmin()*/ true));
+        Platform.runLater(() -> mainView.updateAdminPanel(currentUser.isAdmin()));
     }
 
     public User getUserByNickname(String nickname) {
@@ -190,7 +189,6 @@ public class Controller extends Application {
                 break;
             case CHAT_SUSPENSION:
                 ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
-                System.out.println("Delete chat: " + chatSuspensionMessage.getChatId());
                 chatRooms.remove(chatSuspensionMessage.getChatId());
                 updateChatRoomsView();
                 break;
@@ -206,9 +204,11 @@ public class Controller extends Application {
             case DELETE_USER_RESPONSE:
                 DeleteUserResponse deleteUserResponse = (DeleteUserResponse) responseMessage.getEncapsulatedMessage();
                 if (deleteUserResponse.getUserNickname().equals(currentUser.getNickname())) {
-                    Platform.runLater(() -> DialogWindow.showWarningWindow("Your profile was deleted", null));
                     currentUser = null;
-                    logout();
+                    Platform.runLater(() -> {
+                        DialogWindow.showWarningWindow("Your profile was deleted", null);
+                        logout();
+                    });
                 }
                 if (AdminPanelView.isOpened()) {
                     AdminController.getInstance().processMessage(responseMessage);
@@ -262,13 +262,10 @@ public class Controller extends Application {
     }
 
     public void showCreateNewChatDialog() {
-        Stage dialogStage = new Stage();
-        dialogStage.initOwner(stage);
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        CreateChatView createChatView = CreateChatView.getInstance(dialogStage);
+        CreateChatView createChatView = CreateChatView.getInstance();
         createChatView.setOnlineUsers(getUsers());
         createChatView.setUsersWithoutPrivateChat(getUsersWithoutPrivateChat());
-        dialogStage.showAndWait();
+        createChatView.getStage().showAndWait();
     }
 
     public void handleCreateChatClick(CreateChatView view) {
@@ -308,7 +305,6 @@ public class Controller extends Application {
                 isUpdated = true;
             } else {
                 DialogWindow.showWarningWindow("Passwords don't match", "The password and confirm password fields do not match.");
-                System.out.println("password doesn't match");
                 isUpdated = false;
             }
         }
@@ -366,7 +362,6 @@ public class Controller extends Application {
 
     public void openAdminPanel() {
         AdminPanelView adminPanelView = AdminPanelView.getInstance();
-        System.out.println("showAdminPanelView");
         AdminController.getInstance().sendAllUsersRequest();
         adminPanelView.getStage().showAndWait();
     }

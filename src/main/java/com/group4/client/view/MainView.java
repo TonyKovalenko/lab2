@@ -64,7 +64,6 @@ public class MainView extends View {
         onlineUsers.setCellFactory(param -> new UsersListCellView());
         chatMessageListView.setCellFactory(param -> new MessagesListCellView());
         chatRoomsWithUser.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("selection changed to : " + newValue);
             if (newValue != null) {
                 chatMessageListView.setItems(FXCollections.observableArrayList(newValue.getMessages()));
                 if (newValue.isPrivate()) {
@@ -120,18 +119,12 @@ public class MainView extends View {
     }
 
     public void setOnlineUsers(Collection<User> users) {
-        System.out.println("users: " + users.size());
-        System.out.println(users);
         onlineUsers.getItems().clear();
         onlineUsers.getItems().addAll(users);
         //onlineUsers.setItems(FXCollections.observableArrayList(users));
     }
 
     public void setChatRoomsWithUser(Collection<ChatRoom> chatRoomsWithUser) {
-        //System.out.println(chatRoomsWithUser);
-        for (ChatRoom room : chatRoomsWithUser) {
-            System.out.println(room.getId() + " - " + room.getMessages().size());
-        }
         this.chatRoomsWithUser.setItems(FXCollections.observableArrayList(chatRoomsWithUser));
     }
 

@@ -36,7 +36,6 @@ public class AdminController {
     public void deleteUser(User selectedUser) {
         if (selectedUser != null && DialogWindow.showConfirmationWindow("Are you sure to delete this user?", selectedUser.toString())) {
             DeleteUserRequest request = new DeleteUserRequest(selectedUser.getNickname());
-            System.out.println(request);
             Controller.getInstance().getThread().sendMessage(request);
         }
     }
