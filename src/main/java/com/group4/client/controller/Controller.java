@@ -7,7 +7,6 @@ import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -262,13 +261,10 @@ public class Controller extends Application {
     }
 
     public void showCreateNewChatDialog() {
-        Stage dialogStage = new Stage();
-        dialogStage.initOwner(stage);
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        CreateChatView createChatView = CreateChatView.getInstance(dialogStage);
+        CreateChatView createChatView = CreateChatView.getInstance();
         createChatView.setOnlineUsers(getUsers());
         createChatView.setUsersWithoutPrivateChat(getUsersWithoutPrivateChat());
-        dialogStage.showAndWait();
+        createChatView.getStage().showAndWait();
     }
 
     public void handleCreateChatClick(CreateChatView view) {

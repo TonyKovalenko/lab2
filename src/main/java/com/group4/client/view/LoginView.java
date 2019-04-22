@@ -41,7 +41,6 @@ public class LoginView extends View {
 
     @FXML
     public void onRegisterClick() {
-        System.out.println(controller);
         controller.register();
     }
 

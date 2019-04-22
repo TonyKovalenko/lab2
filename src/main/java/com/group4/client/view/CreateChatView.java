@@ -11,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -37,18 +38,10 @@ public class CreateChatView extends View {
 
     public static CreateChatView getInstance() {
         try {
-            instance = (CreateChatView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/createChatView.fxml", "Create chat");
-            Controller controller = Controller.getInstance();
-            instance.setController(controller);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return instance;
-    }
-
-    public static CreateChatView getInstance(Stage stage) {
-        try {
-            instance = (CreateChatView) View.loadViewFromFxml(stage, "/createChatView.fxml", "Create chat");
+            Stage dialogStage = new Stage();
+            dialogStage.initOwner(Controller.getInstance().getStage());
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            instance = (CreateChatView) View.loadViewFromFxml(dialogStage, "/createChatView.fxml", "Create chat");
             Controller controller = Controller.getInstance();
             instance.setController(controller);
         } catch (IOException e) {
@@ -97,7 +90,6 @@ public class CreateChatView extends View {
             groupFieldsPane.setVisible(false);
             usersListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             usersListView.setItems(usersWithoutPrivateChat);
-
         } else {
             groupFieldsPane.setVisible(true);
             usersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
