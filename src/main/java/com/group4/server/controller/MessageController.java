@@ -184,9 +184,17 @@ class MessageController {
                     break;
                 case CHAT_UPDATE_REQUEST:
                     ChatUpdateMessageRequest chatUpdateRequest = (ChatUpdateMessageRequest) requestMessage.getEncapsulatedMessage();
+                    ChatRoom updatedChatRoom = ChatRoomsContainer.INSTANCE.getChatRoomById(chatUpdateRequest.getChatRoomId());
+                    ChatUpdateMessageResponse chatUpdateMessageResponse = ChatRoomProcessorHandler.INSTANCE.handle(chatUpdateRequest, marshaller);
                     log.info("Chat update requested  chatId:[" + chatUpdateRequest.getChatRoomId() + "]");
-                    TransmittableMessage chatUpdateResponse = ChatRoomProcessorHandler.INSTANCE.handle(chatUpdateRequest, marshaller);
-                    sendResponse(chatUpdateResponse, out, stringWriter);
+                    Set<User> members = updatedChatRoom.getMembers();
+                    for (User user : members) {
+                        PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
+                        if(userStream != null) {
+                            sendResponse(chatUpdateRequest, userStream, stringWriter);
+                        }
+                    }
+                    break;
                 case PING:
                     PingMessage pingRequest = (PingMessage) requestMessage.getEncapsulatedMessage();
                     TransmittableMessage pingMessageResponse = new PingMessage(pingRequest.getUserNickname(), true);
