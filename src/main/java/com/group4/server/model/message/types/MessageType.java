@@ -23,7 +23,6 @@ public enum MessageType {
     USER_DISCONNECT,
     PING,
     CHAT_SUSPENSION,
-    LEAVE_CHAT_ROOM,
     DELETE_USER_REQUEST,
     DELETE_USER_RESPONSE,
     SET_BAN_STATUS,
@@ -49,7 +48,6 @@ public enum MessageType {
         put(UserLogoutMessage.class.getSimpleName(), USER_LOGOUT);
         put(UserDisconnectMessage.class.getSimpleName(), USER_DISCONNECT);
         put(ChatSuspensionMessage.class.getSimpleName(), CHAT_SUSPENSION);
-        put(LeaveChatRoomMessage.class.getSimpleName(), LEAVE_CHAT_ROOM);
         put(DeleteUserRequest.class.getSimpleName(), DELETE_USER_REQUEST);
         put(SetBanStatusMessage.class.getSimpleName(), SET_BAN_STATUS);
     }};

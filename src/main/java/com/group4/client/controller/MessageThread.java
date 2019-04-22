@@ -32,7 +32,7 @@ public class MessageThread extends Thread {
             RegistrationRequest.class, RegistrationResponse.class,
             AuthorizationRequest.class, AuthorizationResponse.class,
             ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
-            ChatInvitationMessage.class, ChatSuspensionMessage.class, LeaveChatRoomMessage.class,
+            ChatInvitationMessage.class, ChatSuspensionMessage.class,
             OnlineListMessage.class,
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
             ChatUpdateMessage.class, ChatUpdateMessageResponse.class,

@@ -374,7 +374,9 @@ public class Controller extends Application {
     public void leaveChatRoom() {
         ChatInfoView view = ChatInfoView.getInstance();
         ChatRoom room = mainView.getSelectedChatRoom();
-        LeaveChatRoomMessage message = new LeaveChatRoomMessage(room.getId(), currentUser.getNickname());
+        List<User> membersToDelete = new ArrayList<>();
+        membersToDelete.add(currentUser);
+        ChatUpdateMessage message = new ChatUpdateMessage(room.getId(), null, null, membersToDelete);
         thread.sendMessage(message);
         view.close();
     }

@@ -55,8 +55,7 @@ public class GroupMemberListCellView extends ListCell<User> {
             if ((user.equals(currentUser)
                     || !currentUser.getNickname().equals(room.getAdminNickname())
                     || room.getId() == 1)
-                    && room.isMemberPresent(user.getNickname())) {
-                System.out.println(user + " deletebutton remove");
+                    /*|| !room.isMemberPresent(user.getNickname())*/) {
                 stackPane.getChildren().remove(imageView);
             }
             setText(null);

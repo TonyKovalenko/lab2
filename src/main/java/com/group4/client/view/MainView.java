@@ -77,6 +77,9 @@ public class MainView extends View {
                     infoImageButton.setVisible(true);
                 }
                 chatMessageListView.scrollTo(chatMessageListView.getItems().size()-1);
+            } else {
+                chatName.setText(null);
+                infoImageButton.setVisible(false);
             }
         });
     }

@@ -16,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatInfoView extends View {
@@ -84,6 +85,7 @@ public class ChatInfoView extends View {
         this.chatRoom = chatRoom;
         groupNameTextField.setText(chatRoom.getName());
         ObservableList<User> users = FXCollections.observableArrayList(chatRoom.getMembers());
+        users.sort(Comparator.comparing(User::getNickname));
         usersListView.setItems(users);
         System.out.println(chatRoom);
         addMemberButton.setVisible(!(chatRoom.getId() == 1));
