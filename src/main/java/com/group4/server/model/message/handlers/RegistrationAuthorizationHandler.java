@@ -41,7 +41,6 @@ public enum RegistrationAuthorizationHandler {
             Unmarshaller unmarshaller = context.createUnmarshaller();
             adapter = (UserDataContainerAdapter) unmarshaller.unmarshal(br);
             nicknameToUser = adapter.getNicknameToUser();
-            nicknameToUser.forEach((k, v) -> System.out.println(k + " - " + v));
             log.info("User data container loaded from a file [" + marshallFilePath + "]");
         } catch (IOException | JAXBException ex) {
             log.error("Error while unmarshalling user data container from file " + marshallFilePath + " " + ex);

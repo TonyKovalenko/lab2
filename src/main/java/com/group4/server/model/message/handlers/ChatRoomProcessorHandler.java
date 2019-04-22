@@ -23,7 +23,7 @@ public enum ChatRoomProcessorHandler {
         return new ChatRoomCreationResponse(creationIsSuccessful, newChatRoom);
     }
 
-    public <T extends ChatUpdateMessageRequest> ChatUpdateMessageResponse handle(T chatUpdateMessage, Marshaller marshaller) {
+    public <T extends ChatUpdateMessage> ChatUpdateMessageResponse handle(T chatUpdateMessage, Marshaller marshaller) {
         ChatRoom roomToUpdate = ChatRoomsContainer.INSTANCE.getChatRoomById(chatUpdateMessage.getChatRoomId());
         long roomId = chatUpdateMessage.getChatRoomId();
         if (roomToUpdate == null) {

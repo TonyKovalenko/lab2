@@ -32,7 +32,7 @@ class MessageController {
             ChatMessage.class,
             ChatRoomCreationRequest.class,
             ChatRoomCreationResponse.class,
-            ChatUpdateMessageRequest.class,
+            ChatUpdateMessage.class,
             ChatUpdateMessageResponse.class,
             OnlineListMessage.class,
             PingMessage.class,
@@ -112,8 +112,6 @@ class MessageController {
                     log.info("New user registration from:[" + registrationRequest.getUserNickname() + "]");
                     if (registrationResponse.isRegistrationSuccessful()) {
                         User user = new User(registrationRequest.getUserNickname(), registrationRequest.getPassword(), registrationRequest.getFullName());
-                        UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
-                        ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
                         log.info("Confirmed user registration from:[" + user.getNickname() + "]");
                     } else {
                         log.info("Denied user registration");
@@ -183,15 +181,15 @@ class MessageController {
                     sendResponse(allUsersResponse, out, stringWriter);
                     break;
                 case CHAT_UPDATE_REQUEST:
-                    ChatUpdateMessageRequest chatUpdateRequest = (ChatUpdateMessageRequest) requestMessage.getEncapsulatedMessage();
-                    ChatRoom updatedChatRoom = ChatRoomsContainer.INSTANCE.getChatRoomById(chatUpdateRequest.getChatRoomId());
-                    ChatRoomProcessorHandler.INSTANCE.handle(chatUpdateRequest, marshaller);
-                    log.info("Chat update requested  chatId:[" + chatUpdateRequest.getChatRoomId() + "]");
+                    ChatUpdateMessage chatUpdate = (ChatUpdateMessage) requestMessage.getEncapsulatedMessage();
+                    ChatRoom updatedChatRoom = ChatRoomsContainer.INSTANCE.getChatRoomById(chatUpdate.getChatRoomId());
+                    ChatRoomProcessorHandler.INSTANCE.handle(chatUpdate, marshaller);
+                    log.info("Chat update requested  chatId:[" + chatUpdate.getChatRoomId() + "]");
                     Set<User> members = updatedChatRoom.getMembers();
                     for (User user : members) {
                         PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
                         if(userStream != null) {
-                            sendResponse(chatUpdateRequest, userStream, stringWriter);
+                            sendResponse(chatUpdate, userStream, stringWriter);
                         }
                     }
                     break;
