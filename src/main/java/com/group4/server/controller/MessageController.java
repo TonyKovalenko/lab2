@@ -247,6 +247,7 @@ class MessageController {
                         if (userStream != null) {
                             sendResponse(deleteUserResponse, userStream, stringWriter);
                         }
+                        UserStreamContainer.INSTANCE.deleteUser(userToDelete.getUserNickname());
                     }
                     if (adminStream != null) {
                         sendResponse(deleteUserResponse, adminStream, stringWriter);
