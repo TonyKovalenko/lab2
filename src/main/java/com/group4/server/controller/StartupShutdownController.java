@@ -111,12 +111,13 @@ public class StartupShutdownController {
                         saveData(marshaller);
                         serverController.interrupt();
                     }
-                    System.out.println("EXITED FROM SERVER CONSOLE");
+                    System.out.println("Waiting all user to logout...");
                     break;
                 default:
                     System.out.print("Incorrect input, please retry.");
             }
         } while (!exitAction);
+        System.out.println("EXITED FROM SERVER CONSOLE");
     }
 
     private String getTrimmedInput() {
