@@ -83,7 +83,7 @@ public class DialogWindow {
     public static boolean showConfirmationWindow(String header, String text) {
         showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION, "OK");
         Optional<ButtonType> result = lastInstance.showAndWait();
-        return result.get() == ButtonType.OK;
+        return result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE;
     }
 
     public static Alert getLastInstance() {

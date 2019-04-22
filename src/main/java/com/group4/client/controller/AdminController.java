@@ -4,9 +4,7 @@ import com.group4.client.view.AdminPanelView;
 import com.group4.client.view.DialogWindow;
 import com.group4.client.view.EditProfileView;
 import com.group4.server.model.entities.User;
-import com.group4.server.model.message.types.ChangeCredentialsResponse;
-import com.group4.server.model.message.types.GetAllUsersRequest;
-import com.group4.server.model.message.types.GetAllUsersResponse;
+import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
 
@@ -32,15 +30,14 @@ public class AdminController {
     }
 
     public void banUser(User selectedUser) {
-
+        sendSetBanMessage(selectedUser, true);
     }
 
     public void deleteUser(User selectedUser) {
-        if (selectedUser != null) {
-            if (DialogWindow.showConfirmationWindow("Are you sure to delete this user?", selectedUser.toString())) {
-
-                //allUsers.remove(selectedUser.getId());
-            }
+        if (selectedUser != null && DialogWindow.showConfirmationWindow("Are you sure to delete this user?", selectedUser.toString())) {
+            DeleteUserRequest request = new DeleteUserRequest(selectedUser.getNickname());
+            System.out.println(request);
+            Controller.getInstance().getThread().sendMessage(request);
         }
     }
 
@@ -51,7 +48,7 @@ public class AdminController {
     }
 
     public void unbanUser(User selectedUser) {
-
+        sendSetBanMessage(selectedUser, false);
     }
 
     public void processMessage(MessageWrapper message) {
@@ -70,13 +67,24 @@ public class AdminController {
                     User user = changeCredentialsResponse.getUser();
                     allUsers.put(user.getNickname(), user);
                     Platform.runLater(() -> {
-                        DialogWindow.showInfoWindow("Credentials change was confirmed");
-                        EditProfileView.getInstance().cancel();
+                        if (!user.equals(Controller.getInstance().getCurrentUser())) {
+                            DialogWindow.showInfoWindow("Credentials change was confirmed");
+                            EditProfileView.getInstance().cancel();
+                        }
                         view.setUsers(allUsers.values());
                     });
                 } else {
                     Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
                 }
+                break;
+            case SET_BAN_STATUS:
+                SetBanStatusMessage setBanStatusMessage = (SetBanStatusMessage) message.getEncapsulatedMessage();
+                allUsers.get(setBanStatusMessage.getUserNickname()).setBanned(setBanStatusMessage.isBanned());
+                Platform.runLater(() -> view.setUsers(allUsers.values()));
+            case DELETE_USER_RESPONSE:
+                DeleteUserResponse deleteUserResponse = (DeleteUserResponse) message.getEncapsulatedMessage();
+                allUsers.remove(deleteUserResponse.getUserNickname());
+                Platform.runLater(() -> view.setUsers(allUsers.values()));
             default:
                 break;
         }
@@ -85,5 +93,10 @@ public class AdminController {
     public void sendAllUsersRequest() {
         GetAllUsersRequest request = new GetAllUsersRequest();
         Controller.getInstance().getThread().sendMessage(request);
+    }
+
+    private void sendSetBanMessage(User selectedUser, boolean isBanned) {
+        SetBanStatusMessage message = new SetBanStatusMessage(selectedUser.getNickname(), isBanned);
+        Controller.getInstance().getThread().sendMessage(message);
     }
 }

@@ -13,14 +13,12 @@ public class RegistrationResponse implements TransmittableMessage {
     @XmlElement
     private boolean registrationState;
 
-
     public RegistrationResponse() {
     }
 
     public RegistrationResponse(boolean registrationState) {
         this.registrationState = registrationState;
     }
-
 
     public boolean isRegistrationSuccessful() {
         return registrationState;

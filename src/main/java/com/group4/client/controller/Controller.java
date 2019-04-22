@@ -177,6 +177,27 @@ public class Controller extends Application {
             case CHAT_SUSPENSION:
                 ChatSuspensionMessage chatSuspensionMessage = (ChatSuspensionMessage) responseMessage.getEncapsulatedMessage();
                 chatRooms.remove(chatSuspensionMessage.getChatId());
+                break;
+            case SET_BAN_STATUS:
+                SetBanStatusMessage setBanStatusMessage = (SetBanStatusMessage) responseMessage.getEncapsulatedMessage();
+                if (setBanStatusMessage.getUserNickname().equals(currentUser.getNickname())) {
+                    currentUser.setBanned(setBanStatusMessage.isBanned());
+                }
+                if (AdminPanelView.isOpened()) {
+                    AdminController.getInstance().processMessage(responseMessage);
+                }
+                break;
+            case DELETE_USER_RESPONSE:
+                DeleteUserResponse deleteUserResponse = (DeleteUserResponse) responseMessage.getEncapsulatedMessage();
+                if (deleteUserResponse.getUserNickname().equals(currentUser.getNickname())) {
+                    Platform.runLater(() -> DialogWindow.showWarningWindow("Your profile was deleted", null));
+                    currentUser = null;
+                    logout();
+                }
+                if (AdminPanelView.isOpened()) {
+                    AdminController.getInstance().processMessage(responseMessage);
+                }
+                break;
             default:
                 break;
         }
@@ -195,15 +216,21 @@ public class Controller extends Application {
     }
 
     public void logout() {
-        thread.sendMessage(new UserLogoutMessage(currentUser.getNickname()));
+        if (currentUser != null) {
+            thread.sendMessage(new UserLogoutMessage(currentUser.getNickname()));
+            currentUser = null;
+        }
         LoginView.getInstance().showStage();
-        currentUser = null;
         users = new HashMap<>();
         chatRooms = new HashMap<>();
     }
 
     public void sendMessageToChat() {
         if (mainView.getSelectedChatRoom() == null) {
+            return;
+        }
+        if (mainView.getSelectedChatRoom().getId() == 1 && currentUser.isBanned()) {
+            DialogWindow.showWarningWindow("You are banned by admin", null);
             return;
         }
         String text = mainView.getMessageInput().trim();

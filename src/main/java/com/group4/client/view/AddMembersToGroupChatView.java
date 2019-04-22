@@ -47,7 +47,7 @@ public class AddMembersToGroupChatView extends View{
     }
 
     @FXML
-    private void handleAddClick() {
+    public void handleAddClick() {
         controller.addMembersToGroupChat();
     }
 

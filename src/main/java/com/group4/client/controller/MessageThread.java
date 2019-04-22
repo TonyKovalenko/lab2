@@ -37,8 +37,9 @@ public class MessageThread extends Thread {
             ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
             ChatUpdateMessageRequest.class, ChatUpdateMessageResponse.class,
             GetAllUsersRequest.class, GetAllUsersResponse.class,
-            UserLogoutMessage.class, UserDisconnectMessage.class
-    };
+            UserLogoutMessage.class, UserDisconnectMessage.class,
+            DeleteUserRequest.class, DeleteUserResponse.class, SetBanStatusMessage.class
+};
     private JAXBContext context;
     private ReconnectionThread reconnectionThread;
 
