@@ -71,11 +71,9 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                ", nickname='" + nickname + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        return "nickname: " + nickname + '\'' +
+                ", fullName: " + fullName + '\'' +
+                ", password: " + password + '\'';
     }
 
     public boolean isAdmin() {

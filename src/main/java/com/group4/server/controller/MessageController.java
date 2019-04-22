@@ -226,13 +226,21 @@ class MessageController {
                     SetBanStatusMessage setBanStatus = (SetBanStatusMessage) requestMessage.getEncapsulatedMessage();
                     log.info("User ban message for [" + setBanStatus.getUserNickname() + "]");
                     RegistrationAuthorizationHandler.INSTANCE.getUser(setBanStatus.getUserNickname()).setBanned(setBanStatus.isBanned());
+                    PrintWriter adminStream = UserStreamContainer.INSTANCE.getStream("admin");
+                    if (adminStream != null) {
+                        sendResponse(setBanStatus, adminStream, stringWriter);
+                    }
+                    PrintWriter bannedUserStream = UserStreamContainer.INSTANCE.getStream(setBanStatus.getUserNickname());
+                    if (bannedUserStream != null) {
+                        sendResponse(setBanStatus, bannedUserStream, stringWriter);
+                    }
                     break;
                 case DELETE_USER_REQUEST:
                     DeleteUserRequest userToDelete = (DeleteUserRequest) requestMessage.getEncapsulatedMessage();
                     ChatInvitationsContainer.INSTANCE.removeInvitations(userToDelete.getUserNickname());
                     ChatRoomsContainer.INSTANCE.deleteUserFromChatRooms(userToDelete.getUserNickname());
                     boolean wasDeleted = RegistrationAuthorizationHandler.INSTANCE.deleteUser(userToDelete.getUserNickname());
-                    PrintWriter adminStream = UserStreamContainer.INSTANCE.getStream("admin");
+                    adminStream = UserStreamContainer.INSTANCE.getStream("admin");
                     TransmittableMessage deleteUserResponse = new DeleteUserResponse(userToDelete.getUserNickname(), wasDeleted);
                     if (wasDeleted) {
                         PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(userToDelete.getUserNickname());
@@ -240,7 +248,9 @@ class MessageController {
                             sendResponse(deleteUserResponse, userStream, stringWriter);
                         }
                     }
-                    sendResponse(deleteUserResponse, adminStream, stringWriter);
+                    if (adminStream != null) {
+                        sendResponse(deleteUserResponse, adminStream, stringWriter);
+                    }
                     break;
                 case USER_DISCONNECT:
                     isConnected = false;
