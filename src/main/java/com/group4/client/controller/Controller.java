@@ -276,6 +276,7 @@ public class Controller extends Application {
         message.setChatId(mainView.getSelectedChatRoom().getId());
 
         thread.sendMessage(message);
+        mainView.clearMessageInput();
     }
 
     public void showCreateNewChatDialog() {

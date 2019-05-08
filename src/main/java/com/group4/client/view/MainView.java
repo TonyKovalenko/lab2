@@ -139,4 +139,8 @@ public class MainView extends View {
     public void updateAdminPanel(boolean isAdmin) {
         adminMenu.setVisible(isAdmin);
     }
+
+    public void clearMessageInput() {
+        messageInput.clear();
+    }
 }
