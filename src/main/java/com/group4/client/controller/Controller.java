@@ -259,6 +259,7 @@ public class Controller extends Application {
         LoginView.getInstance().showStage();
         users = new HashMap<>();
         chatRooms = new HashMap<>();
+        System.out.println("Log out");
     }
 
     public void sendMessageToChat() {

@@ -2,16 +2,20 @@ package com.group4.client.controller;
 
 import com.group4.client.view.DialogWindow;
 import com.group4.server.model.entities.User;
-import com.group4.server.model.message.types.*;
+import com.group4.server.model.message.types.PingMessage;
+import com.group4.server.model.message.types.TransmittableMessage;
+import com.group4.server.model.message.utils.MarshallingUtils;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Optional;
 import java.util.Timer;
@@ -19,7 +23,6 @@ import java.util.TimerTask;
 
 public class MessageThread extends Thread {
     private final static int DELAY = 5000;
-    private final static String lineBreakEscape = "<br />";
     private Socket socket;
     private BufferedReader reader;
     private PrintWriter writer;
@@ -28,19 +31,6 @@ public class MessageThread extends Thread {
     private int outPings;
     private boolean connected;
 
-    private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
-            RegistrationRequest.class, RegistrationResponse.class,
-            AuthorizationRequest.class, AuthorizationResponse.class,
-            ChatMessage.class, ChatRoomCreationRequest.class, ChatRoomCreationResponse.class,
-            ChatInvitationMessage.class, ChatSuspensionMessage.class,
-            OnlineListMessage.class,
-            ChangeCredentialsRequest.class, ChangeCredentialsResponse.class,
-            ChatUpdateMessage.class, ChatUpdateMessageResponse.class,
-            GetAllUsersRequest.class, GetAllUsersResponse.class,
-            UserLogoutMessage.class, UserDisconnectMessage.class,
-            DeleteUserRequest.class, DeleteUserResponse.class, SetBanStatusMessage.class
-};
-    private JAXBContext context;
     private ReconnectionThread reconnectionThread;
 
     public boolean isConnected() {
@@ -52,8 +42,10 @@ public class MessageThread extends Thread {
         while (connected) {
             try {
                 if (reader.ready()) {
-                    try (StringReader dataReader = new StringReader(reader.readLine().replaceAll(lineBreakEscape, "\n"))) {
-                        MessageWrapper message = (MessageWrapper) context.createUnmarshaller().unmarshal(dataReader);
+                    String s = reader.readLine();
+                    System.out.println("INPUT: " + s);
+                    try {
+                        MessageWrapper message = MarshallingUtils.unmarshallMessage(s);
                         System.out.println("message accepted: " + message.getMessageType());
                         switch (message.getMessageType()) {
                             case AUTHORIZATION_RESPONSE:
@@ -72,23 +64,20 @@ public class MessageThread extends Thread {
                                 Controller.getInstance().processMessage(message);
                                 break;
                         }
+                    } catch (JAXBException e) {
+                        e.printStackTrace();
                     }
                 }
-            } catch (IOException | JAXBException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
     public void connect() throws IOException {
-        try {
-            socket = new Socket("localhost", 8888);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(socket.getOutputStream(), true);
-            context = JAXBContext.newInstance(clazzes);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
+        socket = new Socket("localhost", 8888);
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        writer = new PrintWriter(socket.getOutputStream(), true);
 
         System.out.println("Connected");
         inPings = outPings = 0;
@@ -140,10 +129,9 @@ public class MessageThread extends Thread {
 
     public void sendMessage(TransmittableMessage innerMessage) {
         MessageWrapper message = new MessageWrapper(innerMessage);
-        StringWriter stringWriter = new StringWriter();
         try {
-            context.createMarshaller().marshal(message, stringWriter);
-            writer.println(stringWriter.toString().replaceAll("\n", lineBreakEscape));
+            writer.println(MarshallingUtils.marshallMessage(message));
+            System.out.println("out: " + MarshallingUtils.marshallMessage(message));
         } catch (JAXBException e) {
             e.printStackTrace();
         }
