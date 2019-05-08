@@ -393,4 +393,13 @@ public class Controller extends Application {
         thread.sendMessage(message);
         view.close();
     }
+
+    public void openMainChatRoom() {
+        List<ChatRoom> list = chatRooms.values().stream()
+                .filter(item -> !item.isPrivate())
+                .filter(item -> item.getName().equals("mainChatRoom")).collect(Collectors.toList());
+        if (list.size() == 1) {
+            Platform.runLater(() -> mainView.selectChatRoom(list.get(0)));
+        }
+    }
 }

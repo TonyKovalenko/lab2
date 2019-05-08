@@ -136,6 +136,9 @@ public class MainView extends View {
         return chatRoomsWithUser.getSelectionModel().getSelectedItem();
     }
 
+    public void selectChatRoom(ChatRoom chatRoom) {
+        chatRoomsWithUser.getSelectionModel().select(chatRoom);
+    }
     public void updateAdminPanel(boolean isAdmin) {
         adminMenu.setVisible(isAdmin);
     }
