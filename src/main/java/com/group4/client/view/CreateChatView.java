@@ -11,7 +11,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -37,17 +36,24 @@ public class CreateChatView extends View {
     private GridPane groupFieldsPane;
 
     public static CreateChatView getInstance() {
-        try {
-            Stage dialogStage = new Stage();
-            dialogStage.initOwner(Controller.getInstance().getStage());
-            dialogStage.initModality(Modality.APPLICATION_MODAL);
-            instance = (CreateChatView) View.loadViewFromFxml(dialogStage, "/createChatView.fxml", "Create chat");
-            Controller controller = Controller.getInstance();
-            instance.setController(controller);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (instance == null) {
+            try {
+                Stage dialogStage = View.newModalStage();
+                instance = (CreateChatView) View.loadViewFromFxml(dialogStage, "/createChatView.fxml", "Create chat");
+                Controller controller = Controller.getInstance();
+                instance.setController(controller);
+                instance.getStage().setOnCloseRequest(windowEvent -> {
+                    instance = null;
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return instance;
+    }
+
+    public static boolean isOpened() {
+        return instance != null;
     }
 
     public void setController(Controller controller) {
@@ -56,7 +62,8 @@ public class CreateChatView extends View {
 
     public void setOnlineUsers(Collection<User> onlineUsers) {
         this.onlineUsers = FXCollections.observableArrayList(onlineUsers);
-        usersListView.setItems(this.onlineUsers);
+        usersListView.getItems().clear();
+        usersListView.getItems().addAll(this.onlineUsers);
     }
 
     public void setUsersWithoutPrivateChat(Collection<User> usersWithoutPrivateChat) {

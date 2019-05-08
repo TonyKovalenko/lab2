@@ -12,7 +12,6 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -39,9 +38,7 @@ public class ChatInfoView extends View {
     public static ChatInfoView getInstance() {
         if (instance == null) {
             try {
-                Stage dialogStage = new Stage();
-                dialogStage.initOwner(Controller.getInstance().getStage());
-                dialogStage.initModality(Modality.APPLICATION_MODAL);
+                Stage dialogStage = View.newModalStage();
                 instance = (ChatInfoView) View.loadViewFromFxml(dialogStage, "/chatInfoView.fxml", "Chat info");
                 Controller controller = Controller.getInstance();
                 instance.setController(controller);

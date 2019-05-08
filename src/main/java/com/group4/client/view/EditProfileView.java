@@ -5,7 +5,6 @@ import com.group4.server.model.entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -30,9 +29,7 @@ public class EditProfileView extends View {
     public static EditProfileView getInstance() {
         if (instance == null) {
             try {
-                Stage dialogStage = new Stage();
-                dialogStage.initOwner(Controller.getInstance().getStage());
-                dialogStage.initModality(Modality.APPLICATION_MODAL);
+                Stage dialogStage = View.newModalStage();
                 instance = (EditProfileView) View.loadViewFromFxml(dialogStage, "/editProfile.fxml", "Edit profile");
                 Controller controller = Controller.getInstance();
                 instance.setController(controller);

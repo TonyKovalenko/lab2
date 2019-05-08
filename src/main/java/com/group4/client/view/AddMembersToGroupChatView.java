@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -24,9 +23,7 @@ public class AddMembersToGroupChatView extends View{
     public static AddMembersToGroupChatView getInstance() {
         if (instance == null) {
             try {
-                Stage dialogStage = new Stage();
-                dialogStage.initOwner(Controller.getInstance().getStage());
-                dialogStage.initModality(Modality.APPLICATION_MODAL);
+                Stage dialogStage = View.newModalStage();
                 instance = (AddMembersToGroupChatView) View.loadViewFromFxml(dialogStage, "/addMembersToGroupChatView.fxml", "Add members");
                 Controller controller = Controller.getInstance();
                 instance.setController(controller);
