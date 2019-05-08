@@ -170,7 +170,7 @@ public class Controller extends Application {
                         AdminController.getInstance().processMessage(responseMessage);
                     }
                 } else {
-                    Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
+                    DialogWindow.showErrorWindow("Credentials change was denied");
                 }
                 break;
             case CHAT_UPDATE:

@@ -1,5 +1,6 @@
 package com.group4.client.view;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -37,8 +38,10 @@ public class DialogWindow {
      * @param text   text to show in the dialog content area
      */
     public static void showWarningWindow(String header, String text) {
-        showDialogWindow("Warning!", header, text, Alert.AlertType.WARNING, "OK");
-        lastInstance.showAndWait();
+        Platform.runLater(() -> {
+            showDialogWindow("Warning!", header, text, Alert.AlertType.WARNING, "OK");
+            lastInstance.showAndWait();
+        });
     }
 
     /**
@@ -47,8 +50,10 @@ public class DialogWindow {
      * @param text text to show in the dialog content area
      */
     public static void showInfoWindow(String text) {
-        showDialogWindow("Information Dialog", null, text, Alert.AlertType.INFORMATION, "OK");
-        lastInstance.showAndWait();
+        Platform.runLater(() -> {
+            showDialogWindow("Information Dialog", null, text, Alert.AlertType.INFORMATION, "OK");
+            lastInstance.showAndWait();
+        });
     }
 
     /**
@@ -57,8 +62,10 @@ public class DialogWindow {
      * @param text text to show in the dialog content area
      */
     public static void showErrorWindow(String text) {
-        showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK");
-        lastInstance.showAndWait();
+        Platform.runLater(() -> {
+            showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK");
+            lastInstance.showAndWait();
+        });
     }
 
     /**
@@ -67,10 +74,12 @@ public class DialogWindow {
      * @param text text to show in the dialog content area
      */
     public static void showErrorWindowWithoutButtons(String text) {
-        showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK");
-        lastInstance.getButtonTypes().clear();
-        lastInstance.setResult(ButtonType.OK);
-        lastInstance.show();
+        Platform.runLater(() -> {
+            showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK");
+            lastInstance.getButtonTypes().clear();
+            lastInstance.setResult(ButtonType.OK);
+            lastInstance.show();
+        });
     }
 
     /**
@@ -81,7 +90,9 @@ public class DialogWindow {
      * @return {@code true}  if user pressed "OK" button
      */
     public static boolean showConfirmationWindow(String header, String text) {
-        showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION, "OK");
+        showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION, "Yes");
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        lastInstance.getButtonTypes().add(noButton);
         Optional<ButtonType> result = lastInstance.showAndWait();
         return result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE;
     }
