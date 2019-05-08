@@ -60,7 +60,12 @@ public class Controller extends Application {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-        Platform.runLater(() -> mainView.updateAdminPanel(currentUser.isAdmin()));
+        Platform.runLater(() -> {
+            mainView.updateAdminPanel(currentUser.isAdmin());
+            if (currentUser.isBanned()) {
+                DialogWindow.showWarningWindow(null, "You have been banned");
+            }
+        });
     }
 
     public User getUserByNickname(String nickname) {
@@ -202,6 +207,11 @@ public class Controller extends Application {
             case SET_BAN_STATUS:
                 SetBanStatusMessage setBanStatusMessage = (SetBanStatusMessage) responseMessage.getEncapsulatedMessage();
                 if (setBanStatusMessage.getUserNickname().equals(currentUser.getNickname())) {
+                    if (!currentUser.isBanned() && setBanStatusMessage.isBanned()) {
+                        DialogWindow.showWarningWindow(null, "You have been banned");
+                    } else if (currentUser.isBanned() && !setBanStatusMessage.isBanned()) {
+                        DialogWindow.showInfoWindow("You have been unbanned");
+                    }
                     currentUser.setBanned(setBanStatusMessage.isBanned());
                 }
                 if (AdminPanelView.isOpened()) {
