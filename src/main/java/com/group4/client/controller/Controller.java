@@ -123,6 +123,13 @@ public class Controller extends Application {
         switch (responseMessage.getMessageType()) {
             case ONLINE_LIST:
                 OnlineListMessage onlineListMessage = (OnlineListMessage) responseMessage.getEncapsulatedMessage();
+                if (onlineListMessage.getUsers().stream().anyMatch(item -> item.isAdmin() && !currentUser.isAdmin())
+                        && users.values().stream().noneMatch(item -> item.isAdmin())) {
+                    DialogWindow.showInfoWindow("Admin had entered the chat");
+                } else if (!onlineListMessage.getUsers().stream().anyMatch(item -> item.isAdmin())
+                            && users.values().stream().anyMatch(item -> item.isAdmin())) {
+                    DialogWindow.showInfoWindow("Admin had left the chat");
+                }
                 users = new HashMap<>();
                 for (User user : onlineListMessage.getUsers()) {
                     users.put(user.getNickname(), user);
