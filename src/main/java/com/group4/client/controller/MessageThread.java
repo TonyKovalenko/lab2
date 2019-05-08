@@ -99,25 +99,29 @@ public class MessageThread extends Thread {
     }
 
     public void disconnect() {
-        try {
-            connected = false;
-            if (reconnectionThread != null) {
-                reconnectionThread.finishReconnecting();
-            }
-            if (pingTimer != null) {
-                pingTimer.cancel();
-            }
-            if (socket != null) {
+        connected = false;
+        if (reconnectionThread != null) {
+            reconnectionThread.finishReconnecting();
+        }
+        if (pingTimer != null) {
+            pingTimer.cancel();
+        }
+        if (socket != null) {
+            try {
                 socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (reader != null) {
+        }
+        if (reader != null) {
+            try {
                 reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (writer != null) {
-                writer.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        if (writer != null) {
+            writer.close();
         }
         System.out.println("Disconnected");
     }
