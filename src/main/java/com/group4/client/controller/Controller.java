@@ -141,6 +141,9 @@ public class Controller extends Application {
                 }
                 users.remove(currentUser.getNickname());
                 updateOnlineUsersView();
+                if (CreateChatView.isOpened()) {
+                    Platform.runLater(() -> CreateChatView.getInstance().setOnlineUsers(users.values()));
+                }
                 break;
             case CHAT_CREATION_RESPONSE:
                 ChatRoomCreationResponse chatRoomCreationResponse = (ChatRoomCreationResponse) responseMessage.getEncapsulatedMessage();
