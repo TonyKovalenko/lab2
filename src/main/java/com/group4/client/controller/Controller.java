@@ -8,12 +8,14 @@ import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Controller extends Application {
+    private static final Logger log = Logger.getLogger(Controller.class);
     private Stage stage;
     private MainView mainView;
     private MessageThread thread;
@@ -94,19 +96,7 @@ public class Controller extends Application {
     }
 
     /**
-     * The main entry point for all JavaFX applications.
-     * The start method is called after the init method has returned,
-     * and after the system is ready for the application to begin running.
-     *
-     * <p>
-     * NOTE: This method is called on the JavaFX Application Thread.
-     * </p>
-     *
-     * @param primaryStage the primary stage for this application, onto which
-     *                     the application scene can be set. The primary stage will be embedded in
-     *                     the browser if the application was launched as an applet.
-     *                     Applications may create other stages, if needed, but they will not be
-     *                     primary stages and will not be embedded in the browser.
+     * {@inheritDoc}
      */
     @Override
     public void start(Stage primaryStage) {
@@ -119,6 +109,7 @@ public class Controller extends Application {
             thread.connect();
             thread.start();
         } catch (IOException e) {
+            log.info("Can't connect to server. Start reconnecting");
             thread.reconnect();
         }
     }

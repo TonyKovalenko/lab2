@@ -5,10 +5,12 @@ import com.group4.client.controller.RegistrationController;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class RegistrationView extends View {
+    private static final Logger log = Logger.getLogger(RegistrationView.class);
     private static RegistrationView instance;
     private RegistrationController controller;
 
@@ -31,7 +33,8 @@ public class RegistrationView extends View {
             registrationController.setView(instance);
             instance.setController(registrationController);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Can't get instance of RegistrationView.", e);
+            throw new RuntimeException("Can't get instance of RegistrationView.", e);
         }
         return instance;
     }

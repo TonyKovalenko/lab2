@@ -8,12 +8,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 public class AddMembersToGroupChatView extends View{
+    private static final Logger log = Logger.getLogger(AddMembersToGroupChatView.class);
     private static AddMembersToGroupChatView instance;
     private Controller controller;
 
@@ -28,7 +30,8 @@ public class AddMembersToGroupChatView extends View{
                 Controller controller = Controller.getInstance();
                 instance.setController(controller);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Can't get instance of AddMembersToGroupChatView.", e);
+                throw new RuntimeException("Can't get instance of AddMembersToGroupChatView.", e);
             }
         }
         return instance;

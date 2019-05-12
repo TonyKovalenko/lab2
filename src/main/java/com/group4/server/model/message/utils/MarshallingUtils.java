@@ -2,6 +2,7 @@ package com.group4.server.model.message.utils;
 
 import com.group4.server.model.message.types.*;
 import com.group4.server.model.message.wrappers.MessageWrapper;
+import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -9,6 +10,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 public class MarshallingUtils {
+    private static final Logger log = Logger.getLogger(MarshallingUtils.class);
     private final static String lineBreakEscape = "<br />";
     private static Class<?>[] clazzes = {MessageWrapper.class, PingMessage.class,
             RegistrationRequest.class, RegistrationResponse.class,
@@ -28,7 +30,7 @@ public class MarshallingUtils {
         try {
             context = JAXBContext.newInstance(clazzes);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            log.error("Can't create JAXB context.");
         }
     }
 

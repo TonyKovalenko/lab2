@@ -10,10 +10,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class GroupMemberListCellView extends ListCell<User> {
+    private static final Logger log = Logger.getLogger(GroupMemberListCellView.class);
     @FXML
     private StackPane stackPane;
 
@@ -35,7 +37,8 @@ public class GroupMemberListCellView extends ListCell<User> {
             try {
                 mLLoader.load();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Can't load GroupMemberListCellView from resources.", e);
+                throw new RuntimeException("Can't load GroupMemberListCellView from resources.", e);
             }
         }
     }

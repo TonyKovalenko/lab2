@@ -6,10 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class MessagesListCellView extends ListCell<ChatMessage> {
+    private static final Logger log = Logger.getLogger(MessagesListCellView.class);
 
     @FXML
     private VBox vbox;
@@ -23,6 +25,16 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
     private FXMLLoader mLLoader;
 
     public MessagesListCellView() {
+        if (mLLoader == null) {
+            mLLoader = new FXMLLoader(getClass().getResource("/messagesListCellView.fxml"));
+            mLLoader.setController(this);
+            try {
+                mLLoader.load();
+            } catch (IOException e) {
+                log.error("Can't load MessagesListCellView from resources.", e);
+                throw new RuntimeException("Can't load MessagesListCellView from resources.", e);
+            }
+        }
         prefWidthProperty().bind(widthProperty());
     }
 
@@ -34,16 +46,6 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
             setText(null);
             setGraphic(null);
         } else {
-            if (mLLoader == null) {
-                mLLoader = new FXMLLoader(getClass().getResource("/messagesListCellView.fxml"));
-                mLLoader.setController(this);
-                try {
-                    mLLoader.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
             nameLabel.setText(message.getSender());
             messageTextLabel.setText(message.getText());
 

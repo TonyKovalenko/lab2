@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBException;
 import java.io.BufferedReader;
@@ -22,6 +23,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MessageThread extends Thread {
+    private static final Logger log = Logger.getLogger(MessageThread.class);
     private final static int DELAY = 5000;
     private Socket socket;
     private BufferedReader reader;
@@ -46,7 +48,7 @@ public class MessageThread extends Thread {
                     System.out.println("INPUT: " + s);
                     try {
                         MessageWrapper message = MarshallingUtils.unmarshallMessage(s);
-                        System.out.println("message accepted: " + message.getMessageType());
+                        log.info("Message accepted: " + message.getMessageType());
                         switch (message.getMessageType()) {
                             case AUTHORIZATION_RESPONSE:
                                 LoginController.getInstance().processMessage(message);
@@ -65,11 +67,11 @@ public class MessageThread extends Thread {
                                 break;
                         }
                     } catch (JAXBException e) {
-                        e.printStackTrace();
+                        log.error("Can't unwrap incoming message from server.", e);
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("IOException happened while trying to read incoming message from server", e);
             }
         }
     }
@@ -79,7 +81,7 @@ public class MessageThread extends Thread {
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         writer = new PrintWriter(socket.getOutputStream(), true);
 
-        System.out.println("Connected");
+        log.info("Connected");
         inPings = outPings = 0;
         connected = true;
         pingTimer = new Timer();
@@ -96,34 +98,40 @@ public class MessageThread extends Thread {
                 }
             }
         }, DELAY, DELAY);
+        log.info("Ping timer is scheduled");
     }
 
     public void disconnect() {
         connected = false;
         if (reconnectionThread != null) {
             reconnectionThread.finishReconnecting();
+            log.info("Finished reconnecting.");
         }
         if (pingTimer != null) {
             pingTimer.cancel();
+            log.info("Ping timer is canceled");
         }
         if (socket != null) {
             try {
                 socket.close();
+                log.info("Socket is closed");
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("IOException happened while trying to close socket", e);
             }
         }
         if (reader != null) {
             try {
                 reader.close();
+                log.info("Socket reader is closed");
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("IOException happened while trying to close socket reader", e);
             }
         }
         if (writer != null) {
             writer.close();
+            log.info("Socket writer is closed");
         }
-        System.out.println("Disconnected");
+        log.info("Disconnected from server");
     }
 
     public void reconnect() {
@@ -135,9 +143,8 @@ public class MessageThread extends Thread {
         MessageWrapper message = new MessageWrapper(innerMessage);
         try {
             writer.println(MarshallingUtils.marshallMessage(message));
-            System.out.println("out: " + MarshallingUtils.marshallMessage(message));
         } catch (JAXBException e) {
-            e.printStackTrace();
+            log.error("Can't wrap and send outcoming message.", e);
         }
     }
 
@@ -159,14 +166,15 @@ public class MessageThread extends Thread {
                     }
                     Platform.runLater(() -> DialogWindow.getLastInstance().close());
                 } catch (IOException e) {
-                    System.out.println("Still can't connect!");
+                    log.info("Still can't connect!");
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e1) {
-                        e1.printStackTrace();
+                        log.error("Some thread has interrupted the ReconnectionThread.", e1);
                     }
                 }
             }
+            log.info("Finished reconnecting.");
         }
 
         public void reconnect() {
@@ -183,6 +191,7 @@ public class MessageThread extends Thread {
             });
             isRunning = true;
             this.start();
+            log.info("Started reconnection.");
         }
 
         public void finishReconnecting() {

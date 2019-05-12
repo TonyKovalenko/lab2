@@ -12,12 +12,14 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
 public class CreateChatView extends View {
+    private static final Logger log = Logger.getLogger(CreateChatView.class);
     private static CreateChatView instance;
     private Controller controller;
     private ObservableList<User> onlineUsers;
@@ -46,7 +48,8 @@ public class CreateChatView extends View {
                     instance = null;
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Can't get instance of CreateChatView.", e);
+                throw new RuntimeException("Can't get instance of CreateChatView.", e);
             }
         }
         return instance;

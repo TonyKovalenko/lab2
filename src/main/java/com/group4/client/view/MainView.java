@@ -14,11 +14,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Collection;
 
 public class MainView extends View {
+    private static final Logger log = Logger.getLogger(MainView.class);
     private static MainView instance;
     private Controller controller;
 
@@ -50,7 +52,8 @@ public class MainView extends View {
             controller.setView(instance);
             instance.setController(controller);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Can't get instance of MainView.", e);
+            throw new RuntimeException("Can't get instance of MainView.", e);
         }
         return instance;
     }

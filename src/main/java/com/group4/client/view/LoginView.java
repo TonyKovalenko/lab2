@@ -5,10 +5,12 @@ import com.group4.client.controller.LoginController;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class LoginView extends View {
+    private static final Logger log = Logger.getLogger(LoginView.class);
     private static LoginView instance;
     private LoginController controller;
 
@@ -25,7 +27,8 @@ public class LoginView extends View {
             loginController.setView(instance);
             instance.setController(loginController);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Can't get instance of LoginView.", e);
+            throw new RuntimeException("Can't get instance of LoginView.", e);
         }
         return instance;
     }

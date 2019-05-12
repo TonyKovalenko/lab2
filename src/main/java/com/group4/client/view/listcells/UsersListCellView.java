@@ -8,10 +8,12 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class UsersListCellView extends ListCell<User> {
+    private static final Logger log = Logger.getLogger(UsersListCellView.class);
 
     @FXML
     private HBox hbox;
@@ -27,6 +29,19 @@ public class UsersListCellView extends ListCell<User> {
 
     private FXMLLoader mLLoader;
 
+    public UsersListCellView() {
+        if (mLLoader == null) {
+            mLLoader = new FXMLLoader(getClass().getResource("/usersListCellView.fxml"));
+            mLLoader.setController(this);
+            try {
+                mLLoader.load();
+            } catch (IOException e) {
+                log.error("Can't load UsersListCellView from resources.", e);
+                throw new RuntimeException("Can't load UsersListCellView from resources.", e);
+            }
+        }
+    }
+
     @Override
     protected void updateItem(User user, boolean empty) {
         super.updateItem(user, empty);
@@ -35,17 +50,6 @@ public class UsersListCellView extends ListCell<User> {
             setText(null);
             setGraphic(null);
         } else {
-            if (mLLoader == null) {
-                mLLoader = new FXMLLoader(getClass().getResource("/usersListCellView.fxml"));
-                mLLoader.setController(this);
-                try {
-                    mLLoader.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
             userImageView.setImage(new Image("/user0.png"));
             nicknameLabel.setText(user.getNickname());
             fullnameLabel.setText(user.getFullName());

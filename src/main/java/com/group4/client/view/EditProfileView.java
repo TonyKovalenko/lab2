@@ -6,10 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class EditProfileView extends View {
+    private static final Logger log = Logger.getLogger(EditProfileView.class);
     private static EditProfileView instance;
     private Controller controller;
     private User user;
@@ -37,7 +39,8 @@ public class EditProfileView extends View {
                     instance = null;
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Can't get instance of EditProfileView.", e);
+                throw new RuntimeException("Can't get instance of EditProfileView.", e);
             }
         }
         return instance;

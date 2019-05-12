@@ -9,10 +9,12 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class ChatListCellView extends ListCell<ChatRoom> {
+    private static final Logger log = Logger.getLogger(ChatListCellView.class);
     @FXML
     private ImageView chatImageView;
 
@@ -24,6 +26,19 @@ public class ChatListCellView extends ListCell<ChatRoom> {
 
     private FXMLLoader mLLoader;
 
+    public ChatListCellView() {
+        if (mLLoader == null) {
+            mLLoader = new FXMLLoader(getClass().getResource("/chatListCellView.fxml"));
+            mLLoader.setController(this);
+            try {
+                mLLoader.load();
+            } catch (IOException e) {
+                log.error("Can't load ChatListCellView from resources.", e);
+                throw new RuntimeException("Can't load ChatListCellView from resources.", e);
+            }
+        }
+    }
+
     @Override
     protected void updateItem(ChatRoom chatRoom, boolean empty) {
         super.updateItem(chatRoom, empty);
@@ -32,17 +47,6 @@ public class ChatListCellView extends ListCell<ChatRoom> {
             setText(null);
             setGraphic(null);
         } else {
-            if (mLLoader == null) {
-                mLLoader = new FXMLLoader(getClass().getResource("/chatListCellView.fxml"));
-                mLLoader.setController(this);
-                try {
-                    mLLoader.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
             if (chatRoom.isPrivate()) {
                 chatNameLabel.setText(chatRoom.getOtherMember(Controller.getInstance().getCurrentUser()).getFullName());
                 chatImageView.setImage(new Image("/user0.png"));
@@ -50,7 +54,6 @@ public class ChatListCellView extends ListCell<ChatRoom> {
                 chatNameLabel.setText(chatRoom.getName());
                 chatImageView.setImage(new Image("/users0.png"));
             }
-
             setText(null);
             setGraphic(hbox);
         }

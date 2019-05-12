@@ -8,11 +8,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Collection;
 
 public class AdminPanelView extends View {
+    private static final Logger log = Logger.getLogger(AdminPanelView.class);
     public static AdminPanelView instance;
     private AdminController controller;
 
@@ -43,7 +45,8 @@ public class AdminPanelView extends View {
                     instance = null;
                 });
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Can't get instance of AdminPanelView.", e);
+                throw new RuntimeException("Can't get instance of AdminPanelView.", e);
             }
         }
         return instance;

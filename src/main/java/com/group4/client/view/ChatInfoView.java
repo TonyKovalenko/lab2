@@ -13,12 +13,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
 public class ChatInfoView extends View {
+    private static final Logger log = Logger.getLogger(ChatInfoView.class);
     public static ChatInfoView instance;
     private Controller controller;
     private ChatRoom chatRoom;
@@ -43,7 +45,8 @@ public class ChatInfoView extends View {
                 Controller controller = Controller.getInstance();
                 instance.setController(controller);
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Can't get instance of ChatInfoView.", e);
+                throw new RuntimeException("Can't get instance of ChatInfoView.", e);
             }
         }
         return instance;
