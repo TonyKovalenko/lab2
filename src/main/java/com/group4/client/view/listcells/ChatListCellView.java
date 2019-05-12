@@ -13,6 +13,9 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * Represents a view of the chat ListCell
+ */
 public class ChatListCellView extends ListCell<ChatRoom> {
     private static final Logger log = Logger.getLogger(ChatListCellView.class);
     @FXML
@@ -26,6 +29,9 @@ public class ChatListCellView extends ListCell<ChatRoom> {
 
     private FXMLLoader mLLoader;
 
+    /**
+     * Constructs new chat ListCell and loads its view from appropriate resource file
+     */
     public ChatListCellView() {
         if (mLLoader == null) {
             mLLoader = new FXMLLoader(getClass().getResource("/chatListCellView.fxml"));
@@ -39,6 +45,9 @@ public class ChatListCellView extends ListCell<ChatRoom> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateItem(ChatRoom chatRoom, boolean empty) {
         super.updateItem(chatRoom, empty);

@@ -10,6 +10,9 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * Represents a view of the message ListCell
+ */
 public class MessagesListCellView extends ListCell<ChatMessage> {
     private static final Logger log = Logger.getLogger(MessagesListCellView.class);
 
@@ -24,6 +27,9 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
 
     private FXMLLoader mLLoader;
 
+    /**
+     * Constructs new message ListCell and loads its view from appropriate resource file
+     */
     public MessagesListCellView() {
         if (mLLoader == null) {
             mLLoader = new FXMLLoader(getClass().getResource("/messagesListCellView.fxml"));
@@ -38,6 +44,9 @@ public class MessagesListCellView extends ListCell<ChatMessage> {
         prefWidthProperty().bind(widthProperty());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateItem(ChatMessage message, boolean empty) {
         super.updateItem(message, empty);

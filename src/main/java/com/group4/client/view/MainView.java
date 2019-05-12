@@ -19,6 +19,9 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.util.Collection;
 
+/**
+ * Represents a view of the application main window
+ */
 public class MainView extends View {
     private static final Logger log = Logger.getLogger(MainView.class);
     private static MainView instance;
@@ -45,6 +48,11 @@ public class MainView extends View {
     @FXML
     private Menu adminMenu;
 
+    /**
+     * Gets instance of the class
+     *
+     * @return instance of the class
+     */
     public static MainView getInstance() {
         try {
             instance = (MainView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/mainWindow.fxml", "Messenger");
@@ -58,10 +66,18 @@ public class MainView extends View {
         return instance;
     }
 
+    /**
+     * Sets controller for the view
+     *
+     * @param controller controller for the view
+     */
     public void setController(Controller controller) {
         this.controller = controller;
     }
 
+    /**
+     * Initializes state of the view
+     */
     public void initialize() {
         chatRoomsWithUser.setCellFactory(param -> new ChatListCellView());
         onlineUsers.setCellFactory(param -> new UsersListCellView());
@@ -86,66 +102,121 @@ public class MainView extends View {
         });
     }
 
+    /**
+     * Event handler for "New chat" menu button click
+     */
     @FXML
     public void createNewChat() {
         controller.showCreateNewChatDialog();
     }
 
+    /**
+     * Event handler for "Edit profile" menu button click
+     */
     @FXML
     public void editProfile() {
         controller.showEditProfileDialog(controller.getCurrentUser());
     }
 
+    /**
+     * Event handler for "Log out" menu button click
+     */
     @FXML
     public void logout() {
         controller.logout();
     }
 
+    /**
+     * Event handler for "Exit" menu button click
+     */
     @FXML
     public void exit() {
         controller.exit();
     }
 
+    /**
+     * Event handler for "Send" button click
+     */
     @FXML
     public void onSendButtonClick() {
         controller.sendMessageToChat();
     }
 
+    /**
+     * Event handler for chat info button click
+     */
     @FXML
     public void showChatInfo() {
         controller.showChatInfo();
     }
 
+    /**
+     * Event handler for "Open admin panel" menu button click
+     */
     @FXML
     public void openAdminPanel() {
         controller.openAdminPanel();
     }
 
+    /**
+     * Sets online users
+     *
+     * @param users online users
+     */
     public void setOnlineUsers(Collection<User> users) {
         onlineUsers.getItems().clear();
         onlineUsers.getItems().addAll(users);
         //onlineUsers.setItems(FXCollections.observableArrayList(users));
     }
 
+    /**
+     * Sets chat rooms with current user
+     *
+     * @param chatRoomsWithUser chat rooms with current user
+     */
     public void setChatRoomsWithUser(Collection<ChatRoom> chatRoomsWithUser) {
         this.chatRoomsWithUser.setItems(FXCollections.observableArrayList(chatRoomsWithUser));
     }
 
+    /**
+     * Gets message input
+     *
+     * @return message input
+     */
     public String getMessageInput() {
         return messageInput.getText();
     }
 
+    /**
+     * Gets selected chat room
+     *
+     * @return selected chat room
+     */
     public ChatRoom getSelectedChatRoom() {
         return chatRoomsWithUser.getSelectionModel().getSelectedItem();
     }
 
+    /**
+     * Selects specified chat room
+     *
+     * @param chatRoom selected chat room to be selected
+     */
     public void selectChatRoom(ChatRoom chatRoom) {
         chatRoomsWithUser.getSelectionModel().select(chatRoom);
     }
+
+    /**
+     * Updates visibility of admin panel menu according to user rights
+     *
+     * @param isAdmin indicates if the user is admin
+     */
     public void updateAdminPanel(boolean isAdmin) {
         adminMenu.setVisible(isAdmin);
     }
 
+    /**
+     * Clears message input
+     */
     public void clearMessageInput() {
         messageInput.clear();
     }

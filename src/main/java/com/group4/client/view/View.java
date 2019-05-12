@@ -46,6 +46,10 @@ public abstract class View {
         stage.show();
     }
 
+    /**
+     * Creates new stage for model windows
+     * @return stage for model window
+     */
     public static Stage newModalStage() {
         Stage dialogStage = new Stage();
         dialogStage.initOwner(Controller.getInstance().getStage());

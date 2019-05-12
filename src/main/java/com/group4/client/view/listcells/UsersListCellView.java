@@ -12,6 +12,9 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * Represents a view of the online user ListCell
+ */
 public class UsersListCellView extends ListCell<User> {
     private static final Logger log = Logger.getLogger(UsersListCellView.class);
 
@@ -29,6 +32,9 @@ public class UsersListCellView extends ListCell<User> {
 
     private FXMLLoader mLLoader;
 
+    /**
+     * Constructs new user ListCell and loads its view from appropriate resource file
+     */
     public UsersListCellView() {
         if (mLLoader == null) {
             mLLoader = new FXMLLoader(getClass().getResource("/usersListCellView.fxml"));
@@ -42,6 +48,9 @@ public class UsersListCellView extends ListCell<User> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void updateItem(User user, boolean empty) {
         super.updateItem(user, empty);

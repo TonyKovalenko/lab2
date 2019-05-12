@@ -97,6 +97,11 @@ public class DialogWindow {
         return result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE;
     }
 
+    /**
+     * Gets last created instance of this class
+     *
+     * @return
+     */
     public static Alert getLastInstance() {
         return lastInstance;
     }

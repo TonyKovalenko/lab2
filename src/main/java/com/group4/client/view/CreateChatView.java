@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Represents a view of the application window for creation new chat
+ */
 public class CreateChatView extends View {
     private static final Logger log = Logger.getLogger(CreateChatView.class);
     private static CreateChatView instance;
@@ -37,6 +40,10 @@ public class CreateChatView extends View {
     @FXML
     private GridPane groupFieldsPane;
 
+    /**
+     * Gets instance of the class
+     * @return instance of the class
+     */
     public static CreateChatView getInstance() {
         if (instance == null) {
             try {
@@ -55,45 +62,85 @@ public class CreateChatView extends View {
         return instance;
     }
 
+    /**
+     * Returns {@code true}  if the view is opened, otherwise {@code false}.
+     *
+     * @return {@code true}  if the view is opened
+     */
     public static boolean isOpened() {
         return instance != null;
     }
 
+    /**
+     * Sets controller for the view
+     *
+     * @param controller controller for the view
+     */
     public void setController(Controller controller) {
         this.controller = controller;
     }
 
+    /**
+     * Sets online users to usersListView
+     * @param onlineUsers online users for usersListView
+     */
     public void setOnlineUsers(Collection<User> onlineUsers) {
         this.onlineUsers = FXCollections.observableArrayList(onlineUsers);
         usersListView.getItems().clear();
         usersListView.getItems().addAll(this.onlineUsers);
     }
 
+    /**
+     * Sets users without private chat
+     * @param usersWithoutPrivateChat users without private chat
+     */
     public void setUsersWithoutPrivateChat(Collection<User> usersWithoutPrivateChat) {
         this.usersWithoutPrivateChat = FXCollections.observableArrayList(usersWithoutPrivateChat);
     }
 
+    /**
+     * Gets selected users for creation new chat
+     * @return selected users for creation new chat
+     */
     public List<User> getUsersList() {
         return usersListView.getSelectionModel().getSelectedItems();
     }
 
+    /**
+     * Gets selected user from users list view
+     * @return selected user from users list view
+     */
     public User getSelectedUser() {
         return usersListView.getSelectionModel().getSelectedItem();
     }
 
+    /**
+     * Returns {@code true}  if the 'isPrivateCheckBox' is selected, otherwise {@code false} .
+     * @return {@code true}  if the 'isPrivateCheckBox' is selected
+     */
     public boolean isPrivate() {
         return isPrivateCheckbox.isSelected();
     }
 
+    /**
+     * Gets entered group name from text field
+     * @return entered group name
+     */
     public String getGroupName() {
         return groupNameTextField.getText();
     }
 
+    /**
+     * Initializes state of the view
+     */
     public void initialize() {
         usersListView.setCellFactory(param -> new UsersListCellView());
         usersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+    /**
+     * Event handler for 'isPrivateCheckbox' selection
+     */
     @FXML
     public void changeFields() {
         if (isPrivateCheckbox.isSelected()) {
@@ -107,11 +154,17 @@ public class CreateChatView extends View {
         }
     }
 
+    /**
+     * Event handler for "Create" button click
+     */
     @FXML
     public void handleCreateClick() {
         controller.handleCreateChatClick(instance);
     }
 
+    /**
+     * Closes the view
+     */
     public void close() {
         this.getStage().close();
     }
