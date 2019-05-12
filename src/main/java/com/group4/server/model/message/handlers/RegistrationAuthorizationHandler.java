@@ -2,6 +2,7 @@ package com.group4.server.model.message.handlers;
 
 import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
+import com.group4.server.model.containers.UserStreamContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.adapters.UserDataContainerAdapter;
@@ -62,6 +63,8 @@ public enum RegistrationAuthorizationHandler {
         String userNickname = changeCredentialsRequest.getUserNickname();
         String newFullName = changeCredentialsRequest.getNewFullName();
         String newPassword = changeCredentialsRequest.getNewPassword();
+
+
         if (!nicknameToUser.containsKey(userNickname)) {
             return new ChangeCredentialsResponse(false);
         }
@@ -87,6 +90,11 @@ public enum RegistrationAuthorizationHandler {
         String authNickname = authorizationRequest.getUserNickname();
         String authPassword = authorizationRequest.getPassword();
         User user = getUser(authNickname);
+
+        if (UserStreamContainer.INSTANCE.userIsOnline(authNickname)) {
+            return new AuthorizationResponse(false);
+        }
+
         if (user != null && authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
             Set<ChatRoom> chatRoomsWithUser = ChatRoomsContainer.INSTANCE.getChatRoomsFor(authNickname);
             chatRoomsWithUser.addAll(ChatInvitationsContainer.INSTANCE.getChatInvitationsFor(authNickname));

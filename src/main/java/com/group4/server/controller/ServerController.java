@@ -32,8 +32,7 @@ public class ServerController extends Thread {
         executor = Executors.newFixedThreadPool(availableProcessors);
         log.info("Processing method started.");
         Socket s = new Socket();
-        try {
-            ServerSocket serverSocket = new ServerSocket(port);
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (isRunning) {
                 if (isInterrupted()) {
                     serverSocket.close();
@@ -49,6 +48,7 @@ public class ServerController extends Thread {
         } finally {
             setRunning(false);
             try {
+
                 s.close();
                 executor.awaitTermination(5, TimeUnit.SECONDS);
             } catch (IOException e) {

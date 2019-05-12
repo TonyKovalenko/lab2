@@ -29,6 +29,11 @@ public enum UserStreamContainer {
         userToStream.remove(nickname);
     }
 
+    public boolean userIsOnline(String nickname) {
+        PrintWriter pw = getStream(nickname);
+        return  pw != null;
+    }
+
     public Set<User> getCurrentUsers() {
         Set<User> currentUserSet = new HashSet<>();
         Set<String> currentUserNicknames = userToStream.keySet();
