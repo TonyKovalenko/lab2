@@ -19,9 +19,22 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Set;
 
+/**
+ * MessageController class is primary for handling the connections to a server,
+ * extracting sent messages from the I/O streams and sending a response back.
+ * <p>
+ * Messages are contained as XML formatted text, and the main processing is done
+ * with the help of JAXB classes and methods.
+ *
+ * @author Nadia Volyk, Anton Kovalenko
+ * @see ServerController
+ * @since 05-06-19
+ */
 class MessageController {
 
     private static final Logger log = Logger.getLogger(MessageController.class);
+
+    //variable that holds classes for creating a context by JAXB marshaller or unmarshaller
     private static Class<?>[] clazzes = {
             User.class,
             ChatRoom.class,
@@ -55,6 +68,12 @@ class MessageController {
     private Unmarshaller unmarshaller;
     private Socket socket;
 
+    /**
+     * Constructor, for creating an instance of the MessageController and further
+     * processing of the message, contained inside of the accepted socket I/O stream.
+     *
+     * @param socket, which was accepted in {@link ServerController#run()} method.
+     */
     MessageController(Socket socket) {
         try {
             this.socket = socket;
@@ -66,6 +85,15 @@ class MessageController {
         }
     }
 
+    /**
+     * Method to send a TransmittableMessage instance to specified I/O stream.
+     *
+     * @param message      message to send
+     * @param out          I/O stream, to send the response to
+     * @param stringWriter stream, to wrap the XML string of response message
+     * @see TransmittableMessage
+     * @see MessageWrapper
+     */
     private void sendResponse(TransmittableMessage message, PrintWriter out, StringWriter stringWriter) {
         try {
             marshaller.marshal(new MessageWrapper(message), stringWriter);
@@ -76,6 +104,15 @@ class MessageController {
         stringWriter.getBuffer().setLength(0);
     }
 
+
+    /**
+     * Method to broadcast a TransmittableMessage instance to all currently online users.
+     *
+     * @param message      message to send
+     * @param stringWriter stream, to wrap the XML string of response message
+     * @see TransmittableMessage
+     * @see MessageWrapper
+     */
     private void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
         Set<PrintWriter> userStreams = UserStreamContainer.INSTANCE.getCurrentUserStreams();
         try {
@@ -91,6 +128,18 @@ class MessageController {
         stringWriter.getBuffer().setLength(0);
     }
 
+    /**
+     * Method that does the major handling of the received message:
+     *
+     * - extracting message from the I/O stream
+     * - resolving the encapsulated message type
+     * - handling it in a proper way
+     * - forming and sending a response (if needed)
+     *
+     * As one instance of {@link MessageController} is associated with single user
+     * this method is running in an infinite loop, and serves the single user connection
+     * until user decides to disconnect.
+     */
     void handle() {
         BufferedReader in;
         PrintWriter out;
@@ -181,7 +230,7 @@ class MessageController {
                     }
 
                     if (targetRoom.isEmpty()) {
-                        log.info("Room is empty");
+                        log.info("Message sent to an empty room:[ " + chatMessage.getChatId() + "]");
                         break;
                     } else {
                         ChatRoomsContainer.INSTANCE.addMessageToChat(chatMessage.getChatId(), chatMessage);
@@ -195,7 +244,7 @@ class MessageController {
                     break;
                 case ALL_USERS_REQUEST:
                     TransmittableMessage allUsersResponse = new GetAllUsersResponse(RegistrationAuthorizationHandler.INSTANCE.getAllUsers());
-                    log.info("User list requested");
+                    log.info("User list was requested");
                     sendResponse(allUsersResponse, out, stringWriter);
                     break;
                 case CHAT_UPDATE:
@@ -206,7 +255,7 @@ class MessageController {
                     Set<User> members = updatedChatRoom.getMembers();
                     for (User user : members) {
                         PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
-                        if(userStream != null) {
+                        if (userStream != null) {
                             sendResponse(chatUpdate, userStream, stringWriter);
                         }
                     }
@@ -259,7 +308,7 @@ class MessageController {
                     break;
                 case USER_LOGOUT:
                     UserLogoutMessage logoutMessage = (UserLogoutMessage) requestMessage.getEncapsulatedMessage();
-                    log.info("User logout from:[" + logoutMessage.getNickname()+ "]");
+                    log.info("User logout from:[" + logoutMessage.getNickname() + "]");
                     UserStreamContainer.INSTANCE.deleteUser(logoutMessage.getNickname());
                     Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
                     TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
