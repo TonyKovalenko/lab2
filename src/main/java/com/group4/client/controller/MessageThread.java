@@ -13,12 +13,10 @@ import javafx.scene.control.ButtonType;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,7 +43,6 @@ public class MessageThread extends Thread {
             try {
                 if (reader.ready()) {
                     String s = reader.readLine();
-                    System.out.println("INPUT: " + s);
                     try {
                         MessageWrapper message = MarshallingUtils.unmarshallMessage(s);
                         log.info("Message accepted: " + message.getMessageType());
@@ -77,7 +74,23 @@ public class MessageThread extends Thread {
     }
 
     public void connect() throws IOException {
-        socket = new Socket("localhost", 8888);
+        String host;
+        int port;
+        try (InputStream input = new FileInputStream("config.properties")) {
+            Properties prop = new Properties();
+            prop.load(input);
+
+            host = prop.getProperty("host");
+            port = Integer.valueOf(prop.getProperty("port"));
+        } catch (FileNotFoundException e) {
+            log.warn("Unable to find config.properties");
+            return;
+        } catch (IOException e) {
+            log.error("IOException happened while trying to load config.properties", e);
+            return;
+        }
+
+        socket = new Socket(host, port);
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         writer = new PrintWriter(socket.getOutputStream(), true);
 
