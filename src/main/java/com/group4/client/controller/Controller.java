@@ -60,7 +60,12 @@ public class Controller extends Application {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
-        Platform.runLater(() -> mainView.updateAdminPanel(currentUser.isAdmin()));
+        Platform.runLater(() -> {
+            mainView.updateAdminPanel(currentUser.isAdmin());
+            if (currentUser.isBanned()) {
+                DialogWindow.showWarningWindow(null, "You have been banned");
+            }
+        });
     }
 
     public User getUserByNickname(String nickname) {
@@ -123,12 +128,22 @@ public class Controller extends Application {
         switch (responseMessage.getMessageType()) {
             case ONLINE_LIST:
                 OnlineListMessage onlineListMessage = (OnlineListMessage) responseMessage.getEncapsulatedMessage();
+                if (onlineListMessage.getUsers().stream().anyMatch(item -> item.isAdmin() && !currentUser.isAdmin())
+                        && users.values().stream().noneMatch(item -> item.isAdmin())) {
+                    DialogWindow.showInfoWindow("Admin had entered the chat");
+                } else if (!onlineListMessage.getUsers().stream().anyMatch(item -> item.isAdmin())
+                            && users.values().stream().anyMatch(item -> item.isAdmin())) {
+                    DialogWindow.showInfoWindow("Admin had left the chat");
+                }
                 users = new HashMap<>();
                 for (User user : onlineListMessage.getUsers()) {
                     users.put(user.getNickname(), user);
                 }
                 users.remove(currentUser.getNickname());
                 updateOnlineUsersView();
+                if (CreateChatView.isOpened()) {
+                    Platform.runLater(() -> CreateChatView.getInstance().setOnlineUsers(users.values()));
+                }
                 break;
             case CHAT_CREATION_RESPONSE:
                 ChatRoomCreationResponse chatRoomCreationResponse = (ChatRoomCreationResponse) responseMessage.getEncapsulatedMessage();
@@ -170,7 +185,7 @@ public class Controller extends Application {
                         AdminController.getInstance().processMessage(responseMessage);
                     }
                 } else {
-                    Platform.runLater(() -> DialogWindow.showErrorWindow("Credentials change was denied"));
+                    DialogWindow.showErrorWindow("Credentials change was denied");
                 }
                 break;
             case CHAT_UPDATE:
@@ -195,6 +210,11 @@ public class Controller extends Application {
             case SET_BAN_STATUS:
                 SetBanStatusMessage setBanStatusMessage = (SetBanStatusMessage) responseMessage.getEncapsulatedMessage();
                 if (setBanStatusMessage.getUserNickname().equals(currentUser.getNickname())) {
+                    if (!currentUser.isBanned() && setBanStatusMessage.isBanned()) {
+                        DialogWindow.showWarningWindow(null, "You have been banned");
+                    } else if (currentUser.isBanned() && !setBanStatusMessage.isBanned()) {
+                        DialogWindow.showInfoWindow("You have been unbanned");
+                    }
                     currentUser.setBanned(setBanStatusMessage.isBanned());
                 }
                 if (AdminPanelView.isOpened()) {
@@ -239,6 +259,7 @@ public class Controller extends Application {
         LoginView.getInstance().showStage();
         users = new HashMap<>();
         chatRooms = new HashMap<>();
+        System.out.println("Log out");
     }
 
     public void sendMessageToChat() {
@@ -259,6 +280,7 @@ public class Controller extends Application {
         message.setChatId(mainView.getSelectedChatRoom().getId());
 
         thread.sendMessage(message);
+        mainView.clearMessageInput();
     }
 
     public void showCreateNewChatDialog() {
@@ -374,5 +396,14 @@ public class Controller extends Application {
         ChatUpdateMessage message = new ChatUpdateMessage(room.getId(), null, null, membersToDelete);
         thread.sendMessage(message);
         view.close();
+    }
+
+    public void openMainChatRoom() {
+        List<ChatRoom> list = chatRooms.values().stream()
+                .filter(item -> !item.isPrivate())
+                .filter(item -> item.getName().equals("mainChatRoom")).collect(Collectors.toList());
+        if (list.size() == 1) {
+            Platform.runLater(() -> mainView.selectChatRoom(list.get(0)));
+        }
     }
 }

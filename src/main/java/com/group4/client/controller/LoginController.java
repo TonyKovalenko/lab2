@@ -54,6 +54,7 @@ public class LoginController {
                 Controller.getInstance().getChatRooms().put(room.getId(), room);
             }
             Controller.getInstance().updateChatRoomsView();
+            Controller.getInstance().openMainChatRoom();
         } else {
             Platform.runLater(() -> {
                 DialogWindow.showWarningWindow("Authorization failed", "Authorization was denied");

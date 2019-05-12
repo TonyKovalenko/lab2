@@ -1,14 +1,12 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.AdminController;
-import com.group4.client.controller.Controller;
 import com.group4.server.model.entities.User;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -36,9 +34,7 @@ public class AdminPanelView extends View {
     public static AdminPanelView getInstance() {
         if (instance == null) {
             try {
-                Stage dialogStage = new Stage();
-                dialogStage.initOwner(Controller.getInstance().getStage());
-                dialogStage.initModality(Modality.APPLICATION_MODAL);
+                Stage dialogStage = View.newModalStage();
                 instance = (AdminPanelView) View.loadViewFromFxml(dialogStage, "/adminPanelView.fxml", "Admin panel");
                 AdminController controller = AdminController.getInstance();
                 controller.setView(instance);
