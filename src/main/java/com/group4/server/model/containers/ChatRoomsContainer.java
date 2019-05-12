@@ -24,6 +24,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+/**
+ * ChatRoomsContainer class is primary for holding chat rooms
+ * and performing different operations with them.
+ *
+ * @author Anton Kovalenko
+ * @since 05-06-18
+ */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public enum ChatRoomsContainer {
@@ -37,12 +44,25 @@ public enum ChatRoomsContainer {
     @XmlElement
     private Map<Long, ChatRoom> idToChatRoom = new ConcurrentHashMap<>();
 
+    /**
+     * Constructor to create chat rooms container from {@link #marshallFilePath} file, if it is not the first launch
+     * In case of first launch, the default main chat room is created.
+     */
     ChatRoomsContainer() {
-        id = new AtomicLong(0);
-        idToChatRoom.put(id.incrementAndGet(), new ChatRoom(id.longValue(), "mainChatRoom", new HashSet<>()));
         unmarshallOnStart();
+        int keySetSize = idToChatRoom.keySet().size();
+        if (keySetSize == 0) {
+            id = new AtomicLong(0);
+            idToChatRoom.put(id.incrementAndGet(), new ChatRoom(id.longValue(), "mainChatRoom", new HashSet<>()));
+            return;
+        }
+        id = new AtomicLong(keySetSize);
     }
 
+    /**
+     * Method to unmarshall the chat rooms container from the {@link #marshallFilePath} file
+     * to a internal collection.
+     */
     private void unmarshallOnStart() {
         ChatContainerEnumAdapter adapter;
         try (BufferedReader br = new BufferedReader(new FileReader(new File(marshallFilePath)))) {
@@ -56,6 +76,7 @@ public enum ChatRoomsContainer {
         }
     }
 
+
     public void putToInitialRoom(User user) {
         idToChatRoom.get(1L).addMember(user);
     }
@@ -64,10 +85,21 @@ public enum ChatRoomsContainer {
         return idToChatRoom.get(1L);
     }
 
+    /**
+     * Method for getting a chatrooms for specified user
+     *
+     * @param nickname user nickname, to get chatrooms for
+     * @return Set of chatrooms with specified user
+     */
     public Set<ChatRoom> getChatRoomsFor(String nickname) {
         return idToChatRoom.values().stream().filter(room -> room.isMemberPresent(nickname)).collect(Collectors.toSet());
     }
 
+    /**
+     * Method for deleting a specified user from all chatrooms, he is currently in
+     *
+     * @param nickname user nickname, to delete from chatrooms
+     */
     public void deleteUserFromChatRooms(String nickname) {
         idToChatRoom.values()
                 .stream()
@@ -76,6 +108,11 @@ public enum ChatRoomsContainer {
                 .forEach(members -> members.removeMember(nickname));
     }
 
+    /**
+     * Method for inserting chatroom into container
+     *
+     * @param chatRoom chatroom to be added to container
+     */
     public boolean createChatRoom(ChatRoom chatRoom) {
         if (idToChatRoom.values().contains(chatRoom)) {
             chatRoom.setId(-1);

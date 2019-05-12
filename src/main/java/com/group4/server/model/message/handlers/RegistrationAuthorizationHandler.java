@@ -21,7 +21,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+/**
+ * RegistrationAuthorizationHandler class is used to
+ * handle user requests, regarding their personal data
+ */
 public enum RegistrationAuthorizationHandler {
 
     INSTANCE;
@@ -31,10 +34,18 @@ public enum RegistrationAuthorizationHandler {
 
     private Map<String, User> nicknameToUser = new ConcurrentHashMap<>();
 
+    /**
+     * Constructor to create user data container from {@link #marshallFilePath} file.
+     */
     RegistrationAuthorizationHandler() {
         unmarshallOnStart();
     }
 
+    /**
+     * Method to unmarshall the user data container from the {@link #marshallFilePath} file
+     * to a internal collection.
+     * Also default admin creation is done in this method.
+     */
     private void unmarshallOnStart() {
         UserDataContainerAdapter adapter;
         try (BufferedReader br = new BufferedReader(new FileReader(new File(marshallFilePath)))) {
@@ -59,6 +70,12 @@ public enum RegistrationAuthorizationHandler {
         return new HashSet<>(nicknameToUser.values());
     }
 
+    /**
+     * Method is used to handle user credential request
+     *
+     * @param changeCredentialsRequest request on changing the personal data
+     * @return confirmation state of the credential change
+     */
     public <T extends ChangeCredentialsRequest> ChangeCredentialsResponse handle(T changeCredentialsRequest) {
         String userNickname = changeCredentialsRequest.getUserNickname();
         String newFullName = changeCredentialsRequest.getNewFullName();
@@ -76,6 +93,12 @@ public enum RegistrationAuthorizationHandler {
         return new ChangeCredentialsResponse(true, nicknameToUser.get(userNickname));
     }
 
+    /**
+     * Method is used to handle user registration request
+     *
+     * @param registrationRequest request on registering in the system
+     * @return confirmation state of the registration
+     */
     public <T extends RegistrationRequest> RegistrationResponse handle(T registrationRequest) {
         User user = new User(registrationRequest.getUserNickname(), registrationRequest.getFullName(), registrationRequest.getPassword());
         if (nicknameToUser.containsValue(user)) {
@@ -86,6 +109,12 @@ public enum RegistrationAuthorizationHandler {
         }
     }
 
+    /**
+     * Method is used to handle user authorization request
+     *
+     * @param authorizationRequest request on authorization in the system
+     * @return confirmation state of the authorization
+     */
     public <T extends AuthorizationRequest> AuthorizationResponse handle(T authorizationRequest) {
         String authNickname = authorizationRequest.getUserNickname();
         String authPassword = authorizationRequest.getPassword();

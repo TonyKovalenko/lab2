@@ -7,6 +7,10 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * UserStreamContainer is used for storing online users I/O streams,
+ * primary for sending them chat messages
+ */
 public enum UserStreamContainer {
 
     INSTANCE;
@@ -34,6 +38,11 @@ public enum UserStreamContainer {
         return  pw != null;
     }
 
+    /**
+     * Method to get User instances by currently online nicknames
+     * @return Set of currently online User instances
+     * @see User
+     */
     public Set<User> getCurrentUsers() {
         Set<User> currentUserSet = new HashSet<>();
         Set<String> currentUserNicknames = userToStream.keySet();
