@@ -8,6 +8,10 @@ import com.group4.server.model.message.types.RegistrationResponse;
 import com.group4.server.model.message.wrappers.MessageWrapper;
 import javafx.application.Platform;
 
+/**
+ * Controller that is responsible for all registration actions.
+ * This class realizes singleton design pattern
+ */
 public class RegistrationController {
     private RegistrationView view;
     private static RegistrationController instance;
@@ -15,6 +19,11 @@ public class RegistrationController {
     private RegistrationController() {
     }
 
+    /**
+     * Gets instance of the class
+     *
+     * @return instance of the class
+     */
     public static RegistrationController getInstance() {
         if (instance == null) {
             instance = new RegistrationController();
@@ -22,14 +31,26 @@ public class RegistrationController {
         return instance;
     }
 
+    /**
+     * Sets view for controller
+     *
+     * @param view view for controller
+     */
     public void setView(RegistrationView view) {
         this.view = view;
     }
 
+    /**
+     * Cancels registration and returns to login page
+     */
     public void cancel() {
         LoginView.getInstance().showStage();
     }
 
+    /**
+     * Sends registration request if all information is filled correctly,
+     * otherwise shows dialog window why action can't be done
+     */
     public void register() {
         if (view.isFieldsFilled()) {
             if (view.isPasswordConfirmed()) {
@@ -50,6 +71,11 @@ public class RegistrationController {
         }
     }
 
+    /**
+     * Processes incoming message. If registration was confirmed, then login page is shown.
+     * Otherwise dialog window with explanation why action can't be done is shown
+     * @param responseMessage incoming message
+     */
     public void processMessage(MessageWrapper responseMessage) {
         RegistrationResponse innerMessage = (RegistrationResponse) responseMessage.getEncapsulatedMessage();
         if (innerMessage.isRegistrationSuccessful()) {

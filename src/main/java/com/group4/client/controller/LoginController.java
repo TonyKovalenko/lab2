@@ -12,6 +12,10 @@ import javafx.application.Platform;
 
 import java.util.Set;
 
+/**
+ * Controller that is responsible for all authorization actions.
+ * This class realizes singleton design pattern
+ */
 public class LoginController {
     private LoginView view;
     private static LoginController instance;
@@ -19,6 +23,11 @@ public class LoginController {
     private LoginController() {
     }
 
+    /**
+     * Gets instance of the class
+     *
+     * @return instance of the class
+     */
     public static LoginController getInstance() {
         if (instance == null) {
             instance = new LoginController();
@@ -26,10 +35,20 @@ public class LoginController {
         return instance;
     }
 
+    /**
+     * Sets view for controller
+     *
+     * @param view view for controller
+     */
     public void setView(LoginView view) {
         this.view = view;
     }
 
+    /**
+     * Event handler for "Login" button.
+     * Sends login request if all information is filled correctly,
+     * otherwise shows dialog window why action can't be done
+     */
     public void login() {
         String nickname = view.getUsername();
         String password = view.getPassword();
@@ -40,10 +59,20 @@ public class LoginController {
         }
     }
 
+    /**
+     * Shows registration window
+     */
     public void register() {
         RegistrationView.getInstance().showStage();
     }
 
+    /**
+     * Processes incoming message. If authorization was confirmed,
+     * then data form AuthorizationResponse is initialized and main page is shown.
+     * Otherwise dialog window with explanation why action can't be done is shown
+     *
+     * @param responseMessage incoming message
+     */
     public void processMessage(MessageWrapper responseMessage) {
         AuthorizationResponse innerMessage = (AuthorizationResponse) responseMessage.getEncapsulatedMessage();
         if (innerMessage.isConfirmed()) {
@@ -63,6 +92,12 @@ public class LoginController {
         }
     }
 
+    /**
+     * Sends authorization request
+     *
+     * @param nickname nickname for authorization request
+     * @param password password for authorization request
+     */
     public void sendAuthorizationRequest(String nickname, String password) {
         AuthorizationRequest message = new AuthorizationRequest();
         message.setUserNickname(nickname);

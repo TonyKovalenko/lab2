@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Main controller og the application.
+ * This class realizes singleton design pattern
+ */
 public class Controller extends Application {
     private static final Logger log = Logger.getLogger(Controller.class);
     private Stage stage;
@@ -24,42 +28,88 @@ public class Controller extends Application {
     private HashMap<String, User> users = new HashMap<>();
     private HashMap<Long, ChatRoom> chatRooms = new HashMap<>();
 
+    /**
+     * Gets instance of the class
+     *
+     * @return instance of the class
+     */
     public static Controller getInstance() {
         return instance;
     }
 
+    /**
+     * Gets main stage of the application
+     *
+     * @return main stage of the application
+     */
     public Stage getStage() {
         return stage;
     }
 
+    /**
+     * Gets main message thread of the application
+     *
+     * @return message thread of the application
+     */
     public MessageThread getThread() {
         return thread;
     }
 
+    /**
+     * Sets main message thread of the application
+     *
+     * @param messageThread main message thread of the application
+     */
     public void setThread(MessageThread messageThread) {
         thread = messageThread;
     }
 
+    /**
+     * Sets view for controller
+     *
+     * @param view view for controller
+     */
     public void setView(MainView view) {
         mainView = view;
     }
 
+    /**
+     * Gets view of controller
+     * @return main view
+     */
     public MainView getMainView() {
         return mainView;
     }
 
+    /**
+     * Gets all user's chat rooms
+     * @return all user's chat rooms
+     */
     public Map<Long, ChatRoom> getChatRooms() {
         return chatRooms;
     }
 
+    /**
+     * Gets chat room from all chat rooms by id
+     * @param id id of chat room to be found
+     * @return found chat room
+     */
     public ChatRoom getChatRoomById(long id) {
         return chatRooms.get(id);
     }
 
+    /**
+     * Gets current user of the application
+     * @return current user
+     */
     public User getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * Sets current user of application
+     * @param currentUser current user of application
+     */
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
         Platform.runLater(() -> {
@@ -70,22 +120,41 @@ public class Controller extends Application {
         });
     }
 
+    /**
+     * Gets user from online users list by specified nickname
+     * @param nickname specified nickname of user
+     * @return found user
+     */
     public User getUserByNickname(String nickname) {
         return users.get(nickname);
     }
 
+    /**
+     * Gets collection of online users
+     * @return collection of online users
+     */
     public Collection<User> getUsers() {
         return users.values();
     }
 
+    /**
+     * Updates chat rooms view
+     */
     public void updateChatRoomsView() {
         Platform.runLater(() -> mainView.setChatRoomsWithUser(chatRooms.values()));
     }
 
+    /**
+     * Updates online users view
+     */
     public void updateOnlineUsersView() {
         Platform.runLater(() -> mainView.setOnlineUsers(getUsers()));
     }
 
+    /**
+     * Gets all users with whom the current user hasn't have chat yet
+     * @return all users with whom the current user hasn't have chat yet
+     */
     public List<User> getUsersWithoutPrivateChat() {
         List<User> usersWithoutPrivateChat = new ArrayList<>(getUsers());
         Controller.getInstance().getChatRooms().values()
@@ -114,6 +183,22 @@ public class Controller extends Application {
         }
     }
 
+    /**
+     * Processes incoming message.
+     * <p>For ONLINE_LIST updates online users in view.</p>
+     * <p>For CHAT_CREATION_RESPONSE if create chat request was confirmed,
+     * adds chat room to chat rooms list.</p>
+     * <p>For NEW_CHATS adds new chat rooms to chat rooms list</p>
+     * <p>For TO_CHAT adds new message to chat room</p>
+     * <p>For CHANGE_CREDENTIALS_RESPONSE if change credentials request was confirmed,
+     * changes user credentials and closes EditProfileView.
+     * Otherwise shows dialog window why action can't be done.</p>
+     * <p>For CHAT_UPDATE updates specified chat room</p>
+     * <p>For CHAT_SUSPENSION deletes specified chat room from chat rooms list</p>
+     * <p>For SET_BAN_STATUS sets specified ban status.</p>
+     * <p>For DELETE_USER_RESPONSE makes force log out/p>
+     * @param responseMessage incoming message
+     */
     public void processMessage(MessageWrapper responseMessage) {
         //if (mainView != null) {
         switch (responseMessage.getMessageType()) {
@@ -143,6 +228,7 @@ public class Controller extends Application {
                     chatRooms.put(chatRoom.getId(), chatRoom);
                     updateChatRoomsView();
                 }
+                System.out.println("CHAT_CREATION_RESPONSE");
                 break;
             case NEW_CHATS:
                 ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
@@ -231,6 +317,9 @@ public class Controller extends Application {
         //}
     }
 
+    /**
+     * Exits the application
+     */
     public void exit() {
         if (thread.isConnected()) {
             if (currentUser != null) {
@@ -242,6 +331,9 @@ public class Controller extends Application {
         stage.close();
     }
 
+    /**
+     * Logs out from current account
+     */
     public void logout() {
         if (currentUser != null) {
             thread.sendMessage(new UserLogoutMessage(currentUser.getNickname()));
@@ -253,6 +345,9 @@ public class Controller extends Application {
         System.out.println("Log out");
     }
 
+    /**
+     * Sends entered message to corresponding chat
+     */
     public void sendMessageToChat() {
         if (mainView.getSelectedChatRoom() == null) {
             return;
@@ -274,6 +369,9 @@ public class Controller extends Application {
         mainView.clearMessageInput();
     }
 
+    /**
+     * Shows window for creating new chat
+     */
     public void showCreateNewChatDialog() {
         CreateChatView createChatView = CreateChatView.getInstance();
         createChatView.setOnlineUsers(getUsers());
@@ -281,6 +379,12 @@ public class Controller extends Application {
         createChatView.getStage().showAndWait();
     }
 
+    /**
+     * Event handler for "Create" button click from CreateChatView.
+     * Gets information from CreateChatView and sends request to create new chat.
+     *
+     * @param view view where event handler was called
+     */
     public void handleCreateChatClick(CreateChatView view) {
         ChatRoom chatRoom;
         boolean isPrivate = view.isPrivate();
@@ -299,12 +403,21 @@ public class Controller extends Application {
         view.close();
     }
 
+    /**
+     * Shows window for editing user profile
+     */
     public void showEditProfileDialog(User user) {
         EditProfileView editProfileView = EditProfileView.getInstance();
         editProfileView.setUserInfo(user);
         editProfileView.getStage().showAndWait();
     }
 
+    /**
+     * Event handler for "Save changes" button click from EditProfileView.
+     * Gets information from EditProfileView and sends request to edit user profile.
+     *
+     * @param view view where event handler was called
+     */
     public void saveProfileChanges(EditProfileView view) {
         String newFullName = view.getFullName();
         String newPassword = view.getPassword();
@@ -326,12 +439,19 @@ public class Controller extends Application {
         }
     }
 
+    /**
+     * Shows window with chat info
+     */
     public void showChatInfo() {
         ChatInfoView chatInfoView = ChatInfoView.getInstance();
         chatInfoView.setChatRoom(mainView.getSelectedChatRoom());
         chatInfoView.getStage().showAndWait();
     }
 
+    /**
+     * Event handler for "Save" button click from ChatInfoView.
+     * Gets information from ChatInfoView and sends request update chat room.
+     */
     public void saveGroupChatChanges() {
         ChatInfoView view = ChatInfoView.getInstance();
         List<User> newUsersList = view.getUsersList();
@@ -359,6 +479,9 @@ public class Controller extends Application {
         view.close();
     }
 
+    /**
+     * Shows window for adding new members to chat room
+     */
     public void showAddMemberToGroupChatView() {
         AddMembersToGroupChatView view = AddMembersToGroupChatView.getInstance();
         Collection<User> members = ChatInfoView.getInstance().getUsersList();
@@ -367,18 +490,29 @@ public class Controller extends Application {
         view.getStage().showAndWait();
     }
 
+    /**
+     * Event handler for "Add" button click from AddMembersToGroupChatView.
+     * Gets list of selected users abd adds them to users in ChatInfoView
+     */
     public void addMembersToGroupChat() {
         AddMembersToGroupChatView view = AddMembersToGroupChatView.getInstance();
         ChatInfoView.getInstance().addMembersToListView(AddMembersToGroupChatView.getInstance().getSelectedUsers());
         view.close();
     }
 
+    /**
+     * Shows admin panel window
+     */
     public void openAdminPanel() {
         AdminPanelView adminPanelView = AdminPanelView.getInstance();
         AdminController.getInstance().sendAllUsersRequest();
         adminPanelView.getStage().showAndWait();
     }
 
+    /**
+     * Event handler for "Leave chat" link click from ChatInfoView.
+     * Send request to leave shown chat
+     */
     public void leaveChatRoom() {
         ChatInfoView view = ChatInfoView.getInstance();
         ChatRoom room = mainView.getSelectedChatRoom();
@@ -389,6 +523,9 @@ public class Controller extends Application {
         view.close();
     }
 
+    /**
+     * Opens main chat room
+     */
     public void openMainChatRoom() {
         List<ChatRoom> list = chatRooms.values().stream()
                 .filter(item -> !item.isPrivate())

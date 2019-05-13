@@ -9,6 +9,9 @@ import javax.xml.bind.JAXBException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+/**
+ * Handles operation of marshalling and unmarshalling messages
+ */
 public class MarshallingUtils {
     private static final Logger log = Logger.getLogger(MarshallingUtils.class);
     private final static String lineBreakEscape = "<br />";
@@ -34,7 +37,13 @@ public class MarshallingUtils {
         }
     }
 
-    public static String marshallMessage(MessageWrapper message) throws JAXBException {
+    /**
+     * Marshals message
+     * @param message message to be marshaled
+     * @return marshaled message
+     * @throws JAXBException if message can't be marshaled or context wasn't created
+     */
+    public static String marshalMessage(MessageWrapper message) throws JAXBException {
         if (context == null) {
             throw new JAXBException("Context wasn't created");
         }
@@ -43,7 +52,13 @@ public class MarshallingUtils {
         return stringWriter.toString().replaceAll("\n", lineBreakEscape);
     }
 
-    public static MessageWrapper unmarshallMessage(String s) throws JAXBException {
+    /**
+     * Unmarshals message
+     * @param s marshaled message
+     * @return unmarshaled meassage
+     * @throws JAXBException if message can't be unmarshaled or context wasn't created
+     */
+    public static MessageWrapper unmarshalMessage(String s) throws JAXBException {
         if (context == null) {
             throw new JAXBException("Context wasn't created");
         }

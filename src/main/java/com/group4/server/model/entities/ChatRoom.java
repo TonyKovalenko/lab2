@@ -67,7 +67,7 @@ public class ChatRoom {
         if (!isPrivate) {
             return name;
         }
-        throw new UnsupportedOperationException("Operation can't be used for group chat");
+        throw new UnsupportedOperationException("Operation can't be used for private chat");
     }
 
     public User getOtherMember(User user) {
@@ -79,7 +79,7 @@ public class ChatRoom {
                 throw new NoSuchElementException("User was not found.");
             }
         }
-        throw new UnsupportedOperationException("Operation can't be used for private chat.");
+        throw new UnsupportedOperationException("Operation can't be used for group chat.");
     }
 
     public boolean isPrivate() {

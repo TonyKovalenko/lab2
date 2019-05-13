@@ -20,6 +20,9 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Represents thread that allows to work with server
+ */
 public class MessageThread extends Thread {
     private static final Logger log = Logger.getLogger(MessageThread.class);
     private final static int DELAY = 5000;
@@ -33,10 +36,19 @@ public class MessageThread extends Thread {
 
     private ReconnectionThread reconnectionThread;
 
+    /**
+     * Returns {@code true}  if client is connected to server, otherwise {@code false} .
+     *
+     * @return {@code true}  if the view is opened
+     */
     public boolean isConnected() {
         return connected;
     }
 
+    /**
+     * Wait for incoming messages from server while connected.
+     * After unmarshalling message transfers control to corresponding controller
+     */
     @Override
     public void run() {
         while (connected) {
@@ -44,7 +56,7 @@ public class MessageThread extends Thread {
                 if (reader.ready()) {
                     String s = reader.readLine();
                     try {
-                        MessageWrapper message = MarshallingUtils.unmarshallMessage(s);
+                        MessageWrapper message = MarshallingUtils.unmarshalMessage(s);
                         log.info("Message accepted: " + message.getMessageType());
                         switch (message.getMessageType()) {
                             case AUTHORIZATION_RESPONSE:
@@ -73,6 +85,11 @@ public class MessageThread extends Thread {
         }
     }
 
+    /**
+     * Connects to the server. Host and port for socket are loaded from "config.properties"/
+     * Starts ping timer to check server efficiency
+     * @throws IOException
+     */
     public void connect() throws IOException {
         String host;
         int port;
@@ -114,6 +131,9 @@ public class MessageThread extends Thread {
         log.info("Ping timer is scheduled");
     }
 
+    /**
+     * Disconnects from server
+     */
     public void disconnect() {
         connected = false;
         if (reconnectionThread != null) {
@@ -147,23 +167,37 @@ public class MessageThread extends Thread {
         log.info("Disconnected from server");
     }
 
+    /**
+     * Starts reconnecting to server
+     */
     public void reconnect() {
         reconnectionThread = new ReconnectionThread();
         reconnectionThread.reconnect();
     }
 
+    /**
+     * Sends specified message to server
+     * @param innerMessage
+     */
     public void sendMessage(TransmittableMessage innerMessage) {
         MessageWrapper message = new MessageWrapper(innerMessage);
         try {
-            writer.println(MarshallingUtils.marshallMessage(message));
+            writer.println(MarshallingUtils.marshalMessage(message));
         } catch (JAXBException e) {
             log.error("Can't wrap and send outcoming message.", e);
         }
     }
 
+    /**
+     * Thread for reconnecting to server
+     */
     private class ReconnectionThread extends Thread {
         private boolean isRunning;
 
+        /**
+         * Tries to connect to server while the reconnection thread is running and until successful connection.
+         * If connection fails, the thread tries to wait 1 second and ties again.
+         */
         @Override
         public void run() {
             MessageThread newThread = new MessageThread();
@@ -190,6 +224,9 @@ public class MessageThread extends Thread {
             log.info("Finished reconnecting.");
         }
 
+        /**
+         * Starts reconnecting
+         */
         public void reconnect() {
             Platform.runLater(() -> {
                 DialogWindow.showDialogWindow("Error",
@@ -207,6 +244,9 @@ public class MessageThread extends Thread {
             log.info("Started reconnection.");
         }
 
+        /**
+         * Finishes reconnecting
+         */
         public void finishReconnecting() {
             isRunning = false;
         }

@@ -10,6 +10,10 @@ import javafx.application.Platform;
 
 import java.util.HashMap;
 
+/**
+ * Controller that is responsible for all admin actions.
+ * This class realizes singleton design pattern
+ */
 public class AdminController {
     private AdminPanelView view;
     private static AdminController instance;
@@ -18,6 +22,11 @@ public class AdminController {
     private AdminController() {
     }
 
+    /**
+     * Gets instance of the class
+     *
+     * @return instance of the class
+     */
     public static AdminController getInstance() {
         if (instance == null) {
             instance = new AdminController();
@@ -25,14 +34,27 @@ public class AdminController {
         return instance;
     }
 
+    /**
+     * Sets view for controller
+     *
+     * @param view view for controller
+     */
     public void setView(AdminPanelView view) {
         this.view = view;
     }
 
+    /**
+     * Sends request to ban specified user
+     * @param selectedUser user to be banned
+     */
     public void banUser(User selectedUser) {
         sendSetBanMessage(selectedUser, true);
     }
 
+    /**
+     * Sends request to delete specified user
+     * @param selectedUser user to be deleted
+     */
     public void deleteUser(User selectedUser) {
         if (selectedUser != null && DialogWindow.showConfirmationWindow("Are you sure to delete this user?", selectedUser.toString())) {
             DeleteUserRequest request = new DeleteUserRequest(selectedUser.getNickname());
@@ -40,16 +62,34 @@ public class AdminController {
         }
     }
 
+    /**
+     * Opens window for editing profile of selected user
+     * @param selectedUser
+     */
     public void editUser(User selectedUser) {
         if (selectedUser != null) {
             Controller.getInstance().showEditProfileDialog(selectedUser);
         }
     }
 
+    /**
+     * Sends request to unban specified user
+     * @param selectedUser user to be unbanned
+     */
     public void unbanUser(User selectedUser) {
         sendSetBanMessage(selectedUser, false);
     }
 
+    /**
+     * Processes incoming message.
+     * <p>For ALL_USERS_RESPONSE displays all users info in the table inside view.</p>
+     * <p>For CHANGE_CREDENTIALS_RESPONSE if change credentials request was confirmed,
+     * changes info in the table for specified user.
+     * Otherwise shows dialog window why action can't be done.</p>
+     * <p>For SET_BAN_STATUS sets specified ban status.</p>
+     * <p>For DELETE_USER_RESPONSE deletes user from table inside view</p>
+     * @param message incoming message
+     */
     public void processMessage(MessageWrapper message) {
         switch (message.getMessageType()) {
             case ALL_USERS_RESPONSE:
@@ -91,11 +131,19 @@ public class AdminController {
         }
     }
 
+    /**
+     * Sends request to get information about all users
+     */
     public void sendAllUsersRequest() {
         GetAllUsersRequest request = new GetAllUsersRequest();
         Controller.getInstance().getThread().sendMessage(request);
     }
 
+    /**
+     * Sends request to set specified ban status
+     * @param selectedUser user whose ban status has to be changed
+     * @param isBanned new ban status
+     */
     private void sendSetBanMessage(User selectedUser, boolean isBanned) {
         SetBanStatusMessage message = new SetBanStatusMessage(selectedUser.getNickname(), isBanned);
         Controller.getInstance().getThread().sendMessage(message);
