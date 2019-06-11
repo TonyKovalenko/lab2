@@ -60,13 +60,18 @@ class MessageController {
             SetBanStatusMessage.class,
             UserLogoutMessage.class,
             UserDisconnectMessage.class,
-            MessageWrapper.class
+            MessageWrapper.class,
+            ServerRestartMessage.class,
+            ServerShutdownMessage.class
     };
 
     private JAXBContext context;
     private Marshaller marshaller;
     private Unmarshaller unmarshaller;
     private Socket socket;
+
+    MessageController() {
+    }
 
     /**
      * Constructor, for creating an instance of the MessageController and further
@@ -84,6 +89,7 @@ class MessageController {
             log.error("Message controller context was not initialized correctly" + ex);
         }
     }
+
 
     /**
      * Method to send a TransmittableMessage instance to specified I/O stream.
@@ -113,7 +119,7 @@ class MessageController {
      * @see TransmittableMessage
      * @see MessageWrapper
      */
-    private void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
+    void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
         Set<PrintWriter> userStreams = UserStreamContainer.INSTANCE.getCurrentUserStreams();
         try {
             marshaller.marshal(new MessageWrapper(message), stringWriter);

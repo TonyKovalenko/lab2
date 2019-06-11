@@ -8,15 +8,14 @@ import com.group4.server.model.message.adapters.ChatContainerEnumAdapter;
 import com.group4.server.model.message.adapters.ChatInvitationsEnumAdapter;
 import com.group4.server.model.message.adapters.UserDataContainerAdapter;
 import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
+import com.group4.server.model.message.types.ServerRestartMessage;
+import com.group4.server.model.message.types.ServerShutdownMessage;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Map;
 import java.util.Set;
 
@@ -124,6 +123,7 @@ public class StartupShutdownController {
                     if (!serverController.isAlive()) {
                         System.out.println("Server is already stopped.");
                     } else {
+                        new MessageController().broadcastToOnlineUsers(new ServerShutdownMessage(), new StringWriter());
                         saveData(marshaller);
                         serverController.interrupt();
                         System.out.println("SERVER WAS STOPPED");
@@ -133,6 +133,7 @@ public class StartupShutdownController {
                     if (!serverController.isAlive()) {
                         System.out.println("Server is stopped.");
                     } else {
+                        new MessageController().broadcastToOnlineUsers(new ServerRestartMessage(), new StringWriter());
                         saveData(marshaller);
                         serverController.interrupt();
                         serverController = new ServerController();
