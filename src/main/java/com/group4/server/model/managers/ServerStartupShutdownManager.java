@@ -22,16 +22,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * StartupShutdownController is primary for controlling the console
+ * ServerStartupShutdownManager is primary for controlling the console
  * interface of server side, allows to stop, start and restart the server
  *
  * @author Anton Kovalenko
  * @see ServerController
  * @since 05-06.19
  */
-public class StartupShutdownController {
+public class ServerStartupShutdownManager {
 
-    private static final Logger log = Logger.getLogger(StartupShutdownController.class);
+    private static final Logger log = Logger.getLogger(ServerStartupShutdownManager.class);
     private Marshaller marshaller;
     private ServerController serverController = new ServerController();
     private BufferedReader buff;
@@ -48,10 +48,10 @@ public class StartupShutdownController {
     };
 
     /**
-     * Constructor of StartupShutdownController class,
+     * Constructor of ServerStartupShutdownManager class,
      * it initializes the JAXB context, needed for saving and retrieving user data from storage.
      */
-    private StartupShutdownController() {
+    private ServerStartupShutdownManager() {
         initContext();
     }
 
@@ -68,15 +68,15 @@ public class StartupShutdownController {
     }
 
     public static void main(String... args) {
-        StartupShutdownController startupShutdownController = new StartupShutdownController();
-        startupShutdownController.processActions();
+        ServerStartupShutdownManager serverStartupShutdownManager = new ServerStartupShutdownManager();
+        serverStartupShutdownManager.processActions();
         log.info("Server side console closed.");
     }
 
     /**
      * Method, that prints the available actions
      * that could be performed with the server
-     * to it's console by using {@link StartupShutdownController#showMenu(String...)}
+     * to it's console by using {@link ServerStartupShutdownManager#showMenu(String...)}
      */
     private void showActions() {
         System.out.println("\n - Please choose a further action by typing it's number in following menu \n");
@@ -102,7 +102,7 @@ public class StartupShutdownController {
     }
 
     /**
-     * Method to get {@link StartupShutdownController#getTrimmedInput()} and process users input as a desired action,
+     * Method to get {@link ServerStartupShutdownManager#getTrimmedInput()} and process users input as a desired action,
      * that should be performed with a server.
      */
     private void processActions() {
