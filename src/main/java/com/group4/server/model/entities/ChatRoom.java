@@ -36,7 +36,7 @@ public class ChatRoom {
     }
 
     public ChatRoom(String name, Set<User> members) {
-        this.isPrivate = false;
+        this.isPrivate = members.size() == 2;
         this.members = members;
         this.name = name;
     }

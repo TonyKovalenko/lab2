@@ -60,7 +60,7 @@
             <configuration>
               <archive>
               <manifest>
-                <mainClass>com.group4.server.controller.StartupShutdownController</mainClass>
+                <mainClass>com.group4.server.model.managers.ServerStartupShutdownManager</mainClass>
               </manifest>
             </archive>
               <descriptorRefs>

@@ -30,7 +30,7 @@ import java.util.Set;
  * @see ServerController
  * @since 05-06-19
  */
-class MessageController {
+public class MessageController {
 
     private static final Logger log = Logger.getLogger(MessageController.class);
 
@@ -60,13 +60,18 @@ class MessageController {
             SetBanStatusMessage.class,
             UserLogoutMessage.class,
             UserDisconnectMessage.class,
-            MessageWrapper.class
+            MessageWrapper.class,
+            ServerRestartMessage.class,
+            ServerShutdownMessage.class
     };
 
     private JAXBContext context;
     private Marshaller marshaller;
     private Unmarshaller unmarshaller;
     private Socket socket;
+
+    public MessageController() {
+    }
 
     /**
      * Constructor, for creating an instance of the MessageController and further
@@ -84,6 +89,7 @@ class MessageController {
             log.error("Message controller context was not initialized correctly" + ex);
         }
     }
+
 
     /**
      * Method to send a TransmittableMessage instance to specified I/O stream.
@@ -113,7 +119,7 @@ class MessageController {
      * @see TransmittableMessage
      * @see MessageWrapper
      */
-    private void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
+    public void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
         Set<PrintWriter> userStreams = UserStreamContainer.INSTANCE.getCurrentUserStreams();
         try {
             marshaller.marshal(new MessageWrapper(message), stringWriter);
@@ -144,7 +150,7 @@ class MessageController {
         BufferedReader in;
         PrintWriter out;
         StringWriter stringWriter;
-        StringReader stringReader;
+        StringReader stringReader = new StringReader("");
         MessageWrapper requestMessage;
         boolean isConnected = true;
         try {
@@ -189,9 +195,8 @@ class MessageController {
                         ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
                         Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
                         TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
-                        StringWriter sw = new StringWriter();
                         sendResponse(authorizationResponse, out, stringWriter);
-                        broadcastToOnlineUsers(onlineList, sw);
+                        broadcastToOnlineUsers(onlineList, new StringWriter());
                         log.info("Successful user authorization from:[" + authorizationRequest.getUserNickname() + "]");
                         break;
                     } else {
@@ -312,10 +317,17 @@ class MessageController {
                     UserStreamContainer.INSTANCE.deleteUser(logoutMessage.getNickname());
                     Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
                     TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
-                    StringWriter sw = new StringWriter();
-                    broadcastToOnlineUsers(onlineList, sw);
+                    broadcastToOnlineUsers(onlineList, new StringWriter());
                     break;
             }
+        }
+        try {
+            in.close();
+            out.close();
+            stringReader.close();
+            stringWriter.close();
+        } catch (IOException ex) {
+            log.error("MessageController resources were not closed properly. " + ex.getMessage());
         }
     }
 }

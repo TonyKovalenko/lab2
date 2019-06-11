@@ -1,5 +1,7 @@
-package com.group4.server.controller;
+package com.group4.server.model.managers;
 
+import com.group4.server.controller.MessageController;
+import com.group4.server.controller.ServerController;
 import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.entities.ChatRoom;
@@ -8,29 +10,28 @@ import com.group4.server.model.message.adapters.ChatContainerEnumAdapter;
 import com.group4.server.model.message.adapters.ChatInvitationsEnumAdapter;
 import com.group4.server.model.message.adapters.UserDataContainerAdapter;
 import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
+import com.group4.server.model.message.types.ServerRestartMessage;
+import com.group4.server.model.message.types.ServerShutdownMessage;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * StartupShutdownController is primary for controlling the console
+ * ServerStartupShutdownManager is primary for controlling the console
  * interface of server side, allows to stop, start and restart the server
  *
  * @author Anton Kovalenko
- * @since 05-06.19
  * @see ServerController
+ * @since 05-06.19
  */
-public class StartupShutdownController {
+public class ServerStartupShutdownManager {
 
-    private static final Logger log = Logger.getLogger(StartupShutdownController.class);
+    private static final Logger log = Logger.getLogger(ServerStartupShutdownManager.class);
     private Marshaller marshaller;
     private ServerController serverController = new ServerController();
     private BufferedReader buff;
@@ -47,10 +48,10 @@ public class StartupShutdownController {
     };
 
     /**
-     * Constructor of StartupShutdownController class,
+     * Constructor of ServerStartupShutdownManager class,
      * it initializes the JAXB context, needed for saving and retrieving user data from storage.
      */
-    private StartupShutdownController() {
+    private ServerStartupShutdownManager() {
         initContext();
     }
 
@@ -67,21 +68,22 @@ public class StartupShutdownController {
     }
 
     public static void main(String... args) {
-        StartupShutdownController startupShutdownController = new StartupShutdownController();
-        startupShutdownController.processActions();
+        ServerStartupShutdownManager serverStartupShutdownManager = new ServerStartupShutdownManager();
+        serverStartupShutdownManager.processActions();
         log.info("Server side console closed.");
     }
 
     /**
      * Method, that prints the available actions
      * that could be performed with the server
-     * to it's console by using {@link StartupShutdownController#showMenu(String...)}
+     * to it's console by using {@link ServerStartupShutdownManager#showMenu(String...)}
      */
     private void showActions() {
         System.out.println("\n - Please choose a further action by typing it's number in following menu \n");
         String[] menuItems = new String[]{
                 "Start server.",
                 "Stop server.",
+                "Restart server.",
                 "Exit."
         };
         showMenu(menuItems);
@@ -89,6 +91,7 @@ public class StartupShutdownController {
 
     /**
      * Method that prints input arguments in for of a menu to a console.
+     *
      * @param items items, needed to be printed
      */
     private void showMenu(String... items) {
@@ -99,7 +102,7 @@ public class StartupShutdownController {
     }
 
     /**
-     * Method to get {@link StartupShutdownController#getTrimmedInput()} and process users input as a desired action,
+     * Method to get {@link ServerStartupShutdownManager#getTrimmedInput()} and process users input as a desired action,
      * that should be performed with a server.
      */
     private void processActions() {
@@ -109,34 +112,43 @@ public class StartupShutdownController {
             showActions();
             inputChoice = getTrimmedInput();
             switch (inputChoice) {
-                case "1":
-                    if (serverController.isRunning()) {
+                case "1": //start server
+                    if (serverController.isAlive()) {
                         System.out.println("Server is already running");
                     } else {
                         serverController = new ServerController();
                         serverController.start();
-                        serverController.setRunning(true);
                         System.out.println("SERVER STARTED.");
                     }
                     break;
-                case "2":
-                    if (!serverController.isRunning()) {
+                case "2": //stop server
+                    if (!serverController.isAlive()) {
                         System.out.println("Server is already stopped.");
                     } else {
+                        new MessageController().broadcastToOnlineUsers(new ServerShutdownMessage(), new StringWriter());
                         saveData(marshaller);
-                        serverController.setRunning(false);
                         serverController.interrupt();
                         System.out.println("SERVER WAS STOPPED");
                     }
                     break;
-                case "3":
+                case "3": //restart server
+                    if (!serverController.isAlive()) {
+                        System.out.println("Server is stopped.");
+                    } else {
+                        new MessageController().broadcastToOnlineUsers(new ServerRestartMessage(), new StringWriter());
+                        saveData(marshaller);
+                        serverController.interrupt();
+                        serverController = new ServerController();
+                        serverController.start();
+                        System.out.println("Server restarted");
+                    }
+                    break;
+                case "4": //exit
                     exitAction = true;
-                    if (serverController.isRunning()) {
-                        serverController.setRunning(false);
+                    if (serverController.isAlive()) {
                         saveData(marshaller);
                         serverController.interrupt();
                     }
-                    System.out.println("Waiting all user to logout...");
                     break;
                 default:
                     System.out.print("Incorrect input, please retry.");
@@ -147,6 +159,7 @@ public class StartupShutdownController {
 
     /**
      * Method to get users input from console.
+     *
      * @return trimmed user's input
      */
     private String getTrimmedInput() {
@@ -166,6 +179,7 @@ public class StartupShutdownController {
 
     /**
      * Method to return internal JAXB marshaller of class
+     *
      * @return marshallerof a class
      */
     public Marshaller getMarshaller() {
@@ -174,6 +188,7 @@ public class StartupShutdownController {
 
     /**
      * Method to save user data containers upon server shutdown.
+     *
      * @param marshaller marshaller, to use while saving the data
      */
     private void saveData(Marshaller marshaller) {
@@ -184,6 +199,7 @@ public class StartupShutdownController {
 
     /**
      * Method to save chat invitations to a file
+     *
      * @param marshaller marshaller, to use for saving the data
      * @see ChatInvitationsContainer
      */
@@ -200,6 +216,7 @@ public class StartupShutdownController {
 
     /**
      * Method to save chat rooms to a file
+     *
      * @param marshaller marshaller, to use for saving the data
      * @see ChatRoomsContainer
      */
@@ -216,6 +233,7 @@ public class StartupShutdownController {
 
     /**
      * Method to save user data to a file
+     *
      * @param marshaller marshaller, to use for saving the data
      * @see RegistrationAuthorizationHandler
      */
