@@ -72,6 +72,13 @@ public class MessageController {
     private Socket socket;
 
     public MessageController() {
+        try {
+            this.context = JAXBContext.newInstance(clazzes);
+            this.marshaller = context.createMarshaller();
+            this.unmarshaller = context.createUnmarshaller();
+        } catch (JAXBException ex) {
+            log.error("Message controller context was not initialized correctly" + ex);
+        }
     }
 
     /**
@@ -81,14 +88,8 @@ public class MessageController {
      * @param socket, which was accepted in {@link ServerController#run()} method.
      */
     MessageController(Socket socket) {
-        try {
-            this.socket = socket;
-            this.context = JAXBContext.newInstance(clazzes);
-            this.marshaller = context.createMarshaller();
-            this.unmarshaller = context.createUnmarshaller();
-        } catch (JAXBException ex) {
-            log.error("Message controller context was not initialized correctly" + ex);
-        }
+        this();
+        this.socket = socket;
     }
 
 
