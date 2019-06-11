@@ -218,7 +218,10 @@ public class Controller extends Application {
                 users.remove(currentUser.getNickname());
                 updateOnlineUsersView();
                 if (CreateChatView.isOpened()) {
-                    Platform.runLater(() -> CreateChatView.getInstance().setOnlineUsers(users.values()));
+                    Platform.runLater(() -> {
+                        CreateChatView.getInstance().setOnlineUsers(users.values());
+                        CreateChatView.getInstance().setUsersWithoutPrivateChat(getUsersWithoutPrivateChat());
+                    });
                 }
                 break;
             case CHAT_CREATION_RESPONSE:
@@ -228,7 +231,21 @@ public class Controller extends Application {
                     chatRooms.put(chatRoom.getId(), chatRoom);
                     updateChatRoomsView();
                 }
-                System.out.println("CHAT_CREATION_RESPONSE");
+                break;
+            case CHAT_CREATION_REQUEST:
+                ChatRoom requestChatRoom = ((ChatRoomCreationRequest) responseMessage.getEncapsulatedMessage()).getChatRoom();
+                String username = requestChatRoom.getAdminNickname();
+                ChatRoomCreationResponse response = new ChatRoomCreationResponse();
+                boolean isConfirmed = DialogWindow.showConfirmationWindow(
+                        "Invitation to chat from " + username,
+                        "Do you want to start chat with " + username);
+                response.setSuccessful(isConfirmed);
+                thread.sendMessage(response);
+                if (isConfirmed) {
+                    chatRooms.put(requestChatRoom.getId(), requestChatRoom);
+                    updateChatRoomsView();
+                    mainView.selectChatRoom(requestChatRoom);
+                }
                 break;
             case NEW_CHATS:
                 ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
@@ -337,12 +354,12 @@ public class Controller extends Application {
     public void logout() {
         if (currentUser != null) {
             thread.sendMessage(new UserLogoutMessage(currentUser.getNickname()));
+            log.info("Log out: " + currentUser);
             currentUser = null;
         }
         LoginView.getInstance().showStage();
         users = new HashMap<>();
         chatRooms = new HashMap<>();
-        System.out.println("Log out");
     }
 
     /**
@@ -396,8 +413,8 @@ public class Controller extends Application {
             String chatName = view.getGroupName();
             users.add(currentUser);
             chatRoom = new ChatRoom(chatName, users);
-            chatRoom.setAdminNickname(currentUser.getNickname());
         }
+        chatRoom.setAdminNickname(currentUser.getNickname());
         ChatRoomCreationRequest message = new ChatRoomCreationRequest(chatRoom);
         thread.sendMessage(message);
         view.close();
