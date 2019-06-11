@@ -208,12 +208,21 @@ public class MessageController {
                 case CHAT_CREATION_RESPONSE:
                     ChatRoomCreationResponse privateChatRoomCreationResponse = (ChatRoomCreationResponse) requestMessage.getEncapsulatedMessage();
                     if (privateChatRoomCreationResponse.isSuccessful()) {
-                        ChatRoomProcessorHandler.INSTANCE.handle(privateChatRoomCreationResponse);
-                    }
-                    String roomAdminNickname = privateChatRoomCreationResponse.getChatRoom().getAdminNickname();
-                    PrintWriter roomAdminStream = UserStreamContainer.INSTANCE.getStream(roomAdminNickname);
-                    if (roomAdminStream != null) {
-                        sendResponse(privateChatRoomCreationResponse, roomAdminStream, stringWriter);
+                        ChatRoomCreationResponse privateChatRoomCreationFinalResponse = ChatRoomProcessorHandler.INSTANCE.handle(privateChatRoomCreationResponse);
+                        if (privateChatRoomCreationFinalResponse.isSuccessful()) {
+                            Set<User> privateMembers = privateChatRoomCreationFinalResponse.getChatRoom().getMembers();
+                            ChatRoom newChatRoom = privateChatRoomCreationFinalResponse.getChatRoom();
+                            for (User user : privateMembers) {
+                                PrintWriter userStream = UserStreamContainer.INSTANCE.getStream(user.getNickname());
+                                TransmittableMessage chatInvitation = new ChatInvitationMessage(newChatRoom);
+                                if (userStream != null) {
+                                    sendResponse(chatInvitation, userStream, stringWriter);
+                                } else {
+                                    ChatInvitationsContainer.INSTANCE.saveChatInvitation(user.getNickname(), newChatRoom);
+                                }
+                            }
+                            log.info("Private chat created");
+                        }
                     }
                     break;
                 case CHAT_CREATION_REQUEST:
