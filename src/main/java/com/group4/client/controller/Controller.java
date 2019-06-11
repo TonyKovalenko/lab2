@@ -236,16 +236,14 @@ public class Controller extends Application {
                 ChatRoom requestChatRoom = ((ChatRoomCreationRequest) responseMessage.getEncapsulatedMessage()).getChatRoom();
                 String username = requestChatRoom.getAdminNickname();
                 ChatRoomCreationResponse response = new ChatRoomCreationResponse();
-                boolean isConfirmed = DialogWindow.showConfirmationWindow(
-                        "Invitation to chat from " + username,
-                        "Do you want to start chat with " + username);
-                response.setSuccessful(isConfirmed);
-                thread.sendMessage(response);
-                if (isConfirmed) {
-                    chatRooms.put(requestChatRoom.getId(), requestChatRoom);
-                    updateChatRoomsView();
-                    mainView.selectChatRoom(requestChatRoom);
-                }
+                Platform.runLater(() -> {
+                    boolean isConfirmed = DialogWindow.showConfirmationWindow(
+                            "Invitation to chat from " + username,
+                            "Do you want to start chat with " + username);
+                    response.setSuccessful(isConfirmed);
+                    thread.sendMessage(response);
+
+                });
                 break;
             case NEW_CHATS:
                 ChatInvitationMessage chatInvitationMessage = (ChatInvitationMessage) responseMessage.getEncapsulatedMessage();
