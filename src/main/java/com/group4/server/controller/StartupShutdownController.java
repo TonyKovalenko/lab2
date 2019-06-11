@@ -25,8 +25,8 @@ import java.util.Set;
  * interface of server side, allows to stop, start and restart the server
  *
  * @author Anton Kovalenko
- * @since 05-06.19
  * @see ServerController
+ * @since 05-06.19
  */
 public class StartupShutdownController {
 
@@ -82,6 +82,7 @@ public class StartupShutdownController {
         String[] menuItems = new String[]{
                 "Start server.",
                 "Stop server.",
+                "Restart server.",
                 "Exit."
         };
         showMenu(menuItems);
@@ -89,6 +90,7 @@ public class StartupShutdownController {
 
     /**
      * Method that prints input arguments in for of a menu to a console.
+     *
      * @param items items, needed to be printed
      */
     private void showMenu(String... items) {
@@ -109,7 +111,7 @@ public class StartupShutdownController {
             showActions();
             inputChoice = getTrimmedInput();
             switch (inputChoice) {
-                case "1":
+                case "1": //start server
                     if (serverController.isAlive()) {
                         System.out.println("Server is already running");
                     } else {
@@ -118,7 +120,7 @@ public class StartupShutdownController {
                         System.out.println("SERVER STARTED.");
                     }
                     break;
-                case "2":
+                case "2": //stop server
                     if (!serverController.isAlive()) {
                         System.out.println("Server is already stopped.");
                     } else {
@@ -127,7 +129,18 @@ public class StartupShutdownController {
                         System.out.println("SERVER WAS STOPPED");
                     }
                     break;
-                case "3":
+                case "3": //restart server
+                    if (!serverController.isAlive()) {
+                        System.out.println("Server is stopped.");
+                    } else {
+                        saveData(marshaller);
+                        serverController.interrupt();
+                        serverController = new ServerController();
+                        serverController.start();
+                        System.out.println("Server restarted");
+                    }
+                    break;
+                case "4": //exit
                     exitAction = true;
                     if (serverController.isAlive()) {
                         saveData(marshaller);
@@ -143,6 +156,7 @@ public class StartupShutdownController {
 
     /**
      * Method to get users input from console.
+     *
      * @return trimmed user's input
      */
     private String getTrimmedInput() {
@@ -162,6 +176,7 @@ public class StartupShutdownController {
 
     /**
      * Method to return internal JAXB marshaller of class
+     *
      * @return marshallerof a class
      */
     public Marshaller getMarshaller() {
@@ -170,6 +185,7 @@ public class StartupShutdownController {
 
     /**
      * Method to save user data containers upon server shutdown.
+     *
      * @param marshaller marshaller, to use while saving the data
      */
     private void saveData(Marshaller marshaller) {
@@ -180,6 +196,7 @@ public class StartupShutdownController {
 
     /**
      * Method to save chat invitations to a file
+     *
      * @param marshaller marshaller, to use for saving the data
      * @see ChatInvitationsContainer
      */
@@ -196,6 +213,7 @@ public class StartupShutdownController {
 
     /**
      * Method to save chat rooms to a file
+     *
      * @param marshaller marshaller, to use for saving the data
      * @see ChatRoomsContainer
      */
@@ -212,6 +230,7 @@ public class StartupShutdownController {
 
     /**
      * Method to save user data to a file
+     *
      * @param marshaller marshaller, to use for saving the data
      * @see RegistrationAuthorizationHandler
      */
