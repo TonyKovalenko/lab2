@@ -241,6 +241,7 @@ public class Controller extends Application {
                             "Invitation to chat from " + username,
                             "Do you want to start chat with " + username);
                     response.setSuccessful(isConfirmed);
+                    response.setChatRoom(requestChatRoom);
                     thread.sendMessage(response);
 
                 });
