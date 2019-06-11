@@ -15,9 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 
@@ -34,34 +32,11 @@ import java.util.concurrent.*;
 public class ServerController extends Thread {
 
     private static final Logger log = Logger.getLogger(ServerController.class.getName());
-    private final int availableProcessors;
+    private int availableProcessors;
     private int port = 8888;
     private String ipAddress = "localhost";
     private ExecutorService executor;
-    private volatile boolean isRunning;
-
-
-    /**
-     * Method to check whether server is currently running
-     * by checking {@link #isRunning} field
-     *
-     * @return true, if server is running
-     * false, otherwise
-     */
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    /**
-     * Method to set server running status
-     * by setting {@link #isRunning} field
-     *
-     * @param running true, to run the server
-     *                false, to stop
-     */
-    public void setRunning(boolean running) {
-        isRunning = running;
-    }
+    private Set<Socket> connectedSockets = new HashSet<>();
 
     /**
      * Constructor for creating ServerController instances
@@ -167,24 +142,26 @@ public class ServerController extends Thread {
     public void run() {
         executor = Executors.newFixedThreadPool(availableProcessors);
         log.info("Processing method started.");
-        Socket s = new Socket();
+        Socket userSocket;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            while (isRunning) {
+            while (isAlive()) {
                 if (isInterrupted()) {
                     serverSocket.close();
                     break;
                 }
                 Future<Socket> futureSocket = executor.submit(serverSocket::accept);
-                s = futureSocket.get();
-                MessageController messageController = new MessageController(s);
+                userSocket = futureSocket.get();
+                connectedSockets.add(userSocket);
+                MessageController messageController = new MessageController(userSocket);
                 executor.submit(messageController::handle);
             }
         } catch (IOException | ExecutionException | InterruptedException ex) {
             log.error("Server failed to close properly" + ex);
         } finally {
-            setRunning(false);
             try {
-                s.close();
+                for (Socket socket : connectedSockets) {
+                    socket.close();
+                }
                 executor.awaitTermination(5, TimeUnit.SECONDS);
             } catch (IOException e) {
                 log.error("Exception while closing the socket");

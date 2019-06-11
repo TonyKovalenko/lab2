@@ -189,9 +189,8 @@ class MessageController {
                         ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
                         Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
                         TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
-                        StringWriter sw = new StringWriter();
                         sendResponse(authorizationResponse, out, stringWriter);
-                        broadcastToOnlineUsers(onlineList, sw);
+                        broadcastToOnlineUsers(onlineList, new StringWriter());
                         log.info("Successful user authorization from:[" + authorizationRequest.getUserNickname() + "]");
                         break;
                     } else {
@@ -312,8 +311,7 @@ class MessageController {
                     UserStreamContainer.INSTANCE.deleteUser(logoutMessage.getNickname());
                     Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
                     TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
-                    StringWriter sw = new StringWriter();
-                    broadcastToOnlineUsers(onlineList, sw);
+                    broadcastToOnlineUsers(onlineList, new StringWriter());
                     break;
             }
         }

@@ -110,33 +110,29 @@ public class StartupShutdownController {
             inputChoice = getTrimmedInput();
             switch (inputChoice) {
                 case "1":
-                    if (serverController.isRunning()) {
+                    if (serverController.isAlive()) {
                         System.out.println("Server is already running");
                     } else {
                         serverController = new ServerController();
                         serverController.start();
-                        serverController.setRunning(true);
                         System.out.println("SERVER STARTED.");
                     }
                     break;
                 case "2":
-                    if (!serverController.isRunning()) {
+                    if (!serverController.isAlive()) {
                         System.out.println("Server is already stopped.");
                     } else {
                         saveData(marshaller);
-                        serverController.setRunning(false);
                         serverController.interrupt();
                         System.out.println("SERVER WAS STOPPED");
                     }
                     break;
                 case "3":
                     exitAction = true;
-                    if (serverController.isRunning()) {
-                        serverController.setRunning(false);
+                    if (serverController.isAlive()) {
                         saveData(marshaller);
                         serverController.interrupt();
                     }
-                    System.out.println("Waiting all user to logout...");
                     break;
                 default:
                     System.out.print("Incorrect input, please retry.");
