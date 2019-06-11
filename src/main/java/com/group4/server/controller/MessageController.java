@@ -30,7 +30,7 @@ import java.util.Set;
  * @see ServerController
  * @since 05-06-19
  */
-class MessageController {
+public class MessageController {
 
     private static final Logger log = Logger.getLogger(MessageController.class);
 
@@ -70,7 +70,7 @@ class MessageController {
     private Unmarshaller unmarshaller;
     private Socket socket;
 
-    MessageController() {
+    public MessageController() {
     }
 
     /**
@@ -119,7 +119,7 @@ class MessageController {
      * @see TransmittableMessage
      * @see MessageWrapper
      */
-    void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
+    public void broadcastToOnlineUsers(TransmittableMessage message, StringWriter stringWriter) {
         Set<PrintWriter> userStreams = UserStreamContainer.INSTANCE.getCurrentUserStreams();
         try {
             marshaller.marshal(new MessageWrapper(message), stringWriter);
@@ -150,7 +150,7 @@ class MessageController {
         BufferedReader in;
         PrintWriter out;
         StringWriter stringWriter;
-        StringReader stringReader;
+        StringReader stringReader = new StringReader("");
         MessageWrapper requestMessage;
         boolean isConnected = true;
         try {
@@ -320,6 +320,14 @@ class MessageController {
                     broadcastToOnlineUsers(onlineList, new StringWriter());
                     break;
             }
+        }
+        try {
+            in.close();
+            out.close();
+            stringReader.close();
+            stringWriter.close();
+        } catch (IOException ex) {
+            log.error("MessageController resources were not closed properly. " + ex.getMessage());
         }
     }
 }

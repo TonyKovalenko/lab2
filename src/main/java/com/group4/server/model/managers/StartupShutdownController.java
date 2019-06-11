@@ -1,5 +1,7 @@
-package com.group4.server.controller;
+package com.group4.server.model.managers;
 
+import com.group4.server.controller.MessageController;
+import com.group4.server.controller.ServerController;
 import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
 import com.group4.server.model.entities.ChatRoom;

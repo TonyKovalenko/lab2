@@ -43,7 +43,7 @@ public class ServerController extends Thread {
      * with the amount of processors, that are available to JVM
      * and specified port.
      */
-    ServerController() {
+    public ServerController() {
         availableProcessors = Runtime.getRuntime().availableProcessors();
         if (validateWithDOM("connection-params.xml")) {
             try {
