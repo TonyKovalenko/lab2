@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.stage.StageStyle;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -233,7 +234,8 @@ public class MessageThread extends Thread {
                         "Connection failed",
                         "Connection was broken!\nPlease try to wait or exit the application.",
                         Alert.AlertType.ERROR,
-                        "Exit");
+                        "Exit",
+                        StageStyle.UNDECORATED);
                 Optional<ButtonType> result = DialogWindow.getLastInstance().showAndWait();
                 if (result.isPresent() && result.get().getButtonData() == ButtonBar.ButtonData.OK_DONE) {
                     Controller.getInstance().exit();

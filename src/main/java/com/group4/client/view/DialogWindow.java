@@ -23,10 +23,10 @@ public class DialogWindow {
      * @param text   text to show in the dialog content area
      * @param type   alert type of the dialog window
      */
-    public static void showDialogWindow(String title, String header, String text, Alert.AlertType type, String okButtonText) {
+    public static void showDialogWindow(String title, String header, String text, Alert.AlertType type, String okButtonText, StageStyle style) {
         ButtonType ok = new ButtonType(okButtonText, ButtonBar.ButtonData.OK_DONE);
         lastInstance = new Alert(type, text, ok);
-        lastInstance.initStyle(StageStyle.UNDECORATED);
+        lastInstance.initStyle(style);
         lastInstance.setTitle(title);
         lastInstance.setHeaderText(header);
     }
@@ -39,7 +39,7 @@ public class DialogWindow {
      */
     public static void showWarningWindow(String header, String text) {
         Platform.runLater(() -> {
-            showDialogWindow("Warning!", header, text, Alert.AlertType.WARNING, "OK");
+            showDialogWindow("Warning!", header, text, Alert.AlertType.WARNING, "OK", StageStyle.DECORATED);
             lastInstance.showAndWait();
         });
     }
@@ -51,7 +51,7 @@ public class DialogWindow {
      */
     public static void showInfoWindow(String text) {
         Platform.runLater(() -> {
-            showDialogWindow("Information Dialog", null, text, Alert.AlertType.INFORMATION, "OK");
+            showDialogWindow("Information Dialog", null, text, Alert.AlertType.INFORMATION, "OK", StageStyle.DECORATED);
             lastInstance.showAndWait();
         });
     }
@@ -63,7 +63,7 @@ public class DialogWindow {
      */
     public static void showErrorWindow(String text) {
         Platform.runLater(() -> {
-            showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK");
+            showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK", StageStyle.DECORATED);
             lastInstance.showAndWait();
         });
     }
@@ -75,7 +75,7 @@ public class DialogWindow {
      */
     public static void showErrorWindowWithoutButtons(String text) {
         Platform.runLater(() -> {
-            showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK");
+            showDialogWindow("Error Dialog", "Error!", text, Alert.AlertType.ERROR, "OK", StageStyle.UNDECORATED);
             lastInstance.getButtonTypes().clear();
             lastInstance.setResult(ButtonType.OK);
             lastInstance.show();
@@ -90,7 +90,7 @@ public class DialogWindow {
      * @return {@code true}  if user pressed "OK" button
      */
     public static boolean showConfirmationWindow(String header, String text) {
-        showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION, "Yes");
+        showDialogWindow("Confirmation Dialog", header, text, Alert.AlertType.CONFIRMATION, "Yes", StageStyle.DECORATED);
         ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
         lastInstance.getButtonTypes().add(noButton);
         Optional<ButtonType> result = lastInstance.showAndWait();
@@ -100,7 +100,7 @@ public class DialogWindow {
     /**
      * Gets last created instance of this class
      *
-     * @return
+     * @return last created instance
      */
     public static Alert getLastInstance() {
         return lastInstance;
