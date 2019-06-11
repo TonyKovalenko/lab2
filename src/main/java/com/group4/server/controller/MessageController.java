@@ -239,6 +239,7 @@ public class MessageController {
                         PrintWriter otherUserStream = UserStreamContainer.INSTANCE.getStream(otherUserNickname);
                         if (otherUserStream != null) {
                             sendResponse(chatRoomCreationRequest, otherUserStream, stringWriter);
+                            break;
                         } else {
                             String adminNickname = privateRoom.getAdminNickname();
                             PrintWriter chatAdminStream = UserStreamContainer.INSTANCE.getStream(adminNickname);

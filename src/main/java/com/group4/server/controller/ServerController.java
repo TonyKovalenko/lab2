@@ -51,11 +51,11 @@ public class ServerController extends Thread {
                 ipAddress = connectionParams.get(0);
                 port = Integer.parseInt(connectionParams.get(1));
             } catch (ParserConfigurationException | SAXException | NumberFormatException | IOException ex) {
-                log.error("Exception during connection data read from file" + ex.getMessage());
+                log.error("Exception during connection data read from file" + ex);
                 return;
             }
         }
-        log.error("Connection parameters file was not validated.");
+        log.error("Connection parameters file was validated.");
     }
 
     /**
