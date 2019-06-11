@@ -17,6 +17,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -136,12 +137,12 @@ public class MessageController {
 
     /**
      * Method that does the major handling of the received message:
-     *
+     * <p>
      * - extracting message from the I/O stream
      * - resolving the encapsulated message type
      * - handling it in a proper way
      * - forming and sending a response (if needed)
-     *
+     * <p>
      * As one instance of {@link MessageController} is associated with single user
      * this method is running in an infinite loop, and serves the single user connection
      * until user decides to disconnect.
@@ -204,9 +205,39 @@ public class MessageController {
                     }
                     sendResponse(authorizationResponse, out, stringWriter);
                     break;
+                case CHAT_CREATION_RESPONSE:
+                    ChatRoomCreationResponse privateChatRoomCreationResponse = (ChatRoomCreationResponse) requestMessage.getEncapsulatedMessage();
+                    if (privateChatRoomCreationResponse.isSuccessful()) {
+                        ChatRoomProcessorHandler.INSTANCE.handle(privateChatRoomCreationResponse);
+                    }
+                    String roomAdminNickname = privateChatRoomCreationResponse.getChatRoom().getAdminNickname();
+                    PrintWriter roomAdminStream = UserStreamContainer.INSTANCE.getStream(roomAdminNickname);
+                    if (roomAdminStream != null) {
+                        sendResponse(privateChatRoomCreationResponse, roomAdminStream, stringWriter);
+                    }
+                    break;
                 case CHAT_CREATION_REQUEST:
                     ChatRoomCreationRequest chatRoomCreationRequest = (ChatRoomCreationRequest) requestMessage.getEncapsulatedMessage();
                     log.info("New chat creation request");
+                    if (chatRoomCreationRequest.getChatRoom().isPrivate()) {
+                        String otherUserNickname = "";
+                        ChatRoom privateRoom = chatRoomCreationRequest.getChatRoom();
+                        Optional<User> otherUser = privateRoom.getMembers().stream().filter(e -> !e.getNickname().equals(privateRoom.getAdminNickname())).findFirst();
+                        if (otherUser.isPresent()) {
+                            otherUserNickname = otherUser.get().getNickname();
+                        }
+                        PrintWriter otherUserStream = UserStreamContainer.INSTANCE.getStream(otherUserNickname);
+                        if (otherUserStream != null) {
+                            sendResponse(chatRoomCreationRequest, otherUserStream, stringWriter);
+                        } else {
+                            String adminNickname = privateRoom.getAdminNickname();
+                            PrintWriter chatAdminStream = UserStreamContainer.INSTANCE.getStream(adminNickname);
+                            if (chatAdminStream != null) {
+                                sendResponse(new ChatRoomCreationResponse(false, privateRoom), chatAdminStream, stringWriter);
+                            }
+                        }
+                        break;
+                    }
                     ChatRoomCreationResponse chatRoomCreationResponse = ChatRoomProcessorHandler.INSTANCE.handle(chatRoomCreationRequest);
                     if (chatRoomCreationResponse.isSuccessful()) {
                         Set<User> members = chatRoomCreationResponse.getChatRoom().getMembers();
@@ -326,7 +357,8 @@ public class MessageController {
             out.close();
             stringReader.close();
             stringWriter.close();
-        } catch (IOException ex) {
+        } catch (
+                IOException ex) {
             log.error("MessageController resources were not closed properly. " + ex.getMessage());
         }
     }

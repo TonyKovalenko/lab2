@@ -18,7 +18,6 @@ public enum ChatRoomProcessorHandler {
 
     INSTANCE;
 
-
     /**
      * Method to handle new chatroom creation
      *
@@ -28,6 +27,19 @@ public enum ChatRoomProcessorHandler {
      */
     public <T extends ChatRoomCreationRequest> ChatRoomCreationResponse handle(T chatCreationRequest) {
         ChatRoom newChatRoom = chatCreationRequest.getChatRoom();
+        boolean creationIsSuccessful = ChatRoomsContainer.INSTANCE.createChatRoom(newChatRoom);
+        return new ChatRoomCreationResponse(creationIsSuccessful, newChatRoom);
+    }
+
+    /**
+     * Method to handle new chatroom creation
+     *
+     * @param chatCreationResponse request message for creating new chatroom
+     * @return response with the state of chatroom creation
+     * @see ChatRoomCreationResponse
+     */
+    public <T extends ChatRoomCreationResponse> ChatRoomCreationResponse handle(T chatCreationResponse) {
+        ChatRoom newChatRoom = chatCreationResponse.getChatRoom();
         boolean creationIsSuccessful = ChatRoomsContainer.INSTANCE.createChatRoom(newChatRoom);
         return new ChatRoomCreationResponse(creationIsSuccessful, newChatRoom);
     }
