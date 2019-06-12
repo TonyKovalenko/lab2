@@ -55,7 +55,7 @@ public class ServerController extends Thread implements ServerControllable {
                 return;
             }
         }
-        log.error("Connection parameters file was validated.");
+        log.info("Connection parameters file was validated.");
     }
 
     /**
@@ -78,11 +78,7 @@ public class ServerController extends Thread implements ServerControllable {
         log.info("Processing method started.");
         Socket userSocket;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            while (isAlive()) {
-                if (isInterrupted()) {
-                    serverSocket.close();
-                    break;
-                }
+            while (!isInterrupted()) {
                 Future<Socket> futureSocket = executor.submit(serverSocket::accept);
                 userSocket = futureSocket.get();
                 connectedSockets.add(userSocket);
@@ -90,13 +86,13 @@ public class ServerController extends Thread implements ServerControllable {
                 executor.submit(messageController::handle);
             }
         } catch (IOException | ExecutionException | InterruptedException ex) {
-            log.error("Server failed to close properly" + ex);
+            log.warn("Server failed to close properly. " + ex);
         } finally {
             try {
                 for (Socket socket : connectedSockets) {
                     socket.close();
                 }
-                executor.awaitTermination(5, TimeUnit.SECONDS);
+                executor.awaitTermination(1, TimeUnit.SECONDS);
             } catch (IOException e) {
                 log.error("Exception while closing the socket");
             } catch (InterruptedException ex) {
