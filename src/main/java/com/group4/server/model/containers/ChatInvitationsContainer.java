@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Container, that holds chat invitations
  * (chat rooms, to which the user was invited while being offline)
  */
-public enum ChatInvitationsContainer {
+public enum ChatInvitationsContainer  {
 
     INSTANCE;
 
@@ -27,7 +27,7 @@ public enum ChatInvitationsContainer {
 
     /**
      * Enum constructor, that populates internal collection
-     * when the class is being accesses at first.
+     * when the class is being accessed at first.
      */
     ChatInvitationsContainer() {
         unmarshallOnStart();

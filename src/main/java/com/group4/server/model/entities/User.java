@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 public class User {

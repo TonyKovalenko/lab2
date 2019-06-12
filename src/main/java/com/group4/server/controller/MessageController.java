@@ -31,7 +31,7 @@ import java.util.Set;
  * @see ServerController
  * @since 05-06-19
  */
-public class MessageController {
+public class MessageController implements MessageControllable {
 
     private static final Logger log = Logger.getLogger(MessageController.class);
 
@@ -92,7 +92,6 @@ public class MessageController {
         this.socket = socket;
     }
 
-
     /**
      * Method to send a TransmittableMessage instance to specified I/O stream.
      *
@@ -102,7 +101,7 @@ public class MessageController {
      * @see TransmittableMessage
      * @see MessageWrapper
      */
-    private void sendResponse(TransmittableMessage message, PrintWriter out, StringWriter stringWriter) {
+    public void sendResponse(TransmittableMessage message, PrintWriter out, StringWriter stringWriter) {
         try {
             marshaller.marshal(new MessageWrapper(message), stringWriter);
         } catch (JAXBException ex) {
@@ -148,7 +147,7 @@ public class MessageController {
      * this method is running in an infinite loop, and serves the single user connection
      * until user decides to disconnect.
      */
-    void handle() {
+    public void handle() {
         BufferedReader in;
         PrintWriter out;
         StringWriter stringWriter;

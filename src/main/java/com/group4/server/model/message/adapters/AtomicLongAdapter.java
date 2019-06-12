@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class AtomicLongAdapter extends XmlAdapter<Long, AtomicLong> {
+
     public AtomicLong unmarshal(Long v) {
         return new AtomicLong(v);
     }
