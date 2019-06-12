@@ -37,6 +37,7 @@ public class ServerController extends Thread implements ServerControllable {
     private String ipAddress = "localhost";
     private ExecutorService executor;
     private Set<Socket> connectedSockets = new HashSet<>();
+    private Set<MessageController> handledConnections = new HashSet<>();
 
     /**
      * Constructor for creating ServerController instances
@@ -83,12 +84,14 @@ public class ServerController extends Thread implements ServerControllable {
                 userSocket = futureSocket.get();
                 connectedSockets.add(userSocket);
                 MessageController messageController = new MessageController(userSocket);
+                handledConnections.add(messageController);
                 executor.submit(messageController::handle);
             }
         } catch (IOException | ExecutionException | InterruptedException ex) {
             log.warn("Server failed to close properly. " + ex);
         } finally {
             try {
+                handledConnections.forEach(MessageController::stopHandling);
                 for (Socket socket : connectedSockets) {
                     socket.close();
                 }

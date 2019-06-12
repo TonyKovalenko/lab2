@@ -70,6 +70,7 @@ public class MessageController implements MessageControllable {
     private Marshaller marshaller;
     private Unmarshaller unmarshaller;
     private Socket socket;
+    private boolean isHandled;
 
     public MessageController() {
         try {
@@ -111,6 +112,9 @@ public class MessageController implements MessageControllable {
         stringWriter.getBuffer().setLength(0);
     }
 
+    void stopHandling() {
+        this.isHandled = false;
+    }
 
     /**
      * Method to broadcast a TransmittableMessage instance to all currently online users.
@@ -153,7 +157,7 @@ public class MessageController implements MessageControllable {
         StringWriter stringWriter;
         StringReader stringReader = new StringReader("");
         MessageWrapper requestMessage;
-        boolean isConnected = true;
+        isHandled = true;
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -164,7 +168,7 @@ public class MessageController implements MessageControllable {
             return;
         }
 
-        while (isConnected) {
+        while (isHandled) {
             try {
                 stringReader = new StringReader(in.readLine());
                 requestMessage = (MessageWrapper) unmarshaller.unmarshal(stringReader);
@@ -349,7 +353,7 @@ public class MessageController implements MessageControllable {
                     }
                     break;
                 case USER_DISCONNECT:
-                    isConnected = false;
+                    isHandled = false;
                     log.info("User disconnected");
                     break;
                 case USER_LOGOUT:
