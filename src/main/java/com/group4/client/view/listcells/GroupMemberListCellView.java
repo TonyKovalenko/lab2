@@ -1,6 +1,6 @@
 package com.group4.client.view.listcells;
 
-import com.group4.client.controller.Controller;
+import com.group4.client.controller.impl.ControllerImpl;
 import com.group4.client.view.ChatInfoView;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
@@ -57,7 +57,7 @@ public class GroupMemberListCellView extends ListCell<User> {
         super.updateItem(user, empty);
 
         ChatRoom room = ChatInfoView.getInstance().getChatRoom();
-        User currentUser = Controller.getInstance().getCurrentUser();
+        User currentUser = ControllerImpl.getInstance().getCurrentUser();
         if(empty || user == null) {
             setText(null);
             setGraphic(null);

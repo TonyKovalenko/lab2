@@ -1,6 +1,7 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
+import com.group4.client.controller.impl.ControllerImpl;
 import com.group4.server.model.entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -41,7 +42,7 @@ public class EditProfileView extends View {
             try {
                 Stage dialogStage = View.newModalStage();
                 instance = (EditProfileView) View.loadViewFromFxml(dialogStage, "/editProfile.fxml", "Edit profile");
-                Controller controller = Controller.getInstance();
+                Controller controller = ControllerImpl.getInstance();
                 instance.setController(controller);
                 instance.getStage().setOnCloseRequest(windowEvent -> {
                     instance = null;

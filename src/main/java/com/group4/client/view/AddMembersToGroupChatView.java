@@ -1,6 +1,7 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
+import com.group4.client.controller.impl.ControllerImpl;
 import com.group4.client.view.listcells.UsersListCellView;
 import com.group4.server.model.entities.User;
 import javafx.collections.FXCollections;
@@ -35,7 +36,7 @@ public class AddMembersToGroupChatView extends View{
             try {
                 Stage dialogStage = View.newModalStage();
                 instance = (AddMembersToGroupChatView) View.loadViewFromFxml(dialogStage, "/addMembersToGroupChatView.fxml", "Add members");
-                Controller controller = Controller.getInstance();
+                Controller controller = ControllerImpl.getInstance();
                 instance.setController(controller);
             } catch (IOException e) {
                 log.error("Can't get instance of AddMembersToGroupChatView.", e);

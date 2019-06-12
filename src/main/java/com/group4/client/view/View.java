@@ -1,6 +1,6 @@
 package com.group4.client.view;
 
-import com.group4.client.controller.Controller;
+import com.group4.client.controller.impl.ControllerImpl;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -52,7 +52,7 @@ public abstract class View {
      */
     public static Stage newModalStage() {
         Stage dialogStage = new Stage();
-        dialogStage.initOwner(Controller.getInstance().getStage());
+        dialogStage.initOwner(ControllerImpl.getInstance().getStage());
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         return dialogStage;
     }

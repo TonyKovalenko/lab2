@@ -42,7 +42,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>com.group4.client.controller.Controller</mainClass>
+                  <mainClass>com.group4.client.controller.impl.ControllerImpl</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
