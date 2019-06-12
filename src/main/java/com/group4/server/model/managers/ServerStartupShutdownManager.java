@@ -4,6 +4,7 @@ import com.group4.server.controller.MessageController;
 import com.group4.server.controller.ServerController;
 import com.group4.server.model.containers.ChatInvitationsContainer;
 import com.group4.server.model.containers.ChatRoomsContainer;
+import com.group4.server.model.containers.UserStreamContainer;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
 import com.group4.server.model.message.adapters.ChatContainerEnumAdapter;
@@ -128,6 +129,7 @@ public class ServerStartupShutdownManager {
                         new MessageController().broadcastToOnlineUsers(new ServerShutdownMessage(), new StringWriter());
                         saveData(marshaller);
                         serverController.interrupt();
+                        UserStreamContainer.INSTANCE.clearUsers();
                         System.out.println("SERVER WAS STOPPED");
                     }
                     break;
@@ -138,6 +140,7 @@ public class ServerStartupShutdownManager {
                         new MessageController().broadcastToOnlineUsers(new ServerRestartMessage(), new StringWriter());
                         saveData(marshaller);
                         serverController.interrupt();
+                        UserStreamContainer.INSTANCE.clearUsers();
                         serverController = new ServerController();
                         serverController.start();
                         System.out.println("Server restarted");

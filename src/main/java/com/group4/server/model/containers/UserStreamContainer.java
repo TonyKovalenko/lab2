@@ -4,7 +4,9 @@ import com.group4.server.model.entities.User;
 import com.group4.server.model.message.handlers.RegistrationAuthorizationHandler;
 
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -54,5 +56,9 @@ public enum UserStreamContainer {
 
     public Set<PrintWriter> getCurrentUserStreams() {
         return new HashSet<>(userToStream.values());
+    }
+
+    public void clearUsers() {
+        userToStream = new ConcurrentHashMap<>();
     }
 }
