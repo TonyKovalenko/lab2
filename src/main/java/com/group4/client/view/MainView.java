@@ -1,6 +1,7 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
+import com.group4.client.controller.impl.ControllerImpl;
 import com.group4.client.view.listcells.ChatListCellView;
 import com.group4.client.view.listcells.MessagesListCellView;
 import com.group4.client.view.listcells.UsersListCellView;
@@ -55,8 +56,8 @@ public class MainView extends View {
      */
     public static MainView getInstance() {
         try {
-            instance = (MainView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/mainWindow.fxml", "Messenger");
-            Controller controller = Controller.getInstance();
+            instance = (MainView) View.loadViewFromFxml(ControllerImpl.getInstance().getStage(), "/mainWindow.fxml", "Messenger");
+            Controller controller = ControllerImpl.getInstance();
             controller.setView(instance);
             instance.setController(controller);
         } catch (IOException e) {
@@ -86,8 +87,8 @@ public class MainView extends View {
             if (newValue != null) {
                 chatMessageListView.setItems(FXCollections.observableArrayList(newValue.getMessages()));
                 if (newValue.isPrivate()) {
-                    if (Controller.getInstance().getCurrentUser() != null) {
-                        chatName.setText(newValue.getOtherMember(Controller.getInstance().getCurrentUser()).getNickname());
+                    if (ControllerImpl.getInstance().getCurrentUser() != null) {
+                        chatName.setText(newValue.getOtherMember(ControllerImpl.getInstance().getCurrentUser()).getNickname());
                     }
                     infoImageButton.setVisible(false);
                 } else {

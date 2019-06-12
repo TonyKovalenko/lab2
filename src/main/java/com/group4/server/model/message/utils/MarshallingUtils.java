@@ -25,7 +25,8 @@ public class MarshallingUtils {
             ChatUpdateMessage.class, ChatUpdateMessageResponse.class,
             GetAllUsersRequest.class, GetAllUsersResponse.class,
             UserLogoutMessage.class, UserDisconnectMessage.class,
-            DeleteUserRequest.class, DeleteUserResponse.class, SetBanStatusMessage.class
+            DeleteUserRequest.class, DeleteUserResponse.class, SetBanStatusMessage.class,
+            ServerRestartMessage.class, ServerShutdownMessage.class
     };
     private static JAXBContext context;
 

@@ -1,7 +1,8 @@
 package com.group4.client.view;
 
-import com.group4.client.controller.Controller;
 import com.group4.client.controller.RegistrationController;
+import com.group4.client.controller.impl.ControllerImpl;
+import com.group4.client.controller.impl.RegistrationControllerImpl;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -36,8 +37,8 @@ public class RegistrationView extends View {
      */
     public static RegistrationView getInstance() {
         try {
-            instance = (RegistrationView) View.loadViewFromFxml(Controller.getInstance().getStage(), "/registerView.fxml", "Register");
-            RegistrationController registrationController = RegistrationController.getInstance();
+            instance = (RegistrationView) View.loadViewFromFxml(ControllerImpl.getInstance().getStage(), "/registerView.fxml", "Register");
+            RegistrationController registrationController = RegistrationControllerImpl.getInstance();
             registrationController.setView(instance);
             instance.setController(registrationController);
         } catch (IOException e) {

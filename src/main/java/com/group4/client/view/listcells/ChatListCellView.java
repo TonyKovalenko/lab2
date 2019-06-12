@@ -1,6 +1,6 @@
 package com.group4.client.view.listcells;
 
-import com.group4.client.controller.Controller;
+import com.group4.client.controller.impl.ControllerImpl;
 import com.group4.server.model.entities.ChatRoom;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,7 +57,7 @@ public class ChatListCellView extends ListCell<ChatRoom> {
             setGraphic(null);
         } else {
             if (chatRoom.isPrivate()) {
-                chatNameLabel.setText(chatRoom.getOtherMember(Controller.getInstance().getCurrentUser()).getFullName());
+                chatNameLabel.setText(chatRoom.getOtherMember(ControllerImpl.getInstance().getCurrentUser()).getFullName());
                 chatImageView.setImage(new Image("/user0.png"));
             } else {
                 chatNameLabel.setText(chatRoom.getName());

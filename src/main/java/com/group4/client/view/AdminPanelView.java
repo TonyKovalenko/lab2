@@ -1,6 +1,7 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.AdminController;
+import com.group4.client.controller.impl.AdminControllerImpl;
 import com.group4.server.model.entities.User;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.fxml.FXML;
@@ -46,7 +47,7 @@ public class AdminPanelView extends View {
             try {
                 Stage dialogStage = View.newModalStage();
                 instance = (AdminPanelView) View.loadViewFromFxml(dialogStage, "/adminPanelView.fxml", "Admin panel");
-                AdminController controller = AdminController.getInstance();
+                AdminController controller = AdminControllerImpl.getInstance();
                 controller.setView(instance);
                 instance.setController(controller);
                 instance.getStage().setOnCloseRequest(windowEvent -> {

@@ -1,6 +1,7 @@
 package com.group4.client.view;
 
 import com.group4.client.controller.Controller;
+import com.group4.client.controller.impl.ControllerImpl;
 import com.group4.client.view.listcells.GroupMemberListCellView;
 import com.group4.server.model.entities.ChatRoom;
 import com.group4.server.model.entities.User;
@@ -50,7 +51,7 @@ public class ChatInfoView extends View {
             try {
                 Stage dialogStage = View.newModalStage();
                 instance = (ChatInfoView) View.loadViewFromFxml(dialogStage, "/chatInfoView.fxml", "Chat info");
-                Controller controller = Controller.getInstance();
+                Controller controller = ControllerImpl.getInstance();
                 instance.setController(controller);
             } catch (IOException e) {
                 log.error("Can't get instance of ChatInfoView.", e);
