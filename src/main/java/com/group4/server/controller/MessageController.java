@@ -70,7 +70,7 @@ public class MessageController implements MessageControllable {
     private Marshaller marshaller;
     private Unmarshaller unmarshaller;
     private Socket socket;
-    private boolean isHandled;
+    private volatile boolean isHandled;
 
     public MessageController() {
         try {
@@ -197,7 +197,6 @@ public class MessageController implements MessageControllable {
                     if (authorizationResponse.isConfirmed()) {
                         User user = RegistrationAuthorizationHandler.INSTANCE.getUser(authorizationRequest.getUserNickname());
                         UserStreamContainer.INSTANCE.putStream(user.getNickname(), out);
-                        ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
                         Set<User> onlineUsers = UserStreamContainer.INSTANCE.getCurrentUsers();
                         TransmittableMessage onlineList = new OnlineListMessage(onlineUsers);
                         sendResponse(authorizationResponse, out, stringWriter);

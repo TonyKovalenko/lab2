@@ -125,6 +125,7 @@ public enum RegistrationAuthorizationHandler {
         }
 
         if (user != null && authNickname.equals(user.getNickname()) && authPassword.equals(user.getPassword())) {
+            ChatRoomsContainer.INSTANCE.putToInitialRoom(user);
             Set<ChatRoom> chatRoomsWithUser = ChatRoomsContainer.INSTANCE.getChatRoomsFor(authNickname);
             chatRoomsWithUser.addAll(ChatInvitationsContainer.INSTANCE.getChatInvitationsFor(authNickname));
             ChatInvitationsContainer.INSTANCE.removeInvitations(authNickname);
